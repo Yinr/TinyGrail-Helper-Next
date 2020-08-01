@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         TinyGrail Helper
-// @namespace    https://github.com/bangumi/scripts/tree/master/liaune
-// @version      2.4.3
+// @name         TinyGrail Helper Next
+// @namespace    https://gitee.com/Yinr/TinyGrail-Helper-Next
+// @version      2.4.4
 // @description  为小圣杯增加一些小功能,讨论/反馈：https://bgm.tv/group/topic/353368
-// @author       Liaune,Cedar
+// @author       Liaune,Cedar,Yinr
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -2040,6 +2040,13 @@ function fixAuctions(chara){
 		if (d.State == 0 && d.Value.Amount > 0) button = `<button id="auctionButton2" class="text_button">[参与竞拍]</button>`;
 		$('#buildButton').before(button);
 		$('#auctionButton').hide();
+    launchObserver({
+        parentNode: document.body,
+        selector: '#auctionButton',
+        successCallback: () => {
+            $('#auctionButton').hide()
+        }
+    });
 		postData('chara/auction/list', [chara.Id]).then((d)=>{
 			loadUserAuctions(d);
 			$('#auctionButton2').on('click', () => {
