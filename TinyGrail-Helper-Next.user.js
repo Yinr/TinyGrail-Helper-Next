@@ -2452,9 +2452,16 @@ function add_chara_info() {
 		showInitialPrice(charaId); //显示发行价
 		priceWarning(); //买入价格过高提醒
 		mergeorderListHistory(charaId); //合并同一时间订单历史记录
-    addExpandButton(); //添加展开圣殿按钮
-		showOwnTemple(); //显示自己的圣殿
-		changeTempleCover(charaId); //修改他人圣殿封面
+    launchObserver({
+      parentNode: $('.link_count')[0],
+      selector: '.link_count',
+      successCallback: () => {
+        addExpandButton(); //添加展开圣殿按钮
+        showOwnTemple(); //显示自己的圣殿
+        changeTempleCover(charaId); //修改他人圣殿封面
+      },
+      config: {'childList': true, 'attributes': true}
+    });
 		showGallery(); //查看画廊
 		getData(`chara/${charaId}`).then((d)=>{
 			let chara = d.Value;
