@@ -2452,6 +2452,7 @@ function add_chara_info() {
 		showInitialPrice(charaId); //显示发行价
 		priceWarning(); //买入价格过高提醒
 		mergeorderListHistory(charaId); //合并同一时间订单历史记录
+    addExpandButton(); //添加展开圣殿按钮
 		showOwnTemple(); //显示自己的圣殿
 		changeTempleCover(charaId); //修改他人圣殿封面
 		showGallery(); //查看画廊
@@ -2498,6 +2499,24 @@ function launchObserver({
 	}
 	let observer = new MutationObserver(observeFunc);
 	observer.observe(parentNode, config);
+}
+
+function addExpandButton() {
+  if ($('.assets_box .desc .link_count').text().startsWith('固定资产')) {
+    let expandButton = '<button id="expandButton" data-expanded="false" class="text_button">[+显示全部]</button>';
+    $('.assets_box .desc .bold').append(expandButton);
+    //$('#expandButton').on('click', e => {
+    //    if (!$(e.currentTarget).data('expanded')) {
+    //        $(e.currentTarget).data('expanded', true);
+    //        $(e.currentTarget).text('[-隐藏重复]');
+    //        $('.assets .item').addClass('expanded');
+    //    } else {
+    //        $(e.currentTarget).data('expanded', false);
+    //        $(e.currentTarget).text('[+显示全部]');
+    //        $('.assets .item').removeClass('expanded');
+    //    }
+    //});
+  }
 }
 
 // character page
