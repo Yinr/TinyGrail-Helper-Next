@@ -9,6 +9,6 @@
 将下面这段代码保存成书签，在小圣杯页面点击书签即可加载
 
 ```
-javascript:var script=document.createElement('script');script.src='https://yinr.gitee.io/bgm-thl.js';document.head.appendChild(script);
+javascript:var script=document.createElement('script');script.src='https://yinr.gitee.io/tinygrail-helper-next/loader.js';document.head.appendChild(script);
 ```
 
