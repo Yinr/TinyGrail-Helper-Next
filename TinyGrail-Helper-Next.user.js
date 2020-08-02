@@ -1470,7 +1470,7 @@ function showTempleRate(chara){
 		let templeRate = rate * (level+1) * 0.3;
 		$('#grailBox .assets_box .bold .sub').attr('title', '活股股息:'+formatNumber(rate,2));
 		$('#grailBox .assets_box .bold .sub').before(`<span class="sub"> (${templeAll[3]} + ${templeAll[2]} + ${templeAll[1]})</span>`);
-		$('#showTemplesButton').before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate,2)}"> (${formatNumber(templeRate,2)})</span>`);
+		$('#showTempleButton').before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate,2)}"> (${formatNumber(templeRate,2)})</span>`);
 	});
 }
 
