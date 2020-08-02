@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TinyGrail Helper Next
 // @namespace    https://gitee.com/Yinr/TinyGrail-Helper-Next
-// @version      2.4.4
+// @version      2.4.5
 // @description  为小圣杯增加一些小功能,讨论/反馈：https://bgm.tv/group/topic/353368
 // @author       Liaune,Cedar,Yinr
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
@@ -1438,7 +1438,7 @@ function priceWarning(){
 
 function showOwnTemple() {
 	let pre_temple = settings.pre_temple;
-	let temples = $('#grailBox .assets_box .assets .item');
+	let temples = $('#grailBox .assets_box #lastTemples.assets .item');
 	let me = followList.user;
 	if(!me){
 		me = $('#new_comment .reply_author a')[0].href.split('/').pop();
@@ -1450,7 +1450,7 @@ function showOwnTemple() {
 		if(user === me) {
 			temples[i].classList.add('my_temple');
 			temples[i].classList.remove('replicated');
-			if(pre_temple == 'on') $('#grailBox .assets_box .assets').prepend(temples[i]);
+			if(pre_temple == 'on') $('#grailBox .assets_box #lastTemples.assets').prepend(temples[i]);
 			break;
 		}
 	}
@@ -1470,7 +1470,7 @@ function showTempleRate(chara){
 		let templeRate = rate * (level+1) * 0.3;
 		$('#grailBox .assets_box .bold .sub').attr('title', '活股股息:'+formatNumber(rate,2));
 		$('#grailBox .assets_box .bold .sub').before(`<span class="sub"> (${templeAll[3]} + ${templeAll[2]} + ${templeAll[1]})</span>`);
-		$('#expandButton').before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate,2)}"> (${formatNumber(templeRate,2)})</span>`);
+		$('#showTemplesButton').before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate,2)}"> (${formatNumber(templeRate,2)})</span>`);
 	});
 }
 
@@ -2453,14 +2453,12 @@ function add_chara_info() {
 		priceWarning(); //买入价格过高提醒
 		mergeorderListHistory(charaId); //合并同一时间订单历史记录
     launchObserver({
-      parentNode: $('.link_count')[0],
-      selector: '.link_count',
+      parentNode: document.body,
+      selector: '#lastTemples .item',
       successCallback: () => {
-        addExpandButton(); //添加展开圣殿按钮
         showOwnTemple(); //显示自己的圣殿
         changeTempleCover(charaId); //修改他人圣殿封面
       },
-      config: {'childList': true, 'attributes': true}
     });
 		showGallery(); //查看画廊
 		getData(`chara/${charaId}`).then((d)=>{
