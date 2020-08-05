@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TinyGrail Helper Next
 // @namespace    https://gitee.com/Yinr/TinyGrail-Helper-Next
-// @version      2.4.5
+// @version      2.4.6
 // @description  为小圣杯增加一些小功能,讨论/反馈：https://bgm.tv/group/topic/353368
 // @author       Liaune,Cedar,Yinr
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
@@ -1048,7 +1048,7 @@ function openSettings(){ //设置
 <table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
 <tbody><tr><td valign="top" width="50%">主页显示/隐藏小圣杯</td><td valign="top">
 <select id="set1"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
-<tr><td valign="top" width="50%">将自己圣殿排到第一个显示</td><td valign="top">
+<tr><td valign="top" width="50%">将自己圣殿或连接排到第一个显示</td><td valign="top">
 <select id="set2"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
 <tr><td valign="top" width="50%">默认拍卖数量</td><td valign="top">
 <select id="set3"><option value="one" selected="selected">1</option><option value="all">全部</option></td></tr>
@@ -2460,6 +2460,13 @@ function add_chara_info() {
         changeTempleCover(charaId); //修改他人圣殿封面
       },
     });
+    launchObserver({
+      parentNode: document.body,
+      selector: '#lastLinks .link.item',
+      successCallback: () => {
+        showOwnLink(); //前置自己的连接
+      },
+    });
     showGallery(); //查看画廊
     getData(`chara/${charaId}`).then((d)=>{
       let chara = d.Value;
@@ -2521,6 +2528,25 @@ function addExpandButton() {
     //        $('.assets .item').removeClass('expanded');
     //    }
     //});
+  }
+}
+
+function showOwnLink() {
+  let pre_link = settings.pre_temple;
+  let links = $('#grailBox .assets_box #lastLinks.assets .link.item');
+  let me = followList.user;
+  if(!me){
+    me = $('#new_comment .reply_author a')[0].href.split('/').pop();
+    followList.user = me;
+    localStorage.setItem('TinyGrail_followList',JSON.stringify(followList));
+  }
+  for(let i = 0; i < links.length; i++) {
+    let user = links[i].querySelector('.name a').href.split('/').pop();
+    if(user === me) {
+      links[i].classList.add('my_link');
+      if(pre_link == 'on') $(links[i]).siblings('.rank.item').after(links[i]);
+      break;
+    }
   }
 }
 
