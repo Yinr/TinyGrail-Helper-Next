@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TinyGrail Helper Next
 // @namespace    https://gitee.com/Yinr/TinyGrail-Helper-Next
-// @version      2.4.6
+// @version      3.0.0
 // @description  为小圣杯增加一些小功能,讨论/反馈：https://bgm.tv/group/topic/353368
 // @author       Liaune,Cedar,Yinr
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
@@ -76,13 +76,16 @@ min-width: 50px;
 padding: 0 9px;
 }
 
-#TB_window .text_button {
+#TB_window.temple .container {
+text-align: center;
+}
+
+#TB_window .action .text_button {
 margin: 0 8px 0 0;
 padding: 0;
 width: fit-content;
 height: fit-content;
 min-width: fit-content;
-color: #0084B4;
 }
 `);
 const api = 'https://tinygrail.com/api/';
@@ -1477,16 +1480,32 @@ function showTempleRate(chara){
 function changeTempleCover(charaId){
   $('#grailBox .assets .item').on('click', (e) => {
     let me = followList.user;
-    let temple = $(e.currentTarget).data('temple');
+    let $el = $(e.currentTarget);
+    let temple = $el.data('temple');
+    let isLink = false;
+    if (temple == undefined && $el.hasClass('left') || $el.hasClass('right')) {
+      temple = $el.find('.card').data('temple');
+      isLink = true;
+    }
+    if (temple == undefined) return;
     let user = temple.Name;
-    launchObserver({
-      parentNode: document.body,
-      selector: '#TB_window .action',
-      successCallback: ()=>{
-        if(user == me) setChaosCube(temple);
-        else addButton(temple,user);
-      },
-    });
+    if (temple.LinkId == charaId) {
+        user = $el.siblings('.item').find('.card').data('temple').Name;
+    }
+    if (user != me && temple.CharacterId != charaId) return;
+    if (isLink) {
+      if(user == me) setChaosCube(temple);
+      else addButton(temple,user);
+    } else {
+      launchObserver({
+        parentNode: document.body,
+        selector: '#TB_window .action',
+        successCallback: ()=>{
+          if(user == me) setChaosCube(temple);
+          else addButton(temple,user);
+        },
+      });
+    }
   });
 
   function setChaosCube(temple){
