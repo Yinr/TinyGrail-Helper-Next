@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TinyGrail Helper Next
 // @namespace    https://gitee.com/Yinr/TinyGrail-Helper-Next
-// @version      3.0.0
+// @version      3.0.1
 // @description  为小圣杯增加一些小功能,讨论/反馈：https://bgm.tv/group/topic/353368
 // @author       Liaune,Cedar,Yinr
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
@@ -74,6 +74,15 @@ background-color: transparent;
 #grailBox .trade_box button {
 min-width: 50px;
 padding: 0 9px;
+}
+
+.link .swapPos {
+margin-left: 0.5em;
+cursor: pointer;
+}
+
+.link.swapped .swapPos {
+text-decoration: underline;
 }
 
 #TB_window.temple .container {
@@ -319,6 +328,8 @@ let settings = JSON.parse(localStorage.getItem('TinyGrail_settings')) ||
 let chara_initPrice = JSON.parse(localStorage.getItem('TinyGrail_chara_initPrice')) || {};
 //道具设置
 let ItemsSetting = JSON.parse(localStorage.getItem('TinyGrail_ItemsSetting')) || {};
+//连接位置设置
+let linkPosList = JSON.parse(localStorage.getItem('TinyGrail_LinkPosList')) || [];
 //自动补塔
 setInterval(function(){
   checkLostTemple(1);
@@ -2484,6 +2495,7 @@ function add_chara_info() {
       selector: '#lastLinks .link.item',
       successCallback: () => {
         showOwnLink(); //前置自己的连接
+        changeLinkPos('#lastLinks'); // 修改连接顺序
       },
     });
     showGallery(); //查看画廊
@@ -2569,6 +2581,85 @@ function showOwnLink() {
   }
 }
 
+function changeLinkPos(parentNode) {
+  let me = getMe();
+  let user = undefined;
+  if (location.pathname.startsWith('/user')) {
+    user = location.pathname.split('/').pop();
+  }
+
+  $(parentNode).find('.link .name').each((i, el) => {
+    $(el).append('<span class="swapPos" title="交换连接两塔的顺序">[换序]</span>');
+    // 应用设置
+    let thisUser = user;
+    if (!thisUser) thisUser = $(el).find('a').attr('href').split('/').pop();
+    if (thisUser == me) {
+      let $link = $(el).closest('.link');
+      let leftId = $link.find('.left .card').data('temple').CharacterId,
+          rightId = $link.find('.right .card').data('temple').CharacterId;
+      let reverseConfig = `${thisUser}#${rightId}#${leftId}`;
+      if (linkPosList.includes(reverseConfig)) swapLink($link);
+    }
+  });
+
+  $(parentNode).on('click', '.swapPos', (e) => {
+    swapLink($(e.currentTarget).closest('.link'));
+  });
+
+  function swapLink(linkEl) {
+    let $link = $(linkEl).closest('.link');
+    let $left = $link.find('.left'),
+        $right = $link.find('.right'),
+        $content = $link.find('.content');
+    $left.toggleClass('left').toggleClass('right');
+    $right.toggleClass('left').toggleClass('right');
+    let $names = $content.find('span');
+    $($names[0]).replaceWith($names[1]);
+    $content.append($names[0]);
+    $link.toggleClass('swapped');
+    let thisUser = user;
+    if (thisUser === undefined) thisUser = $link.find('.name a').attr('href').split('/').pop();
+    let thisLinkPos = [$right, $left].map((el) => $(el).find('.card').data('temple').CharacterId).join('#');
+    let thisConfig = `${thisUser}#${thisLinkPos}`;
+    console.log(thisConfig);
+
+    // 保存位置顺序
+    if (thisUser == me) {
+      let reverseConfig = thisConfig.replace(/^(.+)#(\d+)#(\d+)$/, '$1#$3#$2');
+      linkPosList = linkPosList.filter((i) => ![thisConfig, reverseConfig].includes(i));
+      if ($link.hasClass('swapped')) {
+        linkPosList.push(thisConfig);
+        console.log('saved link pos: ' + thisConfig);
+      }
+      localStorage.setItem('TinyGrail_LinkPosList', JSON.stringify(linkPosList));
+    }
+  }
+}
+
+function getMe() {
+  let me = followList.user;
+  if (!me) {
+    // character page
+    if(location.pathname.startsWith('/rakuen/topic/crt') || location.pathname.startsWith('/character')) {
+      me = $('#new_comment .reply_author a')[0].href.split('/').pop();
+    }
+    // rakuen homepage
+    else if (location.pathname.startsWith('/rakuen/home')) {
+      me = $('#grailBox2').data('name');
+    }
+    // menu page
+    else if (location.pathname.startsWith('/rakuen/topiclist')) {
+    }
+    // user homepage
+    else if (location.pathname.startsWith('/user')) {
+      me = $('.idBadgerNeue a.avatar').attr('href').split('/').pop();
+    }
+    followList.user = me;
+    localStorage.setItem('TinyGrail_followList',JSON.stringify(followList));
+  }
+  return me;
+}
+
 // character page
 if(location.pathname.startsWith('/rakuen/topic/crt') || location.pathname.startsWith('/character')) {
   let parentNode = document.getElementById('subject_info') || document.getElementById('columnCrtB');
@@ -2612,6 +2703,13 @@ else if (location.pathname.startsWith('/rakuen/home')) {
       showGallery(); //显示画廊
     },
   });
+  launchObserver({
+    parentNode: document.body,
+    selector: '#lastLinks.tab_page_item .assets .link.item',
+    successCallback: ()=>{
+      changeLinkPos('#lastLinks'); // 修改连接顺序
+    },
+  });
   let chara_fetched = false;
   launchObserver({
     parentNode: document.body,
@@ -2637,6 +2735,13 @@ else if (location.pathname.startsWith('/user')) {
     successCallback: ()=>{
       showHideGrailBox();
       showGallery();
+    },
+  });
+  launchObserver({
+    parentNode: document.body,
+    selector: '.link_list .link .item',
+    successCallback: ()=>{
+      changeLinkPos('.link_list'); // 修改连接顺序
     },
   });
   let chara_fetched = false;
