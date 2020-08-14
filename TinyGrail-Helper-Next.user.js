@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TinyGrail Helper Next
 // @namespace    https://gitee.com/Yinr/TinyGrail-Helper-Next
-// @version      3.0.1
+// @version      3.0.1.1
 // @description  为小圣杯增加一些小功能,讨论/反馈：https://bgm.tv/group/topic/353368
 // @author       Liaune,Cedar,Yinr
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
@@ -2589,6 +2589,7 @@ function changeLinkPos(parentNode) {
   }
 
   $(parentNode).find('.link .name').each((i, el) => {
+    if ($(el).find('.swapPos').length > 0) return;
     $(el).append('<span class="swapPos" title="交换连接两塔的顺序">[换序]</span>');
     // 应用设置
     let thisUser = user;
@@ -2739,10 +2740,13 @@ else if (location.pathname.startsWith('/user')) {
   });
   launchObserver({
     parentNode: document.body,
-    selector: '.link_list .link .item',
+    selector: '.link_list .grail_list:not([style]) .link .item',
     successCallback: ()=>{
-      changeLinkPos('.link_list'); // 修改连接顺序
+      if ($('.link_list .grail_list:not([style]) .link .swapPos').length > 0) return;
+      changeLinkPos('.link_list .grail_list:not([style])'); // 修改连接顺序
     },
+    stopWhenSuccess: false,
+    config: {'childList': true},
   });
   let chara_fetched = false;
   launchObserver({
