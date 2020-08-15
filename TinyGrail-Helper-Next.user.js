@@ -2746,7 +2746,6 @@ else if (location.pathname.startsWith('/user')) {
       changeLinkPos('.link_list .grail_list:not([style])'); // 修改连接顺序
     },
     stopWhenSuccess: false,
-    config: {'childList': true},
   });
   let chara_fetched = false;
   launchObserver({
