@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TinyGrail Helper Next
 // @namespace    https://gitee.com/Yinr/TinyGrail-Helper-Next
-// @version      3.0.1.1
+// @version      3.0.2
 // @description  为小圣杯增加一些小功能,讨论/反馈：https://bgm.tv/group/topic/353368
 // @author       Liaune,Cedar,Yinr
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
@@ -87,6 +87,10 @@ text-decoration: underline;
 
 #TB_window.temple .container {
 text-align: center;
+}
+
+#TB_window.temple .container .line {
+text-align: left;
 }
 
 #TB_window .action .text_button {
