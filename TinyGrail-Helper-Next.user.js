@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TinyGrail Helper Next
 // @namespace    https://gitee.com/Yinr/TinyGrail-Helper-Next
-// @version      3.0.2
+// @version      3.0.3
 // @description  为小圣杯增加一些小功能,讨论/反馈：https://bgm.tv/group/topic/353368
 // @author       Liaune,Cedar,Yinr
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
@@ -497,13 +497,13 @@ function loadHelperMenu() {
 }
 
 function loadFollowAuction(page){
-  followList = JSON.parse(localStorage.getItem('TinyGrail_followList'))|| {"user":'',"charas":[], "auctions":[]};
+  followList = JSON.parse(localStorage.getItem('TinyGrail_followList')) || {"user":'',"charas":[],"auctions":[]};
   let start = 20 * (page - 1);
-  let ids = followList.auctions.slice(start, start+20);
+  let ids = followList.auctions.slice(start, start + 20);
   let totalPages = Math.ceil(followList.auctions.length / 20);
   postData('chara/list', ids).then((d)=>{
     if (d.State === 0) {
-      loadCharacterList(d.Value, page, totalPages, loadFollowAuction, 'auction',true);
+      loadCharacterList(d.Value, page, totalPages, loadFollowAuction, 'auction', true);
       postData('chara/auction/list', ids).then((d)=>{
         loadUserAuctions(d);
       });
@@ -1120,6 +1120,7 @@ function loadCharacterList(list, page, total, more, type,showCancel) {
     }
     lastEven = !lastEven;
   }
+  $('.cancel_auction').unbind('click');
   $('.cancel_auction').on('click', (e) => {
     //if (!confirm('确定取消关注？')) return;
     let id = $(e.target).data('id').toString();
@@ -1129,12 +1130,53 @@ function loadCharacterList(list, page, total, more, type,showCancel) {
     $(`#eden_tpc_list li[data-id=${id}]`).remove();
   });
 
+  $('.fill_costs').unbind('click');
   $('.fill_costs').on('click', (e) => {
     let id = $(e.target).data('id');
     let lv = $(e.target).data('lv');
     let cost = $(e.target).data('cost');
     fillCosts(id, lv, cost);
     $(e.target).remove();
+  });
+
+  $('.fill_auction').unbind('click');
+  $('.fill_auction').on('click', (e) => {
+    e.stopPropagation();
+    let id = $(e.target).data('id');
+    let isAucDay = (new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Shanghai"}))).getDay() == 6;
+
+    getData(`chara/user/${id}/tinygrail/false`).then(d => {
+      let aucInfo = {
+        basePrice: d.Value.Price, totalAmount: d.Value.Amount,
+        userCount: d.Value.AuctionUsers, userAmount: d.Value.AuctionTotal,
+        myPrice: 0, myAmount: 0,
+      };
+      postData('chara/auction/list', [id]).then(d => {
+        if (d.Value[0]) {
+          aucInfo.myPrice = d.Value[0].Price;
+          aucInfo.myAmount = d.Value[0].Amount;
+          // aucInfo.userCount = d.Value[0].State;
+          // aucInfo.userAmount = d.Value[0].Type;
+        }
+        let remains = aucInfo.totalAmount - aucInfo.userAmount;
+        if (remains > 0) {
+          let price = Math.ceil(aucInfo.basePrice * 100) / 100,
+              amount = remains + aucInfo.myAmount;
+          if (isAucDay && price * amount < aucInfo.myPrice * aucInfo.myAmount) {
+            // 竞拍日不撤资
+            price = Math.ceil(aucInfo.myPrice * aucInfo.myAmount / amount * 100) / 100;
+          }
+          postData(`chara/auction/${id}/${price}/${amount}`, null).then(d => {
+            if (d.State == 0) {
+              console.log(`自动补满拍卖 #${id} 耗资 ₵${price*amount}（₵${price} x ${amount}）`);
+              postData('chara/auction/list', [id]).then(d => {
+                loadUserAuctions(d);
+              });
+            } else alert(d.Message);
+          });
+        } else {console.log(`#${id} 已拍满`);}
+      });
+    });
   });
 
   $('#eden_tpc_list .item_list').on('click', listItemClicked);
@@ -1250,10 +1292,12 @@ function renderCharacter(item,type,even,showCancel) {
   let chara;
 
   if(type=='auction'){
+    cancel = `<small data-id="${id}" class="cancel_auction" title="取消关注竞拍">[取关]</small>`;
     chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
 <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)})</small>
 <div class="row"><small class="time">${formatTime(time)}</small>
-${cancel}</div></div>${tag}</li>`
+<span><small data-id="${id}" class="fill_auction" title="当竞拍数量未满时补满数量" style="display: none;">[补满]</small>${cancel}</span>
+</div></div>${tag}</li>`
   }
   else if (type=='ico'){
     badge = renderBadge(item, false, false, false);
@@ -2015,8 +2059,10 @@ async function loadValhalla(ids){
   for(let i = 0; i < ids.length; i++){
     let Id = ids[i];
     await getData(`chara/user/${Id}/tinygrail/false`).then((d)=>{
-      let valhalla = `<small class="even" title="拍卖底价 / 拍卖数量">₵${formatNumber(d.Value.Price,2)} / ${d.Value.Amount}</small>`;
-      $(`.cancel_auction[data-id=${Id}]`).before(valhalla);
+      $(`.item_list[data-id=${Id}] .valhalla`).remove();
+      let valhalla = `<small class="even valhalla" title="拍卖底价 / 拍卖数量">₵${formatNumber(d.Value.Price,2)} / ${d.Value.Amount}</small>`;
+      $(`.fill_auction[data-id=${Id}]`).before(valhalla);
+      if (d.Value.Amount > 0) $(`.fill_auction[data-id=${Id}]`).show();
     });
   }
 }
@@ -2051,6 +2097,8 @@ async function joinAuctions(ids){
 
 function loadUserAuctions(d) {
   d.Value.forEach((a) => {
+    $(`.item_list[data-id=${a.CharacterId}] .user_auction`).remove();
+    $(`.item_list[data-id=${a.CharacterId}] .my_auction`).remove();
     if (a.State != 0) {
       let userAuction = `<span class="user_auction auction_tip" title="竞拍人数 / 竞拍数量">${formatNumber(a.State, 0)} / ${formatNumber(a.Type, 0)}</span>`;
       $(`.item_list[data-id=${a.CharacterId}] .time`).after(userAuction);
