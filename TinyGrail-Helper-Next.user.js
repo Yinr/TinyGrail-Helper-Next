@@ -619,7 +619,9 @@ function loadBalance(){
 <option value="11">修改竞拍</option>
 <option value="12">竞拍结果</option>
 <option value="14">个人所得税</option>
-<option value="16">红包</option>
+<option value="16">发出红包</option>
+<option value="17">收到红包</option>
+<option value="15">系统修复</option>
 </select></td>
 <td>第<input id="page" type="number" style="width:30px" value="1">页</td>
 <td>每页<input id="amount" type="number" style="width:50px" value="1000">条</td>
