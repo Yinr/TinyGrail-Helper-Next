@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TinyGrail Helper Next
 // @namespace    https://gitee.com/Yinr/TinyGrail-Helper-Next
-// @version      3.0.5
+// @version      3.0.6
 // @description  为小圣杯增加一些小功能,讨论/反馈：https://bgm.tv/group/topic/353368
 // @author       Liaune,Cedar,Yinr
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
@@ -1895,7 +1895,7 @@ async function autoJoinICO(icoList){
         let Id = d.Value.Id;
         if(d.Value.Total < 100000 && d.Value.Users < 15){
           getData(`chara/initial/${Id}`).then((d)=>{
-            if(d.State == 1){
+            if(d.State == 1 && d.Message == "尚未参加ICO。"){
               postData(`chara/join/${Id}/${offer}`, null).then((d)=>{
                 if (d.State === 0) {
                   console.log(`#${charaId} 追加注资成功。`);
