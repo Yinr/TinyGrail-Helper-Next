@@ -2,6 +2,12 @@
 
 ## 脚本链接
 
+### GreasyFork
+
+<https://greasyfork.org/zh-CN/scripts/408216-tinygrail-helper-next>
+
+### Gitee
+
 <https://yinr.gitee.io/tinygrail-helper-next/TinyGrail-Helper-Next.user.js>
 
 ## 免油猴使用方案
