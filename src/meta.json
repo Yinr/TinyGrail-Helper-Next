@@ -1,0 +1,6 @@
+{
+  "name": "TinyGrail Helper Next",
+  "namespace": "https://gitee.com/Yinr/TinyGrail-Helper-Next",
+  "include": "/^https?://(bgm\\.tv|bangumi\\.tv|chii\\.in)/(user|character|rakuen\\/topiclist|rakuen\\/home|rakuen\\/topic\\/crt).*",
+  "grant": [ "GM_addStyle" ]
+}
