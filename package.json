@@ -1,6 +1,6 @@
 {
   "name": "tinygrail-helper-next",
-  "version": "3.1.0",
+  "version": "3.0.6",
   "description": "为小圣杯增加一些小功能, 讨论/反馈：https://bgm.tv/group/topic/353368",
   "author": "Liaune, Cedar, no1xsyzy(InQβ), Yinr",
   "homepage": "https://gitee.com/Yinr/TinyGrail-Helper-Next",
@@ -9,11 +9,16 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c ./rollup.config.dev.js -w",
-    "serve": "npm run dev & npx http-server ./dist/ -o",
-    "lint": "eslint ./src",
-    "lint:quiet": "eslint --quiet ./src",
-    "lint:fix": "eslint --fix ./src"
+    "serve": "npm run dev & http-server ./dist/ -o",
+    "lint": "eslint ./src/",
+    "lint:quiet": "eslint --quiet ./src/",
+    "lint:fix": "eslint --fix ./src/",
+    "preversion": "npm run lint:quiet",
+    "postversion": "git push && git push --tags"
   },
+  "eslintIgnore": [
+    "/dist"
+  ],
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
     "eslint": "^7.10.0",

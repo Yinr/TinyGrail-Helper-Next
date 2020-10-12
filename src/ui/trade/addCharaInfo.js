@@ -534,7 +534,7 @@ const addCharaInfo = () => {
       setBuildTemple(chara) // 自动建塔
       fixAuctions(chara) // 修改默认拍卖底价和数量
     })
-  } catch (e) {};
+  } catch (e) {}
 }
 
 const addICOInfo = () => {

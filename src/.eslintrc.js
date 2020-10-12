@@ -13,6 +13,7 @@ module.exports = {
   },
   rules: {
     camelcase: 'warn',
+    'no-empty': 'warn',
     'no-var': 'error',
     'standard/no-callback-literal': 'warn'
   }

@@ -31,7 +31,7 @@ export const showGallery = () => { // 显示画廊
           closeDialog()
           $('.item .card')[index + 1].click()
           $(this).off('touchmove')
-        };
+        }
       })
     }).on('touchend', function () {
       $(this).off('touchmove')

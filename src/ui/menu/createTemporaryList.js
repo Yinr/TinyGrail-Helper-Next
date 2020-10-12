@@ -18,7 +18,7 @@ const getCharasList = () => {
     try {
       const charaId = parseInt(charas[i].match(/(character\/|crt\/)?(\d+)/)[2])
       charasList.push(charaId)
-    } catch (e) {};
+    } catch (e) {}
   }
   return charasList
 }
