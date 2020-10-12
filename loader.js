@@ -8,7 +8,7 @@
 
 var THL_URL = 'https://yinr.gitee.io/tinygrail-helper-next/loader.js';
 // var TH_URL = 'https://greasyfork.org/scripts/392022-tinygrail-helper/code/TinyGrail%20Helper.user.js';
-var TH_URL = 'https://yinr.gitee.io/tinygrail-helper-next/TinyGrail-Helper-Next.user.js'
+var TH_URL = 'https://greasyfork.org/scripts/408216-tinygrail-helper-next/code/TinyGrail%20Helper%20Next.user.js'
 
 function GM_addStyle(sty) {
   var style = document.createElement('style');
