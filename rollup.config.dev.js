@@ -18,7 +18,7 @@ const metab = metablock({
 export default {
   input: 'src/main.js',
   output: {
-    file: 'dist/Tinygrail-Helper-Next-dev.user.js',
+    file: 'dist/TinyGrail-Helper-Next-dev.user.js',
     format: 'iife',
     sourcemap: 'inline',
     globals: {
