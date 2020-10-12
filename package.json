@@ -9,7 +9,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c ./rollup.config.dev.js -w",
-    "serve": "npm run dev & http-server ./dist/ -o",
+    "serve": "npm run dev & http-server ./dist/ -c-1 -o",
     "lint": "eslint ./src/",
     "lint:quiet": "eslint --quiet ./src/",
     "lint:fix": "eslint --fix ./src/",
