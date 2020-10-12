@@ -1,6 +1,7 @@
 import { configGenerator } from './base'
 
 /** Item Info
+ *  ['lotusland']: (int) 幻想乡自动抽奖金额上限
  *  ['chaosCube']: (int) 混沌魔方炮塔角色 ID
  *  ['guidepost'].['monoId']: (int) 虚空道标炮塔角色 ID
  *  ['guidepost'].['toMonoId']: (int) 虚空道标目标角色 ID
