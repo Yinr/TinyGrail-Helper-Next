@@ -3,9 +3,9 @@
 // @description 为小圣杯增加一些小功能, 讨论/反馈：https://bgm.tv/group/topic/353368
 // @namespace   https://gitee.com/Yinr/TinyGrail-Helper-Next
 // @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
-// @version     3.1.0
+// @version     3.1.1
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
-// @homepage    https://gitee.com/Yinr/TinyGrail-Helper-Next
+// @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -226,6 +226,7 @@
   };
 
   /** Item Info
+   *  ['lotusland']: (int) 幻想乡自动抽奖金额上限
    *  ['chaosCube']: (int) 混沌魔方炮塔角色 ID
    *  ['guidepost'].['monoId']: (int) 虚空道标炮塔角色 ID
    *  ['guidepost'].['toMonoId']: (int) 虚空道标目标角色 ID
@@ -914,16 +915,22 @@
     const tag = renderCharacterTag(item);
     const depth = renderCharacterDepth(item);
     let id = item.Id;
-    if (item.CharacterId) id = item.CharacterId;
+    if (item.CharacterId) {
+      id = item.CharacterId;
+      if (type === 'auction') type = 'auction_ico';
+    }
     const time = item.LastOrder;
     let avatar = `<a href="/rakuen/topic/crt/${id}?trade=true" class="avatar l" target="right"><span class="avatarNeue avatarReSize32 ll" style="background-image:url('${normalizeAvatar(item.Icon)}')"></span></a>`;
     let cancel = '';
-    if (showCancel) cancel = `<span><small data-id="${id}" class="cancel_auction">[取消]</small></span>`;
+    if (showCancel) {
+      cancel = type.startsWith('auction')
+        ? `<small data-id="${id}" class="cancel_auction" title="取消关注竞拍">[取关]</small>`
+        : `<span><small data-id="${id}" class="cancel_auction">[取消]</small></span>`;
+    }
     let badge = renderBadge(item, true, true, true);
     let chara;
 
     if (type === 'auction') {
-      cancel = `<small data-id="${id}" class="cancel_auction" title="取消关注竞拍">[取关]</small>`;
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)})</small>
               <div class="row"><small class="time">${formatTime(time)}</small>
@@ -1318,7 +1325,7 @@
     }
   };
 
-  const charasList = [];
+  let charasList = [];
 
   const getCharasList = () => {
     const charas = $('.bibeBox textarea').val().split('\n');
@@ -1344,6 +1351,7 @@
   };
 
   const createTemporaryList = (page) => {
+    charasList = [];
     closeDialog();
     const dialog = `<div class="bibeBox" style="padding:10px">
     <label>在超展开左边创建角色列表 请输入角色url或id，如 https://bgm.tv/character/29282 或 29282，一行一个</label>
@@ -1419,6 +1427,8 @@
     const scratch_ids = [];
     const chaosCube_results = [];
     const chaosCube_ids = [];
+    const lotusland_results = [];
+    const lotusland_ids = [];
 
     const scratch = () => {
       getData('event/scratch/bonus2').then((d) => {
@@ -1439,44 +1449,102 @@
               d.Value[i].Current = scratch_results[i].SellPrice;
             }
             loadCharacterList(d.Value, 2, 2, loadScratch, 'chara', false);
-            $('#eden_tpc_list ul').append('<li class="line_odd item_list" style="text-align: center;">[混沌魔方]</li>');
-            chaosCube();
+            startChaosCube();
           });
         }
       });
     };
 
+    const chaosCubeTempleId = ItemsSetting.get().chaosCube;
+    const startChaosCube = () => {
+      if (chaosCubeTempleId) {
+        $('#eden_tpc_list ul').append('<li class="line_odd item_list" style="text-align: center;">[混沌魔方]</li>');
+        chaosCube();
+      } else {
+        alert('未设置施放混沌魔方的圣殿，请先在角色圣殿施放一次混沌魔方即可完成预设');
+        startLotusland();
+      }
+    };
     const chaosCube = () => {
-      const templeId = ItemsSetting.get().chaosCube;
-      if (templeId) {
-        postData(`magic/chaos/${templeId}`, null).then((d) => {
-          console.log(d);
-          if (d.State === 0) {
-            for (let i = 0; i < d.Value.length; i++) {
-              chaosCube_results.push(d.Value[i]);
-              chaosCube_ids.push(d.Value[i].Id);
-            }
-            if (!d.Value.length) {
-              chaosCube_results.push(d.Value);
-              chaosCube_ids.push(d.Value.Id);
-            }
+      postData(`magic/chaos/${chaosCubeTempleId}`, null).then((d) => {
+        console.log(d);
+        if (d.State === 0) {
+          for (let i = 0; i < d.Value.length; i++) {
+            chaosCube_results.push(d.Value[i]);
+            chaosCube_ids.push(d.Value[i].Id);
+          }
+          if (!d.Value.length) {
+            chaosCube_results.push(d.Value);
+            chaosCube_ids.push(d.Value.Id);
+          }
+          chaosCube();
+        } else {
+          if (d.Message !== '今日已超过使用次数限制或资产不足。') {
+            alert(d.Message);
             chaosCube();
           } else {
-            if (d.Message !== '今日已超过使用次数限制或资产不足。') {
-              alert(d.Message);
-              chaosCube();
-            } else {
-              postData('chara/list', chaosCube_ids).then((d) => {
-                for (let i = 0; i < d.Value.length; i++) {
-                  d.Value[i].Sacrifices = chaosCube_results[i].Amount;
-                  d.Value[i].Current = chaosCube_results[i].SellPrice;
-                }
-                loadCharacterList(d.Value, 2, 2, loadScratch, 'chara', false);
-              });
-            }
+            postData('chara/list', chaosCube_ids).then((d) => {
+              for (let i = 0; i < d.Value.length; i++) {
+                d.Value[i].Sacrifices = chaosCube_results[i].Amount;
+                d.Value[i].Current = chaosCube_results[i].SellPrice;
+              }
+              loadCharacterList(d.Value, 2, 2, loadScratch, 'chara', false);
+              startLotusland();
+            });
           }
-        });
-      } else alert('未设置施放混沌魔方的圣殿，请先在角色圣殿施放一次混沌魔方即可完成预设');
+        }
+      });
+    };
+
+    const lotuslandPrice = ItemsSetting.get().lotusland;
+    const startLotusland = () => {
+      if (lotuslandPrice !== undefined) {
+        $('#eden_tpc_list ul').append('<li class="line_odd item_list" style="text-align: center;" title="可在设置界面设置抽奖金额上限">[幻想乡]</li>');
+        lotusland();
+      } else {
+        alert('未设置幻想乡自动抽奖金额上限，请在助手设置界面进行设置（设为 0 可不自动抽幻想乡）');
+      }
+    };
+    const lotusland = () => {
+      getData('event/daily/count/10').then((d) => {
+        if (d.State === 0) {
+          const count = d.Value * 1;
+          const price = Math.pow(2, count) * 2000;
+          if (price <= lotuslandPrice) {
+            getData('event/scratch/bonus2/true').then((d) => {
+              console.log(d);
+              if (d.State === 0) {
+                for (let i = 0; i < d.Value.length; i++) {
+                  lotusland_results.push(d.Value[i]);
+                  lotusland_ids.push(d.Value[i].Id);
+                }
+                if (!d.Value.length) {
+                  lotusland_results.push(d.Value);
+                  lotusland_ids.push(d.Value.Id);
+                }
+                lotusland();
+              } else {
+                endLotusland();
+                console.warn('小圣杯助手自动抽幻想乡未知回应', d);
+              }
+            });
+          } else {
+            endLotusland();
+          }
+        } else {
+          endLotusland();
+          console.warn('小圣杯助手获取幻想乡价格未知回应', d);
+        }
+      });
+    };
+    const endLotusland = () => {
+      postData('chara/list', lotusland_ids).then((d) => {
+        for (let i = 0; i < d.Value.length; i++) {
+          d.Value[i].Sacrifices = lotusland_results[i].Amount;
+          d.Value[i].Current = lotusland_results[i].SellPrice;
+        }
+        loadCharacterList(d.Value, 2, 2, loadScratch, 'chara', false);
+      });
     };
 
     scratch();
@@ -1647,18 +1715,20 @@
     closeDialog();
     const settings = Settings.get();
     const dialog = `<table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
-    <tbody><tr><td valign="top" width="50%">主页显示/隐藏小圣杯</td><td valign="top">
+    <tbody><tr><td valign="top" width="60%">主页显示/隐藏小圣杯</td><td valign="top">
     <select id="set1"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
-    <tr><td valign="top" width="50%">将自己圣殿或连接排到第一个显示</td><td valign="top">
+    <tr><td valign="top" width="60%">将自己圣殿或连接排到第一个显示</td><td valign="top">
     <select id="set2"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-    <tr><td valign="top" width="50%">默认拍卖数量</td><td valign="top">
+    <tr><td valign="top" width="60%">默认拍卖数量</td><td valign="top">
     <select id="set3"><option value="one" selected="selected">1</option><option value="all">全部</option></td></tr>
-    <tr><td valign="top" width="50%" title="合并同一时间同一价格的历史订单记录">合并历史订单</td><td valign="top">
+    <tr><td valign="top" width="60%" title="合并同一时间同一价格的历史订单记录">合并历史订单</td><td valign="top">
     <select id="set4"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-    <tr><td valign="top" width="50%">周六自动提醒领取股息</td><td valign="top">
+    <tr><td valign="top" width="60%">周六自动提醒领取股息</td><td valign="top">
     <select id="set5"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-    <tr><td valign="top" width="50%">圣殿画廊</td><td valign="top">
+    <tr><td valign="top" width="60%">圣殿画廊</td><td valign="top">
     <select id="set6"><option value="off" selected="selected">关</option><option value="on">开</option></td></tr>
+    <tr><td valign="top" width="60%">幻想乡自动抽奖金额上限</td><td valign="top">
+    <input id="item_set1" type="number" min="0" step="1000" value="0"></td></tr>
     <tr><td valign="top" width="12%"><input class="inputBtn" value="保存" id="submit_setting" type="submit"></td><td valign="top"></td></tr>
     </tbody></table>`;
     showDialog(dialog);
@@ -1669,6 +1739,18 @@
     $('#set4').val(settings.merge_order);
     $('#set5').val(settings.get_bonus);
     $('#set6').val(settings.gallery);
+    $('#item_set1').val(ItemsSetting.get().lotusland || 0);
+    $('#item_set1').on('change', (e) => {
+      const el = e.target;
+      if (parseInt(el.value) > 3000) {
+        el.style.color = 'red';
+        el.style.fontWeight = 'bold';
+      } else {
+        el.style.color = '';
+        el.style.fontWeight = '';
+      }
+    });
+
     $('#submit_setting').on('click', () => {
       settings.hide_grail = $('#set1').val();
       settings.pre_temple = $('#set2').val();
@@ -1677,6 +1759,7 @@
       settings.get_bonus = $('#set5').val();
       settings.gallery = $('#set6').val();
       Settings.set(settings);
+      ItemsSetting.set({ ...ItemsSetting.get(), lotusland: parseInt($('#item_set1').val()) });
       $('#submit_setting').val('已保存');
       setTimeout(() => { closeDialog(); }, 500);
     });
