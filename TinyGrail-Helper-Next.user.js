@@ -2,8 +2,10 @@
 // @name        TinyGrail Helper Next
 // @description 为小圣杯增加一些小功能, 讨论/反馈：https://bgm.tv/group/topic/353368
 // @namespace   https://gitee.com/Yinr/TinyGrail-Helper-Next
-// @include     /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(user|character|rakuen\/topiclist|rakuen\/home|rakuen\/topic\/crt).*
-// @version     3.1.1
+// @include     http*://bgm.tv/*
+// @include     http*://bangumi.tv/*
+// @include     http*://chii.in/*
+// @version     3.1.2
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -1782,7 +1784,7 @@
     <li><a href="#" id="scratch">抽奖</a></li>
     <li><a href="#" id="magic">魔法道具</a></li>
     <li><a href="#" id="balance">资金日志分类</a></li>
-    <li><a href="#" id="sell">卖出</a></li>
+    <li><a href="#" id="sell" title="为当前列表角色增加一键卖出按钮">卖出</a></li>
     <li><a href="#" id="autoBuild">自动建塔</a></li>
     <li><a href="#" id="autoICO">自动补款</a></li>
     <li><a href="#" id="cancelBids">取消买单</a></li>
