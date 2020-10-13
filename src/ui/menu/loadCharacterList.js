@@ -87,16 +87,22 @@ const renderCharacter = (item, type, even, showCancel) => {
   const tag = renderCharacterTag(item)
   const depth = renderCharacterDepth(item)
   let id = item.Id
-  if (item.CharacterId) id = item.CharacterId
+  if (item.CharacterId) {
+    id = item.CharacterId
+    if (type === 'auction') type = 'auction_ico'
+  }
   const time = item.LastOrder
   let avatar = `<a href="/rakuen/topic/crt/${id}?trade=true" class="avatar l" target="right"><span class="avatarNeue avatarReSize32 ll" style="background-image:url('${normalizeAvatar(item.Icon)}')"></span></a>`
   let cancel = ''
-  if (showCancel) cancel = `<span><small data-id="${id}" class="cancel_auction">[取消]</small></span>`
+  if (showCancel) {
+    cancel = type.startsWith('auction')
+      ? `<small data-id="${id}" class="cancel_auction" title="取消关注竞拍">[取关]</small>`
+      : `<span><small data-id="${id}" class="cancel_auction">[取消]</small></span>`
+  }
   let badge = renderBadge(item, true, true, true)
   let chara
 
   if (type === 'auction') {
-    cancel = `<small data-id="${id}" class="cancel_auction" title="取消关注竞拍">[取关]</small>`
     chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)})</small>
               <div class="row"><small class="time">${formatTime(time)}</small>

@@ -10,7 +10,7 @@ import { autoJoinICO } from '../../trade/auction'
 
 import { FollowList } from '../../config/followList'
 
-const charasList = []
+let charasList = []
 
 const getCharasList = () => {
   const charas = $('.bibeBox textarea').val().split('\n')
@@ -36,6 +36,7 @@ const loadTemperaryList = (page) => {
 }
 
 export const createTemporaryList = (page) => {
+  charasList = []
   closeDialog()
   const dialog = `<div class="bibeBox" style="padding:10px">
     <label>在超展开左边创建角色列表 请输入角色url或id，如 https://bgm.tv/character/29282 或 29282，一行一个</label>
