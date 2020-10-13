@@ -9,7 +9,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c ./rollup.config.dev.js -w",
-    "serve": "npm run dev & http-server ./dist/ -c-1 -o",
+    "serve": "npm run dev & ws -d ./dist/ -o",
     "lint": "eslint ./src/",
     "lint:quiet": "eslint --quiet ./src/",
     "lint:fix": "eslint --fix ./src/",
@@ -27,7 +27,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "http-server": "^0.12.3",
+    "local-web-server": "^4.2.1",
     "node-sass": "^4.14.1",
     "rollup": "^2.28.2",
     "rollup-plugin-postcss": "^3.1.8",
