@@ -29,7 +29,7 @@ export const loadHelperMenu = () => {
     <li><a href="#" id="scratch">抽奖</a></li>
     <li><a href="#" id="magic">魔法道具</a></li>
     <li><a href="#" id="balance">资金日志分类</a></li>
-    <li><a href="#" id="sell">卖出</a></li>
+    <li><a href="#" id="sell" title="为当前列表角色增加一键卖出按钮">卖出</a></li>
     <li><a href="#" id="autoBuild">自动建塔</a></li>
     <li><a href="#" id="autoICO">自动补款</a></li>
     <li><a href="#" id="cancelBids">取消买单</a></li>
