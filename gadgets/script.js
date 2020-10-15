@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.3
+// @version     3.1.4
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -282,7 +282,14 @@
    */
 
   // 自动建塔
-  const AutoTempleList = configGenerator('autoTempleList', []);
+  const AutoTempleList = configGenerator('autoTempleList', [], {
+    postGet: value => value.map(item => ({
+      ...item,
+      charaId: parseInt(item.charaId),
+      target: parseInt(item.target),
+      bidPrice: parseFloat(item.bidPrice)
+    }))
+  });
 
   const removeBuildTemple = (charaId) => {
     const autoTempleList = AutoTempleList.get();
@@ -394,11 +401,19 @@
    *  item.charaId: (int) chara.CharacterId
    *  item.name: (string) chara.Name
    *  item.target: (int) 目标等级
-   *  item.end: (int) chara.End, End Time
+   *  item.end: (int?) chara.End, End Time
    */
 
   // ico自动补款
-  const FillICOList = configGenerator('fillicoList', []);
+  const FillICOList = configGenerator('fillicoList', [], {
+    postGet: value => value.map(item => ({
+      ...item,
+      Id: parseInt(item.Id),
+      charaId: parseInt(item.charaId),
+      target: parseInt(item.target),
+      end: item.end
+    }))
+  });
 
   const calculateICO = (ico) => {
     let level = 0;
@@ -914,9 +929,9 @@
     const tag = renderCharacterTag(item);
     const depth = renderCharacterDepth(item);
     let id = item.Id;
-    if (item.Id && item.Id !== item.CharacterId) {
+    if (item.CharacterId && item.Id !== item.CharacterId) {
       id = item.CharacterId;
-      if (type === 'auction') type = 'auction_ico';
+      if (type === 'auction') type += '-ico';
     }
     const time = item.LastOrder;
     let avatar = `<a href="/rakuen/topic/crt/${id}?trade=true" class="avatar l" target="right"><span class="avatarNeue avatarReSize32 ll" style="background-image:url('${normalizeAvatar(item.Icon)}')"></span></a>`;
