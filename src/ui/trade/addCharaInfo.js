@@ -49,7 +49,7 @@ const followAuctions = (charaId) => { // 关注竞拍情况
       }
       $('#buildButton').before(button)
       $('#followAuctionButton').on('click', () => {
-        const followList = FollowList.get
+        const followList = FollowList.get()
         if (followList.auctions.includes(charaId)) {
           followList.auctions.splice(followList.auctions.indexOf(charaId), 1)
           $('#followAuctionButton').text('[关注竞拍]')
