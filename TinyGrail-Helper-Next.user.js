@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.2
+// @version     3.1.3
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -917,7 +917,7 @@
     const tag = renderCharacterTag(item);
     const depth = renderCharacterDepth(item);
     let id = item.Id;
-    if (item.CharacterId) {
+    if (item.Id && item.Id !== item.CharacterId) {
       id = item.CharacterId;
       if (type === 'auction') type = 'auction_ico';
     }
@@ -955,7 +955,7 @@
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}<span class="badge lv${item.CharacterLevel}">lv${item.CharacterLevel}</span></a> <small class="grey">(+${item.Rate.toFixed(2)})</small>
               <div class="row"><small class="time" title="创建时间">${formatTime(item.Create)}</small><small title="固有资产 / 献祭值">${item.Assets} / ${item.Sacrifices}</small>${costs}</div></div>
               <div class="tag lv${item.Level}">${item.Level}级圣殿</div></li>`;
-    } else if (item.CharacterId) {
+    } else if (item.Id !== item.CharacterId) {
       const pre = calculateICO(item);
       badge = renderBadge(item, false, false, false);
       // let percent = formatNumber(item.Total / pre.Next * 100, 0);
