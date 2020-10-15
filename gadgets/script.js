@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.4
+// @version     3.1.5
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -1955,7 +1955,7 @@
         }
         $('#buildButton').before(button);
         $('#followAuctionButton').on('click', () => {
-          const followList = FollowList.get;
+          const followList = FollowList.get();
           if (followList.auctions.includes(charaId)) {
             followList.auctions.splice(followList.auctions.indexOf(charaId), 1);
             $('#followAuctionButton').text('[关注竞拍]');
