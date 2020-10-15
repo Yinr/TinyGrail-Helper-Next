@@ -87,9 +87,9 @@ const renderCharacter = (item, type, even, showCancel) => {
   const tag = renderCharacterTag(item)
   const depth = renderCharacterDepth(item)
   let id = item.Id
-  if (item.Id && item.Id !== item.CharacterId) {
+  if (item.CharacterId && item.Id !== item.CharacterId) {
     id = item.CharacterId
-    if (type === 'auction') type = 'auction_ico'
+    if (type === 'auction') type += '-ico'
   }
   const time = item.LastOrder
   let avatar = `<a href="/rakuen/topic/crt/${id}?trade=true" class="avatar l" target="right"><span class="avatarNeue avatarReSize32 ll" style="background-image:url('${normalizeAvatar(item.Icon)}')"></span></a>`

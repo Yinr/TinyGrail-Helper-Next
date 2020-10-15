@@ -8,6 +8,13 @@ import { configGenerator } from './base'
  */
 
 // 自动建塔
-const AutoTempleList = configGenerator('autoTempleList', [])
+const AutoTempleList = configGenerator('autoTempleList', [], {
+  postGet: value => value.map(item => ({
+    ...item,
+    charaId: parseInt(item.charaId),
+    target: parseInt(item.target),
+    bidPrice: parseFloat(item.bidPrice)
+  }))
+})
 
 export { AutoTempleList }
