@@ -1,0 +1,23 @@
+name: Sync to Gitee
+
+on:
+  push:
+    branches:
+    - release
+  schedule:
+    - cron: '* * 7 * *'
+
+jobs:
+  run:
+    name: Sync
+    runs-on: ubuntu-latest
+    steps:
+    - name: Sync to Gitee
+      uses: Yikun/hub-mirror-action
+      with:
+        src: github/Yinr
+        dst: gitee/Yinr
+        dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+        dst_token:  ${{ secrets.GITEE_TOKEN }}
+        static_list: 'TinyGrail-Helper-Next'
+        force_update: true

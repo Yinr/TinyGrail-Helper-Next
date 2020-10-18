@@ -1,21 +1,11 @@
 import metablock from 'rollup-plugin-userscript-metablock'
 import postcss from 'rollup-plugin-postcss'
+import cleanup from 'rollup-plugin-cleanup'
 import path from 'path'
 
 const pkg = require('./package.json')
 
-const metab = metablock({
-  file: './src/meta.json',
-  override: {
-    version: pkg.version,
-    description: pkg.description,
-    author: pkg.author,
-    homepage: pkg.homepage,
-    license: pkg.license
-  }
-})
-
-export default [{
+export const config = {
   input: 'src/main.js',
   output: {
     file: 'dist/TinyGrail-Helper-Next.user.js',
@@ -24,27 +14,42 @@ export default [{
       jquery: '$'
     }
   },
+  external: ['jquery']
+}
+
+export const metabConfig = {
+  file: './src/meta.json',
+  override: {
+    version: pkg.version,
+    description: pkg.description,
+    author: pkg.author,
+    homepage: pkg.homepage,
+    license: pkg.license
+  }
+}
+
+const metab = metablock(metabConfig)
+
+export default [{
+  ...config,
   plugins: [
     metab,
     postcss({
       inject: (css) => `GM_addStyle(${css})`
-    })
-  ],
-  external: ['jquery']
+    }),
+    cleanup()
+  ]
 }, {
-  input: 'src/main.js',
+  ...config,
   output: {
-    file: 'dist/gadgets/script.js',
-    format: 'iife',
-    globals: {
-      jquery: '$'
-    }
+    ...config.output,
+    file: 'dist/gadgets/script.js'
   },
   plugins: [
     metab,
     postcss({
       extract: path.resolve('dist/gadgets/style.css')
-    })
-  ],
-  external: ['jquery']
+    }),
+    cleanup()
+  ]
 }]
