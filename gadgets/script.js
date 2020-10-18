@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.5
+// @version     3.1.6
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -21,19 +21,41 @@
   }) => {
     const storageName = `TinyGrail_${name}`;
     return {
+      name,
+      storageName,
+      getRaw () {
+        return localStorage.getItem(storageName)
+      },
       get () {
-        if (config.postGet) {
-          return config.postGet(JSON.parse(localStorage.getItem(storageName))) || defaultValue
-        } else {
-          return JSON.parse(localStorage.getItem(storageName)) || defaultValue
+        let value = null;
+        try {
+          value = JSON.parse(this.getRaw());
+          if (config.postGet) {
+            value = config.postGet(value);
+          }
+        } catch (err) {
+          console.error(`Fail to get config of ${storageName}`, { valueString: this.getRaw(), value, err });
+        }
+        return value || defaultValue
+      },
+      setRaw (valueString, raiseError = false) {
+        try {
+          localStorage.setItem(storageName, valueString);
+        } catch (err) {
+          console.error(`Fail to set config of ${storageName}`, { valueString, err });
+          if (raiseError) throw err
         }
       },
       set (value) {
         if (config.preSet) {
-          return localStorage.setItem(storageName, JSON.stringify(config.preSet(value)))
-        } else {
-          return localStorage.setItem(storageName, JSON.stringify(value))
+          try {
+            value = config.preSet(value);
+          } catch (err) {
+            console.warn(`Fail to preparse config of ${storageName}`, { value, err });
+          }
         }
+        this.setRaw(JSON.stringify(value));
+        return value
       }
     }
   };
@@ -378,22 +400,27 @@
     }
   };
 
-  const closeDialog = () => {
-    $('#TB_overlay').remove();
-    $('#TB_window').remove();
+  const closeDialog = (name = 'main') => {
+    if (name === 'main') {
+      $('#TB_overlay').remove();
+      $('#TB_window').remove();
+    } else {
+      $(`#TB_overlay[data-name=${name}]`).remove();
+      $(`#TB_window[data-name=${name}]`).remove();
+    }
   };
 
-  const showDialog = (innerHTML, maxWidth = '', minWidth = '') => {
+  const showDialog = (innerHTML, name = 'main', maxWidth = '', minWidth = '') => {
     const dialog = `
-    <div id="TB_overlay" class="TB_overlayBG TB_overlayActive"></div>
-    <div id="TB_window" class="dialog" style="display:block;max-width:${maxWidth || '640px'};min-width:${minWidth || '400px'};">
+    <div id="TB_overlay" data-name="${name}" class="TB_overlayBG TB_overlayActive"></div>
+    <div id="TB_window" data-name="${name}" class="dialog" style="display:block;max-width:${maxWidth || '640px'};min-width:${minWidth || '400px'};">
     ${innerHTML}
-    <a id="TB_closeWindowButton" title="Close">X关闭</a>
+    <a id="TB_closeWindowButton" data-name="${name}" title="Close">X关闭</a>
     </div>
   `;
     $('body').append(dialog);
-    $('#TB_closeWindowButton').on('click', closeDialog);
-    $('#TB_overlay').on('click', closeDialog);
+    $(`#TB_closeWindowButton[data-name=${name}]`).on('click', () => closeDialog(name));
+    $(`#TB_overlay[data-name=${name}]`).on('click', () => closeDialog(name));
   };
 
   /** Item Info
@@ -1725,6 +1752,61 @@
     });
   };
 
+  // 连接位置设置
+  const LinkPosList = configGenerator('LinkPosList', []);
+
+  const configVersion = 3;
+
+  const configList = [
+    Settings,
+    FollowList,
+    FillICOList,
+    AutoTempleList,
+    ItemsSetting,
+    LinkPosList
+  ];
+
+  const exportConfig = () => JSON.stringify({
+    meta: {
+      project: 'TinyGrail_Helper_Next',
+      confver: configVersion,
+      exportTime: (new Date()).toISOString()
+    },
+    config: configList.reduce((config, configItem) => {
+      const configValue = configItem.getRaw();
+      return configValue
+        ? { ...config, [configItem.name]: configValue }
+        : config
+    }, {})
+  });
+
+  const importSingleConfig = (configStorage, configToImport) => {
+    if (configStorage.name in configToImport) {
+      console.log(`importing ${configStorage.name}`);
+      configStorage.setRaw(configToImport[configStorage.name], true);
+    }
+  };
+
+  const importConfig = (configString) => {
+    try {
+      const errors = [];
+      const { meta, config } = JSON.parse(configString);
+
+      console.log(`import config version: ${meta.confver}`);
+      configList.forEach(configItem => {
+        try {
+          importSingleConfig(configItem, config);
+        } catch (err) {
+          errors.push(configItem.name);
+        }
+      });
+
+      return errors
+    } catch (err) {
+      console.error('设置导入出错：', { configString, err });
+    }
+  };
+
   const openSettings = () => { // 设置
     closeDialog();
     const settings = Settings.get();
@@ -1743,7 +1825,10 @@
     <select id="set6"><option value="off" selected="selected">关</option><option value="on">开</option></td></tr>
     <tr><td valign="top" width="60%">幻想乡自动抽奖金额上限</td><td valign="top">
     <input id="item_set1" type="number" min="0" step="1000" value="0"></td></tr>
-    <tr><td valign="top" width="12%"><input class="inputBtn" value="保存" id="submit_setting" type="submit"></td><td valign="top"></td></tr>
+    <tr valign="buttom">
+      <td><span id="export_setting" style="font-size: smaller; text-decoration: underline; cursor: pointer;">[导入导出设置]</span></td>
+      <td><input class="inputBtn" value="保存" id="submit_setting" type="submit"></td>
+    </tr>
     </tbody></table>`;
     showDialog(dialog);
 
@@ -1776,6 +1861,51 @@
       ItemsSetting.set({ ...ItemsSetting.get(), lotusland: parseInt($('#item_set1').val()) });
       $('#submit_setting').val('已保存');
       setTimeout(() => { closeDialog(); }, 500);
+    });
+
+    $('#export_setting').on('click', () => {
+      const dialog = `<div class="bibeBox" style="padding:10px">
+      <label>设置导入/导出</label>
+      <p><b>导入方式：</b>将之前导出的设置文本粘贴到下方输入框后点击导入按钮</p>
+      <p><b>导出方式：</b>复制下方输入框中内容并妥善保存（若复制按钮无效，请手动复制）</p>
+      <textarea rows="10" class="quick" name="setting_value"></textarea>
+      <label id="info"></label>
+      <input class="inputBtn" value="导入" id="import_setting" type="submit" style="padding: 3px 5px;">
+      <input class="inputBtn" value="复制" id="copy_setting" type="submit" style="padding: 3px 5px;">
+      </div>`;
+      closeDialog();
+      showDialog(dialog);
+
+      const configValue = exportConfig();
+      $('.bibeBox textarea').val(configValue);
+
+      $('#copy_setting').on('click', () => {
+        $('.bibeBox label#info').children().remove();
+        let resInfo = '复制设置出错，请手动复制';
+        $('.bibeBox textarea').select();
+        try {
+          if (document.execCommand('copy')) { resInfo = '设置已复制，请自行保存以便后续导入'; }
+        } catch (e) { console.log('复制设置出错', e); }
+        $('.bibeBox label#info').append(`<span>${resInfo}</span><br>`);
+      });
+
+      $('#import_setting').on('click', () => {
+        if (!confirm('导入设置将会覆盖原有设置，确定操作后将无法恢复，是否确定继续？')) return
+
+        $('.bibeBox label#info').children().remove();
+        let resInfo = '导入设置出错，请重新检查导入文本';
+        const importString = $('.bibeBox textarea').val();
+        try {
+          const importErrors = importConfig(importString);
+          if (importErrors.length === 0) {
+            resInfo = '导入成功';
+          } else {
+            resInfo = `以下设置导入出错，请重新检查导入文本：\n${importErrors.join(', ')}`;
+            console.warn(resInfo);
+          }
+          $('.bibeBox label#info').append(`<span>${resInfo}</span><br>`);
+        } catch (e) { console.log('导入设置出错', e); }
+      });
     });
   };
 
@@ -1818,9 +1948,6 @@
     $('#cancelBids').on('click', () => menuItemClicked(cancelBids));
     $('#settings').on('click', () => menuItemClicked(openSettings));
   };
-
-  // 连接位置设置
-  const LinkPosList = configGenerator('LinkPosList', []);
 
   const changeLinkPos = (parentNode) => {
     const me = getMe();
