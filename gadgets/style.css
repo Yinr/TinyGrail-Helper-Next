@@ -1,3 +1,4 @@
+@charset "UTF-8";
 ul.timelineTabs li a {
   margin: 2px 0 0 0;
   padding: 5px 10px 5px 10px; }
@@ -7,7 +8,7 @@ img.cover {
 
 .assets .my_temple.item .card {
   box-shadow: 3px 3px 5px #FFEB3B;
-  borderList: 1px solid #FFC107; }
+  border: 1px solid #FFC107; }
 
 .assets .my_temple.item .name a {
   font-weight: bold;
@@ -18,11 +19,7 @@ html[data-theme='dark'] #grailBox .title {
 
 html[data-theme='dark'] .assets .my_temple.item .card {
   box-shadow: 0px 0px 15px #FFEB3B;
-  borderList: 1px solid #FFC107; }
-
-#grail .temple_list .item {
-  margin: 5px 5px 5px 0;
-  width: 107px; }
+  border: 1px solid #FFC107; }
 
 .assets_box .item {
   margin: 5px 5px 5px 0;
@@ -59,6 +56,17 @@ html[data-theme='dark'] .assets .my_temple.item .card {
 
 .link.swapped .swapPos {
   text-decoration: underline; }
+
+#grail li.title.hide_grail_title h2:after {
+  font-size: 40%;
+  content: '(点击显示)'; }
+
+#grail .temple_list .item {
+  margin: 5px 5px 5px 0;
+  width: 107px; }
+
+.hide_grail {
+  display: none !important; }
 
 #TB_window.temple .container {
   text-align: center; }

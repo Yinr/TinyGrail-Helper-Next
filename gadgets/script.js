@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.6
+// @version     3.1.7
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -16,8 +16,8 @@
   'use strict';
 
   const configGenerator = (name, defaultValue, config = {
-    postGet: (value) => value, // 获取设置后的过滤处理函数
-    preSet: (value) => value // 保存设置前的过滤处理函数
+    postGet: (value) => value,
+    preSet: (value) => value
   }) => {
     const storageName = `TinyGrail_${name}`;
     return {
@@ -64,11 +64,9 @@
     date = new Date(date);
     return date.format('yyyy-MM-dd hh:mm:ss')
   };
-
   const formatTime = (timeStr) => {
     const now = new Date();
     const time = new Date(timeStr) - (new Date().getTimezoneOffset() + 8 * 60) * 60 * 1000;
-
     let times = (time - now) / 1000;
     let day = 0;
     let hour = 0;
@@ -78,18 +76,15 @@
       day = Math.floor(times / (60 * 60 * 24));
       hour = Math.floor(times / (60 * 60)) - Math.floor(times / (60 * 60 * 24)) * 24;
       minute = Math.floor(times / 60) - Math.floor(times / (60 * 60)) * 60;
-
       if (day > 0) return `剩余${day}天${hour}小时`
       else if (hour > 0) return `剩余${hour}小时${minute}分钟`
       else return `即将结束 剩余${minute}分钟`
-      // return '即将结束';
     } else {
       times = Math.abs(times);
       day = Math.floor(times / (60 * 60 * 24));
       hour = Math.floor(times / (60 * 60));
       minute = Math.floor(times / 60);
       second = Math.floor(times);
-
       if (minute < 1) {
         return `${second}s ago`
       } else if (minute < 60) {
@@ -97,13 +92,10 @@
       } else if (hour < 24) {
         return `${hour}h ago`
       }
-
       if (day > 1000) { return 'never' }
-
       return `[${new Date(timeStr).format('yyyy-MM-dd')}] ${day}d ago`
     }
   };
-
   const formatNumber = (number, decimals, dec_point, thousands_sep) => {
     number = (number + '').replace(/[^0-9+-Ee.]/g, '');
     const n = !isFinite(+number) ? 0 : +number;
@@ -111,32 +103,22 @@
     const sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep;
     const dec = (typeof dec_point === 'undefined') ? '.' : dec_point;
     let s = '';
-    // toFixedFix = function (n, prec) {
-    //   let k = Math.pow(10, prec);
-    //   return '' + Math.ceil(n * k) / k;
-    // };
-
-    // s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
     s = (prec ? n.toFixed(prec) : '' + Math.round(n)).split('.');
     const re = /(-?\d+)(\d{3})/;
     while (re.test(s[0])) {
       s[0] = s[0].replace(re, '$1' + sep + '$2');
     }
-
     if ((s[1] || '').length < prec) {
       s[1] = s[1] || '';
       s[1] += new Array(prec - s[1].length + 1).join('0');
     }
     return s.join(dec)
   };
-
   const formatAskPrice = (price) => {
     if (Number.isInteger(parseFloat(price))) return price
     else return (price - Math.floor(price)) > 0.5 ? Math.ceil(price) : Math.floor(price) + 0.5
   };
-
   const parseIntArray = (arr) => arr.map(item => parseInt(item));
-
   const removeEmpty = (array) => {
     const arr = [];
     for (let i = 0; i < array.length; i++) {
@@ -150,8 +132,6 @@
     charas: parseIntArray(value.charas),
     auctions: parseIntArray(value.auctions)
   });
-
-  // 关注列表
   const FollowList = configGenerator('followList', {
     user: '',
     charas: [],
@@ -165,17 +145,13 @@
     const followList = FollowList.get();
     let me = followList.user;
     if (!me) {
-      // character page
       if (location.pathname.startsWith('/rakuen/topic/crt') || location.pathname.startsWith('/character')) {
         me = $('#new_comment .reply_author a')[0].href.split('/').pop();
       } else
-      // rakuen homepage
       if (location.pathname.startsWith('/rakuen/home')) {
         me = $('#grailBox2').data('name');
       } else
-      // menu page
       if (location.pathname.startsWith('/rakuen/topiclist')) ; else
-      // user homepage
       if (location.pathname.startsWith('/user')) {
         me = $('.idBadgerNeue a.avatar').attr('href').split('/').pop();
       }
@@ -184,16 +160,12 @@
     }
     return me
   };
-
   const normalizeAvatar = (avatar) => {
     if (!avatar) return '//lain.bgm.tv/pic/user/l/icon.jpg'
-
     if (avatar.startsWith('https://tinygrail.oss-cn-hangzhou.aliyuncs.com/')) { return avatar + '!w120' }
-
     const a = avatar.replace('http://', '//');
     return a
   };
-
   const launchObserver = ({
     parentNode,
     selector,
@@ -216,7 +188,6 @@
   };
 
   const api = 'https://tinygrail.com/api/';
-
   const getData = (url) => {
     if (!url.startsWith('http')) url = api + url;
     return new Promise((resolve, reject) => {
@@ -229,7 +200,6 @@
       });
     })
   };
-
   const postData = (url, data) => {
     const d = JSON.stringify(data);
     if (!url.startsWith('http')) url = api + url;
@@ -246,15 +216,6 @@
     })
   };
 
-  /** Item Info
-   *  ['lotusland']: (int) 幻想乡自动抽奖金额上限
-   *  ['chaosCube']: (int) 混沌魔方炮塔角色 ID
-   *  ['guidepost'].['monoId']: (int) 虚空道标炮塔角色 ID
-   *  ['guidepost'].['toMonoId']: (int) 虚空道标目标角色 ID
-   *  ['stardust'].[level]: (int) 星光碎片相应等级能源角色 ID
-   */
-
-  // 道具设置
   const ItemsSetting = configGenerator('ItemsSetting', {});
 
   const autoFillTemple = () => {
@@ -292,18 +253,9 @@
         }
       });
     };
-
     checkLostTemple(1);
   };
 
-  /** Item Info
-   *  item.charaId: (int) 角色ID
-   *  item.name: (string) 角色名
-   *  item.target: (int) 目标数量
-   *  item.bidPrice: (float) 最高买入价格
-   */
-
-  // 自动建塔
   const AutoTempleList = configGenerator('autoTempleList', [], {
     postGet: value => value.map(item => ({
       ...item,
@@ -324,7 +276,6 @@
     $('#autobuildButton').text('[自动建塔]');
     AutoTempleList.set(autoTempleList);
   };
-
   const autoBuildTemple = async (charas = undefined) => {
     const buildTemple = (chara, amount) => {
       postData(`chara/sacrifice/${chara.charaId}/${amount}/false`, null).then((d) => {
@@ -342,13 +293,13 @@
         if (d.Message) console.log(`#${chara.charaId} ${chara.name} ${d.Message}`);
         else {
           console.log(`买入成交 #${chara.charaId} ${chara.name} ${price}*${amount}`);
-          if ((Amount + Sacrifices + amount) >= chara.target) { // 持股达到数量，建塔
+          if ((Amount + Sacrifices + amount) >= chara.target) {
             buildTemple(chara, chara.target - Sacrifices);
           }
         }
       });
     };
-    const getAskin = (Asks, low_price) => { // 获取可买入的卖单价格和总数
+    const getAskin = (Asks, low_price) => {
       let [price, amount] = [0, 0];
       for (let i = 0; i < Asks.length; i++) {
         if (Asks[i].Price > 0 && Asks[i].Price <= low_price) {
@@ -368,11 +319,9 @@
       Asks = removeEmpty(Asks);
       return Asks
     };
-
     if (charas === undefined) {
       charas = AutoTempleList.get();
     }
-
     for (let i = 0; i < charas.length; i++) {
       const chara = charas[i];
       console.log(`自动建塔 check #${chara.charaId} ${chara.name}`);
@@ -382,15 +331,14 @@
         const Sacrifices = d.Value.Sacrifices;
         if (Sacrifices >= chara.target) {
           removeBuildTemple(chara.charaId);
-        } else if ((Amount + Sacrifices) >= chara.target) { // 持股达到数量，建塔
+        } else if ((Amount + Sacrifices) >= chara.target) {
           buildTemple(chara, chara.target - Sacrifices);
         } else {
           getData(`chara/depth/${chara.charaId}`).then((d) => {
             let Asks = d.Value.Asks;
             Asks = remove_myAsks(Asks, myAsks);
-            // console.log(Asks);
             const AskPrice = Asks[0] ? Asks[0].Price : 0;
-            if (AskPrice && AskPrice <= chara.bidPrice) { // 最低卖单低于买入上限，买入
+            if (AskPrice && AskPrice <= chara.bidPrice) {
               const [price, amount] = getAskin(Asks, chara.bidPrice);
               postBid(chara, price, Math.min(amount, chara.target - Amount - Sacrifices), Amount, Sacrifices);
             }
@@ -409,7 +357,6 @@
       $(`#TB_window[data-name=${name}]`).remove();
     }
   };
-
   const showDialog = (innerHTML, name = 'main', maxWidth = '', minWidth = '') => {
     const dialog = `
     <div id="TB_overlay" data-name="${name}" class="TB_overlayBG TB_overlayActive"></div>
@@ -423,15 +370,6 @@
     $(`#TB_overlay[data-name=${name}]`).on('click', () => closeDialog(name));
   };
 
-  /** Item Info
-   *  item.Id: (int) chara.Id, ICO ID
-   *  item.charaId: (int) chara.CharacterId
-   *  item.name: (string) chara.Name
-   *  item.target: (int) 目标等级
-   *  item.end: (int?) chara.End, End Time
-   */
-
-  // ico自动补款
   const FillICOList = configGenerator('fillicoList', [], {
     postGet: value => value.map(item => ({
       ...item,
@@ -448,13 +386,9 @@
     let amount = 0;
     let next = 100000;
     let nextUser = 15;
-
-    // 人数等级
     const heads = ico.Users;
     let headLevel = Math.floor((heads - 10) / 5);
     if (headLevel < 0) headLevel = 0;
-
-    // 资金等级
     while (ico.Total >= next && level < headLevel) {
       level += 1;
       next += Math.pow(level + 1, 2) * 100000;
@@ -464,10 +398,8 @@
       price = ico.Total / amount;
     }
     nextUser = (level + 1) * 5 + 10;
-
     return { Level: level, Next: next, Price: price, Amount: amount, Users: nextUser - ico.Users }
   };
-
   const ICOStandard = (lv) => {
     const users = lv * 5 + 10;
     let total = 100000;
@@ -478,14 +410,12 @@
     }
     return { Users: users, Total: total }
   };
-
   const fullfillICO = async (icoList) => {
     const dialog = `<div class="info_box">
                   <div class="title">自动补款检测中</div>
                   <div class="result" style="max-height:500px;overflow:auto;"></div>
                   </div>`;
     if (!$('#TB_window').length) showDialog(dialog);
-
     for (let i = 0; i < icoList.length; i++) {
       const Id = icoList[i].Id;
       const charaId = icoList[i].charaId;
@@ -520,13 +450,12 @@
       });
     }
   };
-
   const autoFillICO = () => {
     const fillICOList = FillICOList.get();
     const icoList = [];
     for (let i = 0; i < fillICOList.length; i++) {
       const endTime = new Date(new Date(fillICOList[i].end) - (new Date().getTimezoneOffset() + 8 * 60) * 60 * 1000);
-      const leftTime = (new Date(endTime).getTime() - new Date().getTime()) / 1000; // 剩余时间：秒
+      const leftTime = (new Date(endTime).getTime() - new Date().getTime()) / 1000;
       if (leftTime < 60) {
         console.log(`ico check#${fillICOList[i].charaId} -「${fillICOList[i].name}」 目标等级:lv${fillICOList[i].target} ${leftTime}s left`);
         icoList.push(fillICOList[i]);
@@ -536,7 +465,6 @@
     FillICOList.set(removeEmpty(fillICOList));
     if (icoList.length) fullfillICO(icoList);
   };
-
   const openICODialog = (chara) => {
     const fillICOList = FillICOList.get();
     let target = 1;
@@ -552,7 +480,6 @@
                   <button id="cancelfillICOButton">取消补款</button></div></div>
                   <div class="loading" style="display:none"></div>`;
     showDialog(dialog);
-
     $('#cancelfillICOButton').on('click', function () {
       const fillICOList = FillICOList.get();
       const index = fillICOList.findIndex(item => parseInt(item.Id) === chara.Id);
@@ -565,7 +492,6 @@
       closeDialog();
       console.log(fillICOList);
     });
-
     $('#startfillICOButton').on('click', function () {
       const target = parseFloat($('.desc .target').val());
       if (target <= 0 || !Number.isInteger(target)) {
@@ -589,7 +515,6 @@
       closeDialog();
       console.log(fillICOList);
     });
-
     $('#fillICOButton').on('click', function () {
       const target = parseFloat($('.desc .target').val());
       if (target <= 0 || !Number.isInteger(target)) {
@@ -608,8 +533,7 @@
       }
     });
   };
-
-  const setFullFillICO = (chara) => { // 设置自动补款
+  const setFullFillICO = (chara) => {
     let button = '<button id="followICOButton" class="text_button">[自动补款]</button>';
     if (FillICOList.get().some(item => parseInt(item.charaId) === chara.CharacterId)) {
       button = '<button id="followICOButton" class="text_button">[自动补款中]</button>';
@@ -622,10 +546,8 @@
 
   const getWeeklyShareBonus = (callback) => {
     if (!confirm('已经周六了，赶紧领取股息吧？')) return
-
     getData('event/share/bonus');
   };
-
   const getShareBonus = () => {
     let asiaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' });
     asiaTime = new Date(asiaTime);
@@ -645,7 +567,6 @@
       const x = d.Value.Share / 10000;
       const allowance = Math.log10(x + 1) * 30 - x;
       if (d.State === 0 && allowance < 0) $('#bonusButton').remove();
-      // else $('#shareBonusButton').hide();
     });
   };
 
@@ -672,7 +593,6 @@
       });
     }
   };
-
   const loadUserAuctions = (d) => {
     d.Value.forEach((a) => {
       $(`.item_list[data-id=${a.CharacterId}] .user_auction`).remove();
@@ -691,7 +611,6 @@
       }
     });
   };
-
   const loadValhalla = async (ids) => {
     for (let i = 0; i < ids.length; i++) {
       const Id = ids[i];
@@ -707,7 +626,6 @@
       });
     }
   };
-
   const bidAuction = (chara) => {
     $('#TB_window .loading').show();
     $('#TB_window .label').hide();
@@ -730,7 +648,6 @@
       }
     });
   };
-
   const cancelAuction = (chara) => {
     let message = '确定取消竞拍？';
     const Day = new Date().getDay();
@@ -767,7 +684,6 @@
     });
   };
 
-  // 设置
   const Settings = configGenerator('settings', {
     pre_temple: 'on',
     hide_grail: 'off',
@@ -795,21 +711,17 @@
                   <button id="bidAuctionButton" class="active">确定</button><button id="cancelAuctionButton" style="display: none">取消竞拍</button></div>
                   <div class="loading" style="display:none"></div>`;
     showDialog(dialog);
-
     $('.assets_box .auction_tip').remove();
     loadUserAuctions(auction);
-
     $('#cancelAuctionButton').on('click', function () {
       cancelAuction(chara);
     });
     $('#bidAuctionButton').on('click', function () {
       bidAuction(chara);
     });
-
     if (!auction.Value.length) {
       auction.Value = [{ Price: 0, Amount: 0, Type: 0, State: 0 }];
     }
-
     if (auction.Value[0].Price) {
       $('.trade.auction .price').val(auction.Value[0].Price);
       $('.trade.auction .amount').val(auction.Value[0].Amount);
@@ -817,7 +729,6 @@
       $('#TB_window .label .total').text(`合计 -₵${total}`);
       $('#cancelAuctionButton').show();
     }
-
     $('#TB_window .auction input').on('keyup', () => {
       const price = $('.trade.auction .price').val();
       const amount = $('.trade.auction .amount').val();
@@ -879,29 +790,24 @@
   };
 
   let lastEven = false;
-
   const renderBalanceLog = (item, even) => {
     const line = even ? 'line_even' : 'line_odd';
-
     let change = '';
     if (item.Change > 0) {
       change = `<span class="tag raise large">+₵${formatNumber(item.Change, 2)}</span>`;
     } else if (item.Change < 0) {
       change = `<span class="tag fall large">-₵${formatNumber(Math.abs(item.Change), 2)}</span>`;
     }
-
     let amount = '';
     if (item.Amount > 0) {
       amount = `<span class="tag new large">+${formatNumber(item.Amount, 0)}</span>`;
     } else if (item.Amount < 0) {
       amount = `<span class="tag even large">${formatNumber(item.Amount, 0)}</span>`;
     }
-
     let id = '';
     if (item.Type === 4 || item.Type === 5 || item.Type === 6) {
       id = `data-id="${item.RelatedId}"`;
     }
-
     return `<li class="${line} item_list item_log" ${id}>
             <div class="inner">₵${formatNumber(item.Balance, 2)}
               <small class="grey">${formatTime(item.LogTime)}</small>
@@ -913,12 +819,10 @@
             </span>
           </li>`
   };
-
   const renderCharacterDepth = (chara) => {
     const depth = `<small class="raise">+${formatNumber(chara.Bids, 0)}</small><small class="fall">-${formatNumber(chara.Asks, 0)}</small><small class="even">${formatNumber(chara.Change, 0)}</small>`;
     return depth
   };
-
   const renderCharacterTag = (chara, item) => {
     let flu = '--';
     let tclass = 'even';
@@ -929,14 +833,11 @@
       tclass = 'fall';
       flu = `${formatNumber(chara.Fluctuation * 100, 2)}%`;
     }
-
     const tag = `<div class="tag ${tclass}" title="₵${formatNumber(chara.MarketValue, 0)} / ${formatNumber(chara.Total, 0)}">₵${formatNumber(chara.Current, 2)} ${flu}</div>`;
     return tag
   };
-
   const renderBadge = (item, withCrown, withNew, withLevel) => {
     let badge = '';
-
     if (withLevel) {
       badge = `<span class="badge level lv${item.Level}">lv${item.Level}</span>`;
     }
@@ -948,11 +849,9 @@
     }
     return badge
   };
-
   const renderCharacter = (item, type, even, showCancel) => {
     const line = even ? 'line_even' : 'line_odd';
     const amount = `<small title="固定资产">${formatNumber(item.Sacrifices, 0)}</small>`;
-
     const tag = renderCharacterTag(item);
     const depth = renderCharacterDepth(item);
     let id = item.Id;
@@ -970,7 +869,6 @@
     }
     let badge = renderBadge(item, true, true, true);
     let chara;
-
     if (type === 'auction') {
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)})</small>
@@ -997,7 +895,6 @@
     } else if (item.Id !== item.CharacterId) {
       const pre = calculateICO(item);
       badge = renderBadge(item, false, false, false);
-      // let percent = formatNumber(item.Total / pre.Next * 100, 0);
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(ICO进行中: lv${pre.Level})</small>
               <div class="row"><small class="time">${formatTime(item.End)}</small><span><small>${formatNumber(item.Users, 0)}人 / ${formatNumber(item.Total, 1)} / ₵${formatNumber(pre.Price, 2)}</small></span>
@@ -1008,10 +905,8 @@
               <div class="row"><small class="time">${formatTime(item.LastOrder)}</small>${amount}<span title="买入 / 卖出 / 成交">${depth}</span>
               ${cancel}</div></div>${tag}</li>`;
     }
-
     return chara
   };
-
   const listItemClicked = function () {
     const link = $(this).find('a.avatar').attr('href');
     if (link) {
@@ -1021,7 +916,6 @@
       window.open(link, 'right');
     }
   };
-
   const fillCosts = (id, lv, cost) => {
     closeDialog();
     let itemsSetting = ItemsSetting.get();
@@ -1036,7 +930,6 @@
                   <tr><td><input class="inputBtn" value="充能" id="submit_stardust" type="submit"></td></tr>
                   </tbody></table>`;
     showDialog(dialog);
-
     if (!supplyId) {
       $('#TB_window .desc').text('当前等级的能源角色id未设定，补充过一次之后会记住此等级的能源角色id');
       $('#TB_window .desc').show();
@@ -1059,14 +952,11 @@
       } else alert('角色id不能为空');
     });
   };
-
   const loadCharacterList = (list, page, total, more, type, showCancel) => {
     $('#eden_tpc_list ul .load_more').remove();
     if (page === 1) $('#eden_tpc_list ul').html('');
-    // console.log(list);
     for (let i = 0; i < list.length; i++) {
       const item = list[i];
-      // console.log(item);
       if (type === 'balance') {
         const log = renderBalanceLog(item, lastEven);
         $('#eden_tpc_list ul').append(log);
@@ -1076,10 +966,8 @@
       }
       lastEven = !lastEven;
     }
-
     $('.cancel_auction').unbind('click');
     $('.cancel_auction').on('click', (e) => {
-      // if (!confirm('确定取消关注？')) return;
       const id = $(e.target).data('id');
       const followList = FollowList.get();
       if (type === 'chara') followList.charas.splice(followList.charas.indexOf(id), 1);
@@ -1087,7 +975,6 @@
       FollowList.set(followList);
       $(`#eden_tpc_list li[data-id=${id}]`).remove();
     });
-
     $('.fill_costs').unbind('click');
     $('.fill_costs').on('click', (e) => {
       const id = $(e.target).data('id');
@@ -1096,13 +983,11 @@
       fillCosts(id, lv, cost);
       $(e.target).remove();
     });
-
     $('.fill_auction').unbind('click');
     $('.fill_auction').on('click', (e) => {
       e.stopPropagation();
       const id = $(e.target).data('id');
       const isAucDay = (new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }))).getDay() === 6;
-
       getData(`chara/user/${id}/tinygrail/false`).then(d => {
         const aucInfo = {
           basePrice: d.Value.Price,
@@ -1116,15 +1001,12 @@
           if (d.Value[0]) {
             aucInfo.myPrice = d.Value[0].Price;
             aucInfo.myAmount = d.Value[0].Amount;
-            // aucInfo.userCount = d.Value[0].State;
-            // aucInfo.userAmount = d.Value[0].Type;
           }
           const remains = aucInfo.totalAmount - aucInfo.userAmount;
           if (remains > 0) {
             let price = Math.ceil(aucInfo.basePrice * 100) / 100;
             const amount = remains + aucInfo.myAmount;
             if (isAucDay && price * amount < aucInfo.myPrice * aucInfo.myAmount) {
-              // 竞拍日不撤资
               price = Math.ceil(aucInfo.myPrice * aucInfo.myAmount / amount * 100) / 100;
             }
             postData(`chara/auction/${id}/${price}/${amount}`, null).then(d => {
@@ -1139,7 +1021,6 @@
         });
       });
     });
-
     $('#eden_tpc_list .item_list').on('click', listItemClicked);
     if (page !== total && total > 0) {
       const loadMore = `<li class="load_more"><button id="loadMoreButton" class="load_more_button" data-page="${page + 1}">[加载更多]</button></li>`;
@@ -1151,7 +1032,6 @@
     } else {
       let noMore = '暂无数据';
       if (total > 0) { noMore = '加载完成'; }
-
       $('#eden_tpc_list ul').append(`<li class="load_more sub">[${noMore}]</li>`);
     }
   };
@@ -1200,7 +1080,6 @@
               <input class="inputBtn" value="复制" id="copy_list" type="submit" style="padding: 3px 5px;">
               </div>`;
               showDialog(dialog);
-
               $('.bibeBox textarea').val(list_text);
               $('#copy_list').on('click', () => {
                 $('.bibeBox label').children().remove();
@@ -1233,7 +1112,6 @@
       }
     });
   };
-
   const loadMyTemple = (page) => {
     getData(`chara/user/temple/0/${page}/50`).then((d) => {
       if (d.State === 0) {
@@ -1278,7 +1156,6 @@
     <td><input class="inputBtn" value="查询" id="submit_search" type="submit"></td></tr>
     </tbody></table>`;
     showDialog(dialog);
-
     $('#submit_search').on('click', () => {
       const Type = parseInt($('#balanceType').val());
       const page = parseInt($('#page').val());
@@ -1297,7 +1174,6 @@
               const result = $(e.target).find('small.time').text().match(/#(\d+)/);
               if (result && result.length > 0) { id = result[1]; }
             }
-
             if (id != null && id.length > 0) {
               if (parent.window.innerWidth < 1200) {
                 $(parent.document.body).find('#split #listFrameWrapper').animate({ left: '-450px' });
@@ -1367,7 +1243,6 @@
   };
 
   let charasList = [];
-
   const getCharasList = () => {
     const charas = $('.bibeBox textarea').val().split('\n');
     for (let i = 0; i < charas.length; i++) {
@@ -1378,7 +1253,6 @@
     }
     return charasList
   };
-
   const loadTemperaryList = (page) => {
     const start = 50 * (page - 1);
     const ids = charasList.slice(start, start + 50);
@@ -1390,7 +1264,6 @@
       }
     });
   };
-
   const createTemporaryList = (page) => {
     charasList = [];
     closeDialog();
@@ -1425,7 +1298,6 @@
       loadFollowChara(1);
       closeDialog();
     });
-
     $('#add_auction').on('click', () => {
       getCharasList();
       const followList = FollowList.get();
@@ -1442,7 +1314,6 @@
       loadFollowAuction(1);
       closeDialog();
     });
-
     $('#join_auction').on('click', () => {
       getCharasList();
       $('#eden_tpc_list ul').html('');
@@ -1450,7 +1321,6 @@
       joinAuctions(charasList);
       closeDialog();
     });
-
     $('#join_ico').on('click', () => {
       getCharasList();
       postData('chara/list', charasList).then((d) => {
@@ -1470,7 +1340,6 @@
     const chaosCube_ids = [];
     const lotusland_results = [];
     const lotusland_ids = [];
-
     const scratch = () => {
       getData('event/scratch/bonus2').then((d) => {
         if (d.State === 0) {
@@ -1495,7 +1364,6 @@
         }
       });
     };
-
     const chaosCubeTempleId = ItemsSetting.get().chaosCube;
     const startChaosCube = () => {
       if (chaosCubeTempleId) {
@@ -1536,7 +1404,6 @@
         }
       });
     };
-
     const lotuslandPrice = ItemsSetting.get().lotusland;
     const startLotusland = () => {
       if (lotuslandPrice !== undefined) {
@@ -1587,7 +1454,6 @@
         loadCharacterList(d.Value, 2, 2, loadScratch, 'chara', false);
       });
     };
-
     scratch();
   };
 
@@ -1613,7 +1479,6 @@
     <td><input class="inputBtn" value="充能" id="submit_stardust" type="submit"></td></tr>
     </tbody></table>`;
     showDialog(dialog);
-
     $('#submit_chaosCube').on('click', () => {
       const templeId = parseInt($('#chaosCube').val());
       ItemsSetting.set({ ...ItemsSetting.get(), chaosCube: templeId });
@@ -1679,12 +1544,6 @@
     });
   };
 
-  /** Item Info
-   *  [charaId].init_price: (string) 发行价
-   *  [charaId].time: (string) 上市时间
-   */
-
-  // 发行价缓存
   const CharaInitPrice = configGenerator('chara_initPrice', {});
 
   const sellOut = () => {
@@ -1701,7 +1560,7 @@
       const charaInitPrice = CharaInitPrice.get();
       if (id) {
         const price_tag = $(`#eden_tpc_list li[data-id=${id}]`).find('div.tag')[0].innerText.match(/₵([0-9]*(\.[0-9]{1,2})?)/);
-        const price_now = price_tag ? price_tag[1] : 0; // 获取抽奖时买价
+        const price_now = price_tag ? price_tag[1] : 0;
         getData(`chara/${id}`).then((d) => {
           const initPrice = charaInitPrice[id] ? charaInitPrice[id].init_price : d.Value.Price;
           const price = Math.max(parseFloat(price_now), parseFloat(initPrice).toFixed(2), d.Value.Current.toFixed(2));
@@ -1740,8 +1599,7 @@
       });
     }
   };
-
-  const cancelBids = () => { // 取消买单
+  const cancelBids = () => {
     if (!confirm('取消全部买单？')) return
     $('#eden_tpc_list ul').html('');
     getData('chara/user/assets').then((d) => {
@@ -1752,11 +1610,9 @@
     });
   };
 
-  // 连接位置设置
   const LinkPosList = configGenerator('LinkPosList', []);
 
   const configVersion = 3;
-
   const configList = [
     Settings,
     FollowList,
@@ -1765,7 +1621,6 @@
     ItemsSetting,
     LinkPosList
   ];
-
   const exportConfig = () => JSON.stringify({
     meta: {
       project: 'TinyGrail_Helper_Next',
@@ -1779,19 +1634,16 @@
         : config
     }, {})
   });
-
   const importSingleConfig = (configStorage, configToImport) => {
     if (configStorage.name in configToImport) {
       console.log(`importing ${configStorage.name}`);
       configStorage.setRaw(configToImport[configStorage.name], true);
     }
   };
-
   const importConfig = (configString) => {
     try {
       const errors = [];
       const { meta, config } = JSON.parse(configString);
-
       console.log(`import config version: ${meta.confver}`);
       configList.forEach(configItem => {
         try {
@@ -1800,18 +1652,17 @@
           errors.push(configItem.name);
         }
       });
-
       return errors
     } catch (err) {
       console.error('设置导入出错：', { configString, err });
     }
   };
 
-  const openSettings = () => { // 设置
+  const openSettings = () => {
     closeDialog();
     const settings = Settings.get();
     const dialog = `<table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
-    <tbody><tr><td valign="top" width="60%">主页显示/隐藏小圣杯</td><td valign="top">
+    <tbody><tr><td valign="top" width="60%">用户主页小圣杯默认状态</td><td valign="top">
     <select id="set1"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
     <tr><td valign="top" width="60%">将自己圣殿或连接排到第一个显示</td><td valign="top">
     <select id="set2"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
@@ -1831,7 +1682,6 @@
     </tr>
     </tbody></table>`;
     showDialog(dialog);
-
     $('#set1').val(settings.hide_grail);
     $('#set2').val(settings.pre_temple);
     $('#set3').val(settings.auction_num);
@@ -1849,7 +1699,6 @@
         el.style.fontWeight = '';
       }
     });
-
     $('#submit_setting').on('click', () => {
       settings.hide_grail = $('#set1').val();
       settings.pre_temple = $('#set2').val();
@@ -1862,7 +1711,6 @@
       $('#submit_setting').val('已保存');
       setTimeout(() => { closeDialog(); }, 500);
     });
-
     $('#export_setting').on('click', () => {
       const dialog = `<div class="bibeBox" style="padding:10px">
       <label>设置导入/导出</label>
@@ -1875,10 +1723,8 @@
       </div>`;
       closeDialog();
       showDialog(dialog);
-
       const configValue = exportConfig();
       $('.bibeBox textarea').val(configValue);
-
       $('#copy_setting').on('click', () => {
         $('.bibeBox label#info').children().remove();
         let resInfo = '复制设置出错，请手动复制';
@@ -1888,10 +1734,8 @@
         } catch (e) { console.log('复制设置出错', e); }
         $('.bibeBox label#info').append(`<span>${resInfo}</span><br>`);
       });
-
       $('#import_setting').on('click', () => {
         if (!confirm('导入设置将会覆盖原有设置，确定操作后将无法恢复，是否确定继续？')) return
-
         $('.bibeBox label#info').children().remove();
         let resInfo = '导入设置出错，请重新检查导入文本';
         const importString = $('.bibeBox textarea').val();
@@ -1915,7 +1759,6 @@
     $('#helperMenu').addClass('focus');
     if (callback) callback(1);
   };
-
   const loadHelperMenu = () => {
     const item = `<li><a href="#" id="helperMenu" class="top">助手</a><ul>
     <li><a href="#" id="temporaryList">临时列表</a></li>
@@ -1933,7 +1776,6 @@
     <li><a href="#" id="settings">设置</a></li>
     </ul></li>`;
     $('.timelineTabs').append(item);
-
     $('#followChara').on('click', () => menuItemClicked(loadFollowChara));
     $('#followAuction').on('click', () => menuItemClicked(loadFollowAuction));
     $('#myICO').on('click', () => menuItemClicked(loadMyICO));
@@ -1955,7 +1797,6 @@
     if (location.pathname.startsWith('/user')) {
       user = location.pathname.split('/').pop();
     }
-
     const swapLink = (linkEl) => {
       const $link = $(linkEl).closest('.link');
       const $left = $link.find('.left');
@@ -1971,8 +1812,6 @@
       const thisLinkPos = [$right, $left].map((el) => $(el).find('.card').data('temple').CharacterId).join('#');
       const thisConfig = `${thisUser}#${thisLinkPos}`;
       console.log(thisConfig);
-
-      // 保存位置顺序
       if (thisUser === me) {
         const reverseConfig = thisConfig.replace(/^(.+)#(\d+)#(\d+)$/, '$1#$3#$2');
         let linkPosList = LinkPosList.get();
@@ -1984,13 +1823,10 @@
         LinkPosList.set(linkPosList);
       }
     };
-
     const linkPosList = LinkPosList.get();
-
     $(parentNode).find('.link .name').each((i, el) => {
       if ($(el).find('.swapPos').length > 0) return
       $(el).append('<span class="swapPos" title="交换连接两塔的顺序">[换序]</span>');
-      // 应用设置
       let thisUser = user;
       if (!thisUser) thisUser = $(el).find('a').attr('href').split('/').pop();
       if (thisUser === me) {
@@ -2001,13 +1837,12 @@
         if (linkPosList.includes(reverseConfig)) swapLink($link);
       }
     });
-
     $(parentNode).on('click', '.swapPos', (e) => {
       swapLink($(e.currentTarget).closest('.link'));
     });
   };
 
-  const showGallery = () => { // 显示画廊
+  const showGallery = () => {
     if (Settings.get().gallery === 'on') {
       let index = 0;
       $('body').on('keydown', function (e) {
@@ -2028,11 +1863,11 @@
         $(this).on('touchmove', function (e) {
           e.preventDefault();
           touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-          if (touch.pageX - startX > 20) { // 向左
+          if (touch.pageX - startX > 20) {
             closeDialog();
             $('.item .card')[index - 1].click();
             $(this).off('touchmove');
-          } else if (touch.pageX - startX < -20) { // 向右
+          } else if (touch.pageX - startX < -20) {
             closeDialog();
             $('.item .card')[index + 1].click();
             $(this).off('touchmove');
@@ -2044,20 +1879,18 @@
       setInterval(function () {
         $('.item .card').on('click', (e) => {
           index = $('.item .card').index(e.currentTarget);
-          // gallery_mode = true
         });
       }, 1000);
     }
   };
 
-  const followChara = (charaId) => { // 关注角色
+  const followChara = (charaId) => {
     let button = '<button id="followCharaButton" class="text_button">[关注角色]</button>';
     if (FollowList.get().charas.includes(charaId)) {
       button = '<button id="followCharaButton" class="text_button">[取消关注]</button>';
     }
     if ($('#kChartButton').length) $('#kChartButton').before(button);
     else $('#grailBox .title .text').after(button);
-
     $('#followCharaButton').on('click', () => {
       const followList = FollowList.get();
       if (followList.charas.includes(charaId)) {
@@ -2070,8 +1903,7 @@
       FollowList.set(followList);
     });
   };
-
-  const followAuctions = (charaId) => { // 关注竞拍情况
+  const followAuctions = (charaId) => {
     getData(`chara/user/${charaId}/tinygrail/false`).then((d) => {
       if (d.State === 0) {
         let button;
@@ -2095,7 +1927,6 @@
       }
     });
   };
-
   const sell_out = (charaId, init_price) => {
     $($('#grailBox .info .text')[1]).append('<button id="sell_out" class="text_button" title="以发行价全部卖出">[全部卖出]</button>');
     $('#sell_out').on('click', function () {
@@ -2105,7 +1936,6 @@
       });
     });
   };
-
   const showInitialPrice = (charaId) => {
     const charaInitPrice = CharaInitPrice.get();
     if (charaInitPrice[charaId]) {
@@ -2115,17 +1945,18 @@
       sell_out(charaId, init_price);
     } else {
       getData(`chara/charts/${charaId}/2019-08-08`).then((d) => {
-        const init_price = d.Value[0].Begin.toFixed(2);
-        const time = d.Value[0].Time.replace('T', ' ');
-        const charaInitPrice = CharaInitPrice.get();
-        charaInitPrice[charaId] = { init_price: init_price, time: time };
-        CharaInitPrice.set(charaInitPrice);
-        $($('#grailBox .info .text')[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
-        sell_out(charaId, init_price);
+        if (d.Value[0]) {
+          const init_price = d.Value[0].Begin.toFixed(2);
+          const time = d.Value[0].Time.replace('T', ' ');
+          const charaInitPrice = CharaInitPrice.get();
+          charaInitPrice[charaId] = { init_price: init_price, time: time };
+          CharaInitPrice.set(charaInitPrice);
+          $($('#grailBox .info .text')[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
+          sell_out(charaId, init_price);
+        }
       });
     }
   };
-
   const priceWarning = () => {
     const price = $('.bid .price').val();
     $('#bidButton').after('<button style="display:none" id="confirm_bidButton" class="active bid">买入</button>');
@@ -2150,13 +1981,11 @@
       $('#bidButton').click();
     });
   };
-
   const mergeorderList = (orderListHistory) => {
     const mergedorderList = []; let i = 0;
     mergedorderList.push(orderListHistory[0]);
     for (let j = 1; j < orderListHistory.length; j++) {
       if ((orderListHistory[j].Price === mergedorderList[i].Price) && Math.abs(new Date(orderListHistory[j].TradeTime) - new Date(mergedorderList[i].TradeTime)) < 10 * 1000) {
-        // 10s内同价格订单合并
         mergedorderList[i].Amount += orderListHistory[j].Amount;
       } else {
         mergedorderList.push(orderListHistory[j]);
@@ -2165,7 +1994,6 @@
     }
     return mergedorderList
   };
-
   const mergeorderListHistory = (charaId) => {
     if (Settings.get().merge_order === 'on') {
       getData(`chara/user/${charaId}`).then((d) => {
@@ -2186,7 +2014,6 @@
       });
     }
   };
-
   const showOwnTemple = () => {
     const pre_temple = Settings.get().pre_temple;
     const temples = $('#grailBox .assets_box #lastTemples.assets .item');
@@ -2202,7 +2029,6 @@
     }
     $('#expandButton').on('click', () => { showOwnTemple(); });
   };
-
   const changeTempleCover = (charaId) => {
     const setChaosCube = (temple) => {
       $('#chaosCubeButton').on('click', () => {
@@ -2212,7 +2038,6 @@
         ItemsSetting.set(itemsSetting);
       });
     };
-
     const addButton = (temple, user) => {
       $('#TB_window .action').append(`<button id="changeCoverButton2" class="text_button" title="修改圣殿封面">[修改]</button>
                                     <button id="copyCoverButton" class="text_button" title="复制圣殿图片为自己圣殿的封面">[复制]</button>`);
@@ -2231,7 +2056,6 @@
           }
         });
       });
-
       $('#copyCoverButton').on('click', () => {
         const cover = $('#TB_window .container .cover').attr('src');
         const url = 'https://tinygrail.oss-cn-hangzhou.aliyuncs.com/' + cover.match(/cover\/\S+\.jpg/)[0];
@@ -2245,7 +2069,6 @@
         });
       });
     };
-
     $('#grailBox .assets .item').on('click', (e) => {
       const me = getMe();
       const $el = $(e.currentTarget);
@@ -2276,7 +2099,6 @@
       }
     });
   };
-
   const showOwnLink = () => {
     const pre_link = Settings.get().pre_temple;
     const links = $('#grailBox .assets_box #lastLinks.assets .link.item');
@@ -2290,7 +2112,6 @@
       }
     }
   };
-
   const openHistoryDialog = (chara, page) => {
     const dialog = `<div class="title">上${page}周拍卖结果 - #${chara.Id} 「${chara.Name}」 ₵${formatNumber(chara.Current, 2)} / ${formatNumber(chara.Total, 0)}</div>
                   <div class="desc" style="display:none"></div>
@@ -2301,7 +2122,6 @@
                   </div>
                   <div class="loading"></div>`;
     showDialog(dialog);
-
     const charaInitPrice = CharaInitPrice.get();
     const week_ms = 7 * 24 * 3600 * 1000;
     const templeWeek = Math.floor((new Date() - new Date('2019/10/05')) / week_ms + 1);
@@ -2347,7 +2167,6 @@
       });
     });
   };
-
   const showAuctionHistory = (chara) => {
     const button = '<button id="auctionHistorys" class="text_button">[往期拍卖]</button>';
     $('#auctionHistoryButton').after(button);
@@ -2356,14 +2175,12 @@
       openHistoryDialog(chara, 1);
     });
   };
-
   const openTradeHistoryDialog = (chara) => {
     const dialog = `<div class="title">交易历史记录 - #${chara.Id} 「${chara.Name}」 ₵${formatNumber(chara.Current, 2)} / ${formatNumber(chara.Total, 0)}</div>
                   <div class="result" style="display:none; max-height: 500px; overflow: auto;"></div>
                   <div class="desc" style="display:none"></div>
                   <div class="loading"></div>`;
     showDialog(dialog);
-
     const loadTradeHistory = (page) => {
       $('#TB_window .loading').hide();
       $('#TB_window .result').show();
@@ -2381,24 +2198,20 @@
         }
         $('#TB_window .desc').html('');
         $('#TB_window .desc').text(`共有${tradeHistory.length}条记录，当前 ${page} / ${totalPages} 页`);
-
         for (let i = 1; i <= totalPages; i++) {
           const pager = `<span class="page" data-page="${i}">[${i}]</span>`;
           $('#TB_window .desc').append(pager);
         }
-
         $('#TB_window .desc .page').on('click', (e) => {
           const page = $(e.target).data('page');
           loadTradeHistory(page);
         });
-
         $('#TB_window .result').show();
       } else {
         $('#TB_window .desc').text('暂无交易记录');
       }
       $('#TB_window .desc').show();
     };
-
     let tradeHistory, totalPages;
     getData(`chara/charts/${chara.Id}/2019-08-08`).then((d) => {
       if (d.State === 0) {
@@ -2408,19 +2221,16 @@
       }
     });
   };
-
   const showTradeHistory = (chara) => {
     $('#kChartButton').after('<button id="tradeHistoryButton" class="text_button">[交易记录]</button>');
     $('#tradeHistoryButton').on('click', () => {
       openTradeHistoryDialog(chara);
     });
   };
-
   const showPrice = (chara) => {
     const price = chara.Price.toFixed(2);
     $($('#grailBox .info .text')[1]).append(`<span>评估价：${price}</span>`);
   };
-
   const showTempleRate = (chara) => {
     const rate = chara.Rate;
     const level = chara.Level;
@@ -2435,7 +2245,6 @@
       $('#showTempleButton').before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate, 2)}"> (${formatNumber(templeRate, 2)})</span>`);
     });
   };
-
   const openBuildDialog = (chara) => {
     const autoTempleList = AutoTempleList.get();
     const charaId = chara.CharacterId || chara.Id;
@@ -2445,7 +2254,6 @@
       target = parseInt(temple.target);
       bidPrice = parseFloat(temple.bidPrice);
     }
-
     const dialog = `<div class="title" title="目标数量 / 买入价格">
                   自动建塔 - #${charaId} 「${chara.Name}」 ${target} / ₵${bidPrice}</div>
                   <div class="desc"><p>当已献祭股数+持有股数达到目标数量时将自动建塔</p>
@@ -2456,7 +2264,6 @@
                   <button id="startBuildButton" class="active">自动建塔</button><button id="cancelBuildButton">取消建塔</button></div></div>
                   <div class="loading" style="display:none"></div>`;
     showDialog(dialog);
-
     $('#cancelBuildButton').on('click', function () {
       const autoTempleList = AutoTempleList.get();
       const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId);
@@ -2468,7 +2275,6 @@
       $('#autobuildButton').text('[自动建塔]');
       closeDialog();
     });
-
     $('#startBuildButton').on('click', function () {
       const info = {
         charaId: parseInt(charaId),
@@ -2489,7 +2295,6 @@
       autoBuildTemple([info]);
     });
   };
-
   const setBuildTemple = (chara) => {
     const charaId = chara.CharacterId || chara.Id;
     let button = '<button id="autobuildButton" class="text_button">[自动建塔]</button>';
@@ -2498,12 +2303,10 @@
     }
     if ($('#buildButton').length) $('#buildButton').after(button);
     else $('#grailBox .title .text').after(button);
-
     $('#autobuildButton').on('click', () => {
       openBuildDialog(chara);
     });
   };
-
   const fixAuctions = (chara) => {
     getData(`chara/user/${chara.Id}/tinygrail/false`).then((d) => {
       chara.Price = d.Value.Price;
@@ -2527,81 +2330,94 @@
       });
     });
   };
-
   const showEndTime = (chara) => {
     const endTime = (chara.End).slice(0, 19);
     $('#grailBox .title .text').append(`<div class="sub" style="margin-left: 20px">结束时间: ${endTime}</div>`);
   };
-
   const addCharaInfo = () => {
     try {
       const charaId = parseInt($('#grailBox .title .name a')[0].href.split('/').pop());
-      followChara(charaId); // 关注角色
-      followAuctions(charaId); // 关注竞拍情况
-      showInitialPrice(charaId); // 显示发行价
-      priceWarning(); // 买入价格过高提醒
-      mergeorderListHistory(charaId); // 合并同一时间订单历史记录
+      followChara(charaId);
+      followAuctions(charaId);
+      showInitialPrice(charaId);
+      priceWarning();
+      mergeorderListHistory(charaId);
       launchObserver({
         parentNode: document.body,
         selector: '#lastTemples .item',
         successCallback: () => {
-          showOwnTemple(); // 显示自己的圣殿
-          changeTempleCover(charaId); // 修改他人圣殿封面
+          showOwnTemple();
+          changeTempleCover(charaId);
         }
       });
       launchObserver({
         parentNode: document.body,
         selector: '#lastLinks .link.item',
         successCallback: () => {
-          showOwnLink(); // 前置自己的连接
-          changeLinkPos('#lastLinks'); // 修改连接顺序
+          showOwnLink();
+          changeLinkPos('#lastLinks');
         }
       });
-      showGallery(); // 查看画廊
+      showGallery();
       getData(`chara/${charaId}`).then((d) => {
         const chara = d.Value;
-        showAuctionHistory(chara); // 历史拍卖
-        showTradeHistory(chara); // 交易记录
-        showPrice(chara); // 显示评估价
-        showTempleRate(chara); // 显示各级圣殿数量及股息计算值
-        setBuildTemple(chara); // 自动建塔
-        fixAuctions(chara); // 修改默认拍卖底价和数量
+        showAuctionHistory(chara);
+        showTradeHistory(chara);
+        showPrice(chara);
+        showTempleRate(chara);
+        setBuildTemple(chara);
+        fixAuctions(chara);
       });
     } catch (e) {}
   };
-
   const addICOInfo = () => {
     const charaId = parseInt(location.pathname.split('/').pop());
-    followChara(charaId); // 关注角色
+    followChara(charaId);
     getData(`chara/${charaId}`).then((d) => {
       const chara = d.Value;
-      showEndTime(chara); // 显示结束时间
-      setBuildTemple(chara); // 自动建塔
-      setFullFillICO(chara); // 自动补款
+      showEndTime(chara);
+      setBuildTemple(chara);
+      setFullFillICO(chara);
     });
   };
 
-  const showHideGrailBox = () => {
-    const config = Settings.get().hide_grail;
-    if (config === 'on') {
-      $('#grail').hide();
-      setTimeout(() => { $('#pager1').hide(); }, 500);
+  const toggleGrailBox = () => {
+    const $title = $('#grail li.title');
+    if ($title.hasClass('hide_grail_title')) {
+      $title.closest('div.horizontalOptions').next().removeClass('hide_grail');
+      $('div.grail.page_inner').removeClass('hide_grail');
+      $title.removeClass('hide_grail_title');
+    } else {
+      $title.closest('div.horizontalOptions').next().addClass('hide_grail');
+      $('div.grail.page_inner').addClass('hide_grail');
+      $title.addClass('hide_grail_title');
     }
   };
+  const showHideGrailBox = () => {
+    const hide = Settings.get().hide_grail;
+    if (hide === 'on') {
+      toggleGrailBox();
+    }
+    $('#grail li.title').attr('title', '显示/隐藏小圣杯').on('click', toggleGrailBox);
+    launchObserver({
+      parentNode: document.querySelector('#user_home'),
+      selector: '.grail.page_inner',
+      successCallback: () => {
+        console.log('modify page inner');
+        if ($('#grail li.title').hasClass('hide_grail_title')) {
+          $('div.grail.page_inner').addClass('hide_grail');
+        }
+      },
+      config: { childList: true },
+      stopWhenSuccess: false
+    });
+  };
 
-  // 自动补塔
   setInterval(autoFillTemple, 60 * 60 * 1000);
-
-  // 自动建塔
   setInterval(autoBuildTemple, 60 * 60 * 1000);
-
-  // ico自动补款
   setInterval(autoFillICO, 30 * 1000);
-
-  // character page
   if (location.pathname.startsWith('/rakuen/topic/crt') || location.pathname.startsWith('/character')) {
     const parentNode = document.getElementById('subject_info') || document.getElementById('columnCrtB');
-    // charater trade info
     let charaFetched = false;
     launchObserver({
       parentNode: parentNode,
@@ -2614,7 +2430,6 @@
       },
       stopWhenSuccess: false
     });
-    // charater ico info
     let ico_fetched = false;
     launchObserver({
       parentNode: parentNode,
@@ -2628,25 +2443,22 @@
       stopWhenSuccess: false
     });
   } else
-
-  // rakuen homepage
   if (location.pathname.startsWith('/rakuen/home')) {
-    // 周六未领取股息则自动领取
     if (Settings.get().get_bonus === 'on') getShareBonus();
     launchObserver({
       parentNode: document.body,
       selector: '#topWeek',
       successCallback: () => {
-        hideBonusButton(); // 隐藏签到
-        showTopWeek(); // 显示萌王榜排名数值
-        showGallery(); // 显示画廊
+        hideBonusButton();
+        showTopWeek();
+        showGallery();
       }
     });
     launchObserver({
       parentNode: document.body,
       selector: '#lastLinks.tab_page_item .assets .link.item',
       successCallback: () => {
-        changeLinkPos('#lastLinks'); // 修改连接顺序
+        changeLinkPos('#lastLinks');
       }
     });
     let chara_fetched = false;
@@ -2662,13 +2474,9 @@
       stopWhenSuccess: false
     });
   } else
-
-  // menu page
   if (location.pathname.startsWith('/rakuen/topiclist')) {
     setTimeout(function () { loadHelperMenu(); }, 500);
   } else
-
-  // user homepage
   if (location.pathname.startsWith('/user')) {
     launchObserver({
       parentNode: document.body,
@@ -2683,7 +2491,7 @@
       selector: '.link_list .grail_list:not([style]) .link .item',
       successCallback: () => {
         if ($('.link_list .grail_list:not([style]) .link .swapPos').length > 0) return
-        changeLinkPos('.link_list .grail_list:not([style])'); // 修改连接顺序
+        changeLinkPos('.link_list .grail_list:not([style])');
       },
       stopWhenSuccess: false
     });
