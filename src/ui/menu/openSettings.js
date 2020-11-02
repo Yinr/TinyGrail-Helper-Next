@@ -8,7 +8,7 @@ export const openSettings = () => { // 设置
   closeDialog()
   const settings = Settings.get()
   const dialog = `<table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
-    <tbody><tr><td valign="top" width="60%">主页显示/隐藏小圣杯</td><td valign="top">
+    <tbody><tr><td valign="top" width="60%">用户主页小圣杯默认状态</td><td valign="top">
     <select id="set1"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
     <tr><td valign="top" width="60%">将自己圣殿或连接排到第一个显示</td><td valign="top">
     <select id="set2"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>

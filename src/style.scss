@@ -30,11 +30,6 @@ html[data-theme='dark'] {
   }
 }
 
-#grail .temple_list .item {
-  margin: 5px 5px 5px 0;
-  width: 107px;
-}
-
 .assets_box .item {
   margin: 5px 5px 5px 0;
   width: 90px;
@@ -79,6 +74,22 @@ html[data-theme='dark'] {
 
 .link.swapped .swapPos {
   text-decoration: underline;
+}
+
+#grail {
+  li.title.hide_grail_title h2:after {
+    font-size: 40%;
+    content: '(点击显示)';
+  }
+
+  .temple_list .item {
+    margin: 5px 5px 5px 0;
+    width: 107px;
+  }
+}
+
+.hide_grail {
+  display: none !important;
 }
 
 #TB_window.temple .container {
