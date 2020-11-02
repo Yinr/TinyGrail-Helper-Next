@@ -82,13 +82,15 @@ const showInitialPrice = (charaId) => {
     sell_out(charaId, init_price)
   } else {
     getData(`chara/charts/${charaId}/2019-08-08`).then((d) => {
-      const init_price = d.Value[0].Begin.toFixed(2)
-      const time = d.Value[0].Time.replace('T', ' ')
-      const charaInitPrice = CharaInitPrice.get()
-      charaInitPrice[charaId] = { init_price: init_price, time: time }
-      CharaInitPrice.set(charaInitPrice)
-      $($('#grailBox .info .text')[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
-      sell_out(charaId, init_price)
+      if (d.Value[0]) {
+        const init_price = d.Value[0].Begin.toFixed(2)
+        const time = d.Value[0].Time.replace('T', ' ')
+        const charaInitPrice = CharaInitPrice.get()
+        charaInitPrice[charaId] = { init_price: init_price, time: time }
+        CharaInitPrice.set(charaInitPrice)
+        $($('#grailBox .info .text')[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
+        sell_out(charaId, init_price)
+      }
     })
   }
 }
