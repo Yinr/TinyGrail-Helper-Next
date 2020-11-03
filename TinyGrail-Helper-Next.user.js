@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.7
+// @version     3.1.8
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -218,6 +218,11 @@
       });
     })
   };
+  const getDataOrNull = (url) => {
+    return new Promise((resolve) => {
+      getData(url).then(resolve).catch(() => resolve(null));
+    })
+  };
 
   const ItemsSetting = configGenerator('ItemsSetting', {});
 
@@ -424,9 +429,12 @@
       const charaId = icoList[i].charaId;
       const targetlv = icoList[i].target;
       const target = ICOStandard(targetlv);
-      await getData(`chara/${charaId}`).then((d) => {
+      await Promise.all([getData(`chara/${charaId}`), getDataOrNull(`chara/initial/${Id}`)]).then(([d, initial]) => {
         if (d.State === 0) {
           const predicted = calculateICO(d.Value);
+          if (!(initial && initial.State === 0 && initial.Value && initial.Value.Amount > 0)) {
+            predicted.Users -= 1;
+          }
           if (predicted.Level >= targetlv) {
             console.log(charaId + '总额:' + d.Value.Total + ',已达标，无需补款');
             $('.info_box .result').prepend(`<div class="row">#${charaId} 目标: lv${targetlv} 总额: ${d.Value.Total} ,已达标，无需补款</div>`);
