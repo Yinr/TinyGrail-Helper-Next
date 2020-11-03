@@ -1,4 +1,4 @@
-import { getData, postData } from '../utils/api'
+import { getData, postData, getDataOrNull } from '../utils/api'
 import { removeEmpty } from '../utils/formatter'
 import { showDialog, closeDialog } from '../utils/dialog'
 
@@ -53,9 +53,13 @@ const fullfillICO = async (icoList) => {
     const charaId = icoList[i].charaId
     const targetlv = icoList[i].target
     const target = ICOStandard(targetlv)
-    await getData(`chara/${charaId}`).then((d) => {
+    await Promise.all([getData(`chara/${charaId}`), getDataOrNull(`chara/initial/${Id}`)]).then(([d, initial]) => {
       if (d.State === 0) {
         const predicted = calculateICO(d.Value)
+        if (!(initial && initial.State === 0 && initial.Value && initial.Value.Amount > 0)) {
+          // 本人尚未参与 ICO，补款后可增加一个人头
+          predicted.Users -= 1
+        }
         if (predicted.Level >= targetlv) {
           console.log(charaId + '总额:' + d.Value.Total + ',已达标，无需补款')
           $('.info_box .result').prepend(`<div class="row">#${charaId} 目标: lv${targetlv} 总额: ${d.Value.Total} ,已达标，无需补款</div>`)

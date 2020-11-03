@@ -29,4 +29,10 @@ const postData = (url, data) => {
   })
 }
 
-export { getData, postData }
+const getDataOrNull = (url) => {
+  return new Promise((resolve) => {
+    getData(url).then(resolve).catch(() => resolve(null))
+  })
+}
+
+export { getData, postData, getDataOrNull }
