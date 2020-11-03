@@ -5,7 +5,8 @@ on:
     branches:
     - release
   schedule:
-    - cron: '* * 7 * *'
+  - cron: '0 2 7 * *'
+  workflow_dispatch:
 
 jobs:
   run:
@@ -13,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Sync to Gitee
-      uses: Yikun/hub-mirror-action
+      uses: Yikun/hub-mirror-action@v0.11
       with:
         src: github/Yinr
         dst: gitee/Yinr
