@@ -19,17 +19,6 @@ img.cover {
   }
 }
 
-html[data-theme='dark'] {
-  #grailBox .title {
-    background-color: transparent;
-  }
-
-  .assets .my_temple.item .card {
-    box-shadow: 0px 0px 15px #FFEB3B;
-    border: 1px solid #FFC107;
-  }
-}
-
 .assets_box .item {
   margin: 5px 5px 5px 0;
   width: 90px;
@@ -50,16 +39,16 @@ html[data-theme='dark'] {
   height: 140px;
 }
 
-#grailBox .my_auction,
-#TB_window .my_auction {
-  color: #ffa7cc;
-  margin-right: 5px;
-}
+#grailBox, #TB_window {
+  .my_auction {
+    color: #ffa7cc;
+    margin-right: 5px;
+  }
 
-#grailBox .user_auction,
-#TB_window .user_auction {
-  color: #a7e3ff;
-  margin-right: 5px;
+  .user_auction {
+    color: #a7e3ff;
+    margin-right: 5px;
+  }
 }
 
 #grailBox .trade_box button {
@@ -67,13 +56,15 @@ html[data-theme='dark'] {
   padding: 0 9px;
 }
 
-.link .swapPos {
-  margin-left: 0.5em;
-  cursor: pointer;
-}
+.link {
+  &.swapped .swapPos {
+    text-decoration: underline;
+  }
 
-.link.swapped .swapPos {
-  text-decoration: underline;
+  .swapPos {
+    margin-left: 0.5em;
+    cursor: pointer;
+  }
 }
 
 #grail {
@@ -92,27 +83,42 @@ html[data-theme='dark'] {
   display: none !important;
 }
 
-#TB_window.temple .container {
-  text-align: center;
-  .line {
-    text-align: left;
+#TB {
+  &_overlay {
+    z-index: 102;
+  }
+
+  &_window {
+    &[data-name] {
+      z-index: 102;
+      padding: 7px;
+      box-shadow: 0px 0px 4px 1px #56bce0;
+    }
+
+    &.temple .container {
+      text-align: center;
+      .line {
+        text-align: left;
+      }
+    }
+
+    .action .text_button {
+      margin: 0 8px 0 0;
+      padding: 0;
+      width: fit-content;
+      height: fit-content;
+      min-width: fit-content;
+    }
   }
 }
 
-#TB_window .action .text_button {
-  margin: 0 8px 0 0;
-  padding: 0;
-  width: fit-content;
-  height: fit-content;
-  min-width: fit-content;
-}
+html[data-theme='dark'] {
+  #grailBox .title {
+    background-color: transparent;
+  }
 
-#TB_window[data-name] {
-  z-index: 102;
-  padding: 7px;
-  box-shadow: 0px 0px 4px 1px #56bce0;
-}
-
-#TB_overlay {
-  z-index: 102;
+  .assets .my_temple.item .card {
+    box-shadow: 0px 0px 15px #FFEB3B;
+    border: 1px solid #FFC107;
+  }
 }
