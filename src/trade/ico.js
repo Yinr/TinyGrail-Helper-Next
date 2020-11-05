@@ -186,4 +186,47 @@ const setFullFillICO = (chara) => { // 设置自动补款
   })
 }
 
-export { calculateICO, fullfillICO, autoFillICO, setFullFillICO }
+const autoJoinICO = async (icoList) => {
+  for (let i = 0; i < icoList.length; i++) {
+    const charaId = icoList[i].CharacterId
+    await getData(`chara/${charaId}`).then((d) => {
+      if (d.State === 0) {
+        const offer = 5000
+        const Id = d.Value.Id
+        if (d.Value.Total < 100000 && d.Value.Users < 15) {
+          getData(`chara/initial/${Id}`).then((d) => {
+            if (d.State === 1 && d.Message === '尚未参加ICO。') {
+              postData(`chara/join/${Id}/${offer}`, null).then((d) => {
+                if (d.State === 0) {
+                  console.log(`#${charaId} 追加注资成功。`)
+                  $(`#eden_tpc_list li[data-id=${charaId}] .row`).append(`<small class="raise">+${offer}</small>`)
+                }
+              })
+            }
+          })
+        }
+      }
+    })
+  }
+}
+
+const autoBeginICO = async (icoList) => {
+  for (let i = 0; i < icoList.length; i++) {
+    const charaId = icoList[i]
+    await getData(`chara/${charaId}`).then(async (d) => {
+      if (d.State === 1 && d.Message === '找不到人物信息。') {
+        const offer = 10000
+        await postData(`chara/init/${charaId}/${offer}`, null).then((d) => {
+          if (d.State === 0) {
+            console.log(`#${charaId} ICO 启动成功。`)
+            $(`#eden_tpc_list li[data-id=${charaId}] .row`).append(`<small class="raise">+${offer}</small>`)
+          } else {
+            console.log(d.Message)
+          }
+        })
+      }
+    })
+  }
+}
+
+export { calculateICO, fullfillICO, autoFillICO, setFullFillICO, autoJoinICO, autoBeginICO }

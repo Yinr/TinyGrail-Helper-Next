@@ -6,7 +6,7 @@ import { loadFollowAuction } from './loadFollowAuction'
 import { loadCharacterList } from './loadCharacterList'
 import { joinAuctions } from './joinAuctions'
 
-import { autoJoinICO } from '../../trade/auction'
+import { autoJoinICO, autoBeginICO } from '../../trade/ico'
 
 import { FollowList } from '../../config/followList'
 
@@ -44,8 +44,12 @@ export const createTemporaryList = (page) => {
     <input class="inputBtn" value="创建列表" id="submit_list" type="submit" style="padding: 3px 5px;">
     <input class="inputBtn" value="关注角色" id="add_follow" type="submit" style="padding: 3px 5px;">
     <input class="inputBtn" value="关注竞拍" id="add_auction" type="submit" style="padding: 3px 5px;">
+    <input class="inputBtn" value="显示一键操作▼" id="one_key_actions" type="submit" style="padding: 3px 5px;">
+    <div id="one_keys" style="display: none;">
     <input class="inputBtn" value="参与竞拍" id="join_auction" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="参与ICO" id="join_ico" type="submit" style="padding: 3px 5px;">
+    <input class="inputBtn" value="参与 ICO" id="join_ico" type="submit" style="padding: 3px 5px;">
+    <input class="inputBtn" value="启动 ICO" id="begin_ico" type="submit" style="padding: 3px 5px;">
+    </div>
     </div>`
   showDialog(dialog)
   $('#submit_list').on('click', () => {
@@ -87,6 +91,14 @@ export const createTemporaryList = (page) => {
     closeDialog()
   })
 
+  $('#one_key_actions').on('click', () => {
+    if ($('#one_keys').toggle().is(':visible')) {
+      $('#one_key_actions').attr('value', '隐藏一键操作▲')
+    } else {
+      $('#one_key_actions').attr('value', '显示一键操作▼')
+    }
+  })
+
   $('#join_auction').on('click', () => {
     getCharasList()
     $('#eden_tpc_list ul').html('')
@@ -102,5 +114,14 @@ export const createTemporaryList = (page) => {
       loadTemperaryList(1)
       closeDialog()
     })
+  })
+
+  $('#begin_ico').on('click', () => {
+    getCharasList()
+    autoBeginICO(charasList)
+    setTimeout(() => {
+      loadTemperaryList(1)
+      closeDialog()
+    }, 1000)
   })
 }

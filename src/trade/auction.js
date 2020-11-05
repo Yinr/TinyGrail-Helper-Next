@@ -2,30 +2,6 @@ import { getData, postData } from '../utils/api'
 
 import { formatNumber } from '../utils/formatter'
 
-const autoJoinICO = async (icoList) => {
-  for (let i = 0; i < icoList.length; i++) {
-    const charaId = icoList[i].CharacterId
-    await getData(`chara/${charaId}`).then((d) => {
-      if (d.State === 0) {
-        const offer = 5000
-        const Id = d.Value.Id
-        if (d.Value.Total < 100000 && d.Value.Users < 15) {
-          getData(`chara/initial/${Id}`).then((d) => {
-            if (d.State === 1 && d.Message === '尚未参加ICO。') {
-              postData(`chara/join/${Id}/${offer}`, null).then((d) => {
-                if (d.State === 0) {
-                  console.log(`#${charaId} 追加注资成功。`)
-                  $(`#eden_tpc_list li[data-id=${charaId}] .row`).append(`<small class="raise">+${offer}</small>`)
-                }
-              })
-            }
-          })
-        }
-      }
-    })
-  }
-}
-
 const loadUserAuctions = (d) => {
   d.Value.forEach((a) => {
     $(`.item_list[data-id=${a.CharacterId}] .user_auction`).remove()
@@ -120,4 +96,4 @@ const cancelAuction = (chara) => {
   })
 }
 
-export { autoJoinICO, loadUserAuctions, loadValhalla, bidAuction, cancelAuction }
+export { loadUserAuctions, loadValhalla, bidAuction, cancelAuction }
