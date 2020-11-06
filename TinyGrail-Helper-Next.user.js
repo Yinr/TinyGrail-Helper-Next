@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.8
+// @version     3.1.9
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -15,7 +15,7 @@
 (function () {
   'use strict';
 
-  var css_248z = "@charset \"UTF-8\";\nul.timelineTabs li a {\n  margin: 2px 0 0 0;\n  padding: 5px 10px 5px 10px; }\n\nimg.cover {\n  background-color: transparent; }\n\n.assets .my_temple.item .card {\n  box-shadow: 3px 3px 5px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets .my_temple.item .name a {\n  font-weight: bold;\n  color: #0084b4; }\n\nhtml[data-theme='dark'] #grailBox .title {\n  background-color: transparent; }\n\nhtml[data-theme='dark'] .assets .my_temple.item .card {\n  box-shadow: 0px 0px 15px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets_box .item {\n  margin: 5px 5px 5px 0;\n  width: 90px; }\n  .assets_box .item .card {\n    width: 90px;\n    height: 120px; }\n\n#lastTemples .assets .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.item .card {\n  width: 105px;\n  height: 140px; }\n\n#grailBox .my_auction,\n#TB_window .my_auction {\n  color: #ffa7cc;\n  margin-right: 5px; }\n\n#grailBox .user_auction,\n#TB_window .user_auction {\n  color: #a7e3ff;\n  margin-right: 5px; }\n\n#grailBox .trade_box button {\n  min-width: 50px;\n  padding: 0 9px; }\n\n.link .swapPos {\n  margin-left: 0.5em;\n  cursor: pointer; }\n\n.link.swapped .swapPos {\n  text-decoration: underline; }\n\n#grail li.title.hide_grail_title h2:after {\n  font-size: 40%;\n  content: '(点击显示)'; }\n\n#grail .temple_list .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.hide_grail {\n  display: none !important; }\n\n#TB_window.temple .container {\n  text-align: center; }\n  #TB_window.temple .container .line {\n    text-align: left; }\n\n#TB_window .action .text_button {\n  margin: 0 8px 0 0;\n  padding: 0;\n  width: fit-content;\n  height: fit-content;\n  min-width: fit-content; }\n\n#TB_window[data-name] {\n  z-index: 102;\n  padding: 7px;\n  box-shadow: 0px 0px 4px 1px #56bce0; }\n\n#TB_overlay {\n  z-index: 102; }\n";
+  var css_248z = "@charset \"UTF-8\";\nul.timelineTabs li a {\n  margin: 2px 0 0 0;\n  padding: 5px 10px 5px 10px; }\n\nimg.cover {\n  background-color: transparent; }\n\n.assets .my_temple.item .card {\n  box-shadow: 3px 3px 5px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets .my_temple.item .name a {\n  font-weight: bold;\n  color: #0084b4; }\n\n.assets_box .item {\n  margin: 5px 5px 5px 0;\n  width: 90px; }\n  .assets_box .item .card {\n    width: 90px;\n    height: 120px; }\n\n#lastTemples .assets .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.item .card {\n  width: 105px;\n  height: 140px; }\n\n#grailBox .my_auction, #TB_window .my_auction {\n  color: #ffa7cc;\n  margin-right: 5px; }\n\n#grailBox .user_auction, #TB_window .user_auction {\n  color: #a7e3ff;\n  margin-right: 5px; }\n\n#grailBox .trade_box button {\n  min-width: 50px;\n  padding: 0 9px; }\n\n.link.swapped .swapPos {\n  text-decoration: underline; }\n\n.link .swapPos {\n  margin-left: 0.5em;\n  cursor: pointer; }\n\n#grail li.title.hide_grail_title h2:after {\n  font-size: 40%;\n  content: '(点击显示)'; }\n\n#grail .temple_list .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.hide_grail {\n  display: none !important; }\n\n#TB_overlay {\n  z-index: 102; }\n\n#TB_window[data-name] {\n  z-index: 102;\n  padding: 7px;\n  box-shadow: 0px 0px 4px 1px #56bce0; }\n\n#TB_window.temple .container {\n  text-align: center; }\n  #TB_window.temple .container .line {\n    text-align: left; }\n\n#TB_window .action .text_button {\n  margin: 0 8px 0 0;\n  padding: 0;\n  width: fit-content;\n  height: fit-content;\n  min-width: fit-content; }\n\nhtml[data-theme='dark'] #grailBox .title {\n  background-color: transparent; }\n\nhtml[data-theme='dark'] .assets .my_temple.item .card {\n  box-shadow: 0px 0px 15px #FFEB3B;\n  border: 1px solid #FFC107; }\n";
   GM_addStyle(css_248z);
 
   const configGenerator = (name, defaultValue, config = {
@@ -192,7 +192,7 @@
 
   const api = 'https://tinygrail.com/api/';
   const getData = (url) => {
-    if (!url.startsWith('http')) url = api + url;
+    if (!url.startsWith('http') && !url.startsWith('/')) url = api + url;
     return new Promise((resolve, reject) => {
       $.ajax({
         url: url,
@@ -205,7 +205,7 @@
   };
   const postData = (url, data) => {
     const d = JSON.stringify(data);
-    if (!url.startsWith('http')) url = api + url;
+    if (!url.startsWith('http') && !url.startsWith('/')) url = api + url;
     return new Promise((resolve, reject) => {
       $.ajax({
         url: url,
@@ -554,6 +554,47 @@
       openICODialog(chara);
     });
   };
+  const autoJoinICO = async (icoList) => {
+    for (let i = 0; i < icoList.length; i++) {
+      const charaId = icoList[i].CharacterId;
+      await getData(`chara/${charaId}`).then((d) => {
+        if (d.State === 0) {
+          const offer = 5000;
+          const Id = d.Value.Id;
+          if (d.Value.Total < 100000 && d.Value.Users < 15) {
+            getData(`chara/initial/${Id}`).then((d) => {
+              if (d.State === 1 && d.Message === '尚未参加ICO。') {
+                postData(`chara/join/${Id}/${offer}`, null).then((d) => {
+                  if (d.State === 0) {
+                    console.log(`#${charaId} 追加注资成功。`);
+                    $(`#eden_tpc_list li[data-id=${charaId}] .row`).append(`<small class="raise">+${offer}</small>`);
+                  }
+                });
+              }
+            });
+          }
+        }
+      });
+    }
+  };
+  const autoBeginICO = async (icoList) => {
+    for (let i = 0; i < icoList.length; i++) {
+      const charaId = icoList[i];
+      await getData(`chara/${charaId}`).then(async (d) => {
+        if (d.State === 1 && d.Message === '找不到人物信息。') {
+          const offer = 10000;
+          await postData(`chara/init/${charaId}/${offer}`, null).then((d) => {
+            if (d.State === 0) {
+              console.log(`#${charaId} ICO 启动成功。`);
+              $(`#eden_tpc_list li[data-id=${charaId}] .row`).append(`<small class="raise">+${offer}</small>`);
+            } else {
+              console.log(d.Message);
+            }
+          });
+        }
+      });
+    }
+  };
 
   const getWeeklyShareBonus = (callback) => {
     if (!confirm('已经周六了，赶紧领取股息吧？')) return
@@ -581,29 +622,6 @@
     });
   };
 
-  const autoJoinICO = async (icoList) => {
-    for (let i = 0; i < icoList.length; i++) {
-      const charaId = icoList[i].CharacterId;
-      await getData(`chara/${charaId}`).then((d) => {
-        if (d.State === 0) {
-          const offer = 5000;
-          const Id = d.Value.Id;
-          if (d.Value.Total < 100000 && d.Value.Users < 15) {
-            getData(`chara/initial/${Id}`).then((d) => {
-              if (d.State === 1 && d.Message === '尚未参加ICO。') {
-                postData(`chara/join/${Id}/${offer}`, null).then((d) => {
-                  if (d.State === 0) {
-                    console.log(`#${charaId} 追加注资成功。`);
-                    $(`#eden_tpc_list li[data-id=${charaId}] .row`).append(`<small class="raise">+${offer}</small>`);
-                  }
-                });
-              }
-            });
-          }
-        }
-      });
-    }
-  };
   const loadUserAuctions = (d) => {
     d.Value.forEach((a) => {
       $(`.item_list[data-id=${a.CharacterId}] .user_auction`).remove();
@@ -816,7 +834,7 @@
       amount = `<span class="tag even large">${formatNumber(item.Amount, 0)}</span>`;
     }
     let id = '';
-    if (item.Type === 4 || item.Type === 5 || item.Type === 6) {
+    if (item.Type >= 2 && item.Type <= 13) {
       id = `data-id="${item.RelatedId}"`;
     }
     return `<li class="${line} item_list item_log" ${id}>
@@ -880,7 +898,13 @@
     }
     let badge = renderBadge(item, true, true, true);
     let chara;
-    if (type === 'auction') {
+    if (item.NotExist) {
+      chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
+              <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}</a> <small class="grey"></small>
+              <div class="row"><small class="time"></small>
+              <span><small data-id="${id}" data-name="${item.Name}" class="begin_ico" title="开启 ICO">[开启 ICO]</small></span>
+              </div></div></li>`;
+    } else if (type === 'auction') {
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)})</small>
               <div class="row"><small class="time">${formatTime(time)}</small>
@@ -977,7 +1001,7 @@
       }
       lastEven = !lastEven;
     }
-    $('.cancel_auction').unbind('click');
+    $('.cancel_auction').off('click');
     $('.cancel_auction').on('click', (e) => {
       const id = $(e.target).data('id');
       const followList = FollowList.get();
@@ -986,7 +1010,7 @@
       FollowList.set(followList);
       $(`#eden_tpc_list li[data-id=${id}]`).remove();
     });
-    $('.fill_costs').unbind('click');
+    $('.fill_costs').off('click');
     $('.fill_costs').on('click', (e) => {
       const id = $(e.target).data('id');
       const lv = $(e.target).data('lv');
@@ -994,7 +1018,7 @@
       fillCosts(id, lv, cost);
       $(e.target).remove();
     });
-    $('.fill_auction').unbind('click');
+    $('.fill_auction').off('click');
     $('.fill_auction').on('click', (e) => {
       e.stopPropagation();
       const id = $(e.target).data('id');
@@ -1032,6 +1056,15 @@
         });
       });
     });
+    $('.begin_ico').off('click');
+    $('.begin_ico').on('click', (e) => {
+      e.stopPropagation();
+      const id = $(e.target).data('id');
+      const name = $(e.target).data('name');
+      if (confirm(`确定为 #${id}「${name}」开启 ICO？`)) {
+        autoBeginICO([id]);
+      }
+    });
     $('#eden_tpc_list .item_list').on('click', listItemClicked);
     if (page !== total && total > 0) {
       const loadMore = `<li class="load_more"><button id="loadMoreButton" class="load_more_button" data-page="${page + 1}">[加载更多]</button></li>`;
@@ -1046,16 +1079,49 @@
       $('#eden_tpc_list ul').append(`<li class="load_more sub">[${noMore}]</li>`);
     }
   };
+  const getNonCharacter = async id => {
+    try {
+      const bgmPage = await getData(`/rakuen/topic/crt/${id}`);
+      const bgmInfo = bgmPage.match(/class="avatar"><img\s+src="([^"]+)"\s+class="avatar\s+ll"><\/a>\s+<a href=".*"\s+target="_parent">.*<\/a><\/span><br\s*\/>(.+)<\/h1>/);
+      return {
+        Id: id,
+        CharacterId: id,
+        Icon: bgmInfo[1],
+        Name: bgmInfo[2],
+        NotExist: true
+      }
+    } catch (e) {
+      console.log(`获取 #${id} 信息出错`, e);
+      return {
+        Id: id,
+        CharacterId: id,
+        Name: `未知角色 #${id}`,
+        NotExist: true
+      }
+    }
+  };
+  const generateCharacterList = async ids => {
+    const charas = await postData('chara/list', ids);
+    const charasInfo = [];
+    if (charas.State === 0) {
+      for (let i = 0; i < ids.length; i++) {
+        let item = charas.Value.find(chara => chara.CharacterId === parseInt(ids[i]));
+        if (!item) item = await getNonCharacter(ids[i]);
+        charasInfo.push(item);
+      }
+      return charasInfo
+    } else {
+      console.log(charas);
+    }
+  };
 
   const loadFollowChara = (page) => {
     const followList = FollowList.get();
     const start = 50 * (page - 1);
     const ids = followList.charas.slice(start, start + 50);
     const totalPages = Math.ceil(followList.charas.length / 50);
-    postData('chara/list', ids).then((d) => {
-      if (d.State === 0) {
-        loadCharacterList(d.Value, page, totalPages, loadFollowChara, 'chara', true);
-      }
+    generateCharacterList(ids).then(list => {
+      loadCharacterList(list, page, totalPages, loadFollowChara, 'chara', true);
     });
   };
 
@@ -1219,10 +1285,8 @@
     const start = 50 * (page - 1);
     const ids = charas.slice(start, start + 50);
     const totalPages = Math.ceil(charas.length / 50);
-    postData('chara/list', ids).then((d) => {
-      if (d.State === 0) {
-        loadCharacterList(d.Value, page, totalPages, loadAutoBuild, 'chara_ico', false);
-      }
+    generateCharacterList(ids).then(list => {
+      loadCharacterList(list, page, totalPages, loadAutoBuild, 'chara_ico', false);
     });
   };
 
@@ -1269,10 +1333,8 @@
     const ids = charasList.slice(start, start + 50);
     console.log(ids);
     const totalPages = Math.ceil(charasList.length / 50);
-    postData('chara/list', ids).then((d) => {
-      if (d.State === 0) {
-        loadCharacterList(d.Value, page, totalPages, loadTemperaryList, 'chara', false);
-      }
+    generateCharacterList(ids).then(list => {
+      loadCharacterList(list, page, totalPages, loadTemperaryList, 'chara', false);
     });
   };
   const createTemporaryList = (page) => {
@@ -1284,8 +1346,12 @@
     <input class="inputBtn" value="创建列表" id="submit_list" type="submit" style="padding: 3px 5px;">
     <input class="inputBtn" value="关注角色" id="add_follow" type="submit" style="padding: 3px 5px;">
     <input class="inputBtn" value="关注竞拍" id="add_auction" type="submit" style="padding: 3px 5px;">
+    <input class="inputBtn" value="显示一键操作▼" id="one_key_actions" type="submit" style="padding: 3px 5px;">
+    <div id="one_keys" style="display: none;">
     <input class="inputBtn" value="参与竞拍" id="join_auction" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="参与ICO" id="join_ico" type="submit" style="padding: 3px 5px;">
+    <input class="inputBtn" value="参与 ICO" id="join_ico" type="submit" style="padding: 3px 5px;">
+    <input class="inputBtn" value="启动 ICO" id="begin_ico" type="submit" style="padding: 3px 5px;">
+    </div>
     </div>`;
     showDialog(dialog);
     $('#submit_list').on('click', () => {
@@ -1325,6 +1391,13 @@
       loadFollowAuction(1);
       closeDialog();
     });
+    $('#one_key_actions').on('click', () => {
+      if ($('#one_keys').toggle().is(':visible')) {
+        $('#one_key_actions').attr('value', '隐藏一键操作▲');
+      } else {
+        $('#one_key_actions').attr('value', '显示一键操作▼');
+      }
+    });
     $('#join_auction').on('click', () => {
       getCharasList();
       $('#eden_tpc_list ul').html('');
@@ -1336,6 +1409,14 @@
       getCharasList();
       postData('chara/list', charasList).then((d) => {
         autoJoinICO(d.Value);
+        loadTemperaryList(1);
+        closeDialog();
+      });
+    });
+    $('#begin_ico').on('click', () => {
+      getCharasList();
+      $('#begin_ico').attr('value', '正在开启 ICO...').closest('.bibeBox').find('.inputBtn').attr('disabled', true);
+      autoBeginICO(charasList).then(() => {
         loadTemperaryList(1);
         closeDialog();
       });
