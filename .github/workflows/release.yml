@@ -46,4 +46,4 @@ jobs:
       - name: Check Out Repository
         uses: actions/checkout@v2
       - name: Use Sync Action
-        uses: ./.github/workflows/sync-to-gitee
+        uses: ./.github/workflows/sync-to-gitee.yml
