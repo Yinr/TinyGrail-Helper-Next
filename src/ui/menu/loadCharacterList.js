@@ -3,7 +3,7 @@ import { formatNumber, formatTime } from '../../utils/formatter'
 import { normalizeAvatar } from '../../utils/utils'
 import { showDialog, closeDialog } from '../../utils/dialog'
 
-import { calculateICO } from '../../trade/ico'
+import { calculateICO, autoBeginICO } from '../../trade/ico'
 import { loadUserAuctions } from '../../trade/auction'
 
 import { FollowList } from '../../config/followList'
@@ -102,7 +102,13 @@ const renderCharacter = (item, type, even, showCancel) => {
   let badge = renderBadge(item, true, true, true)
   let chara
 
-  if (type === 'auction') {
+  if (item.NotExist) {
+    chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
+              <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}</a> <small class="grey"></small>
+              <div class="row"><small class="time"></small>
+              <span><small data-id="${id}" data-name="${item.Name}" class="begin_ico" title="开启 ICO">[开启 ICO]</small></span>
+              </div></div></li>`
+  } else if (type === 'auction') {
     chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)})</small>
               <div class="row"><small class="time">${formatTime(time)}</small>
@@ -191,7 +197,7 @@ const fillCosts = (id, lv, cost) => {
   })
 }
 
-export const loadCharacterList = (list, page, total, more, type, showCancel) => {
+const loadCharacterList = (list, page, total, more, type, showCancel) => {
   $('#eden_tpc_list ul .load_more').remove()
   if (page === 1) $('#eden_tpc_list ul').html('')
   // console.log(list);
@@ -208,7 +214,7 @@ export const loadCharacterList = (list, page, total, more, type, showCancel) => 
     lastEven = !lastEven
   }
 
-  $('.cancel_auction').unbind('click')
+  $('.cancel_auction').off('click')
   $('.cancel_auction').on('click', (e) => {
     // if (!confirm('确定取消关注？')) return;
     const id = $(e.target).data('id')
@@ -219,7 +225,7 @@ export const loadCharacterList = (list, page, total, more, type, showCancel) => 
     $(`#eden_tpc_list li[data-id=${id}]`).remove()
   })
 
-  $('.fill_costs').unbind('click')
+  $('.fill_costs').off('click')
   $('.fill_costs').on('click', (e) => {
     const id = $(e.target).data('id')
     const lv = $(e.target).data('lv')
@@ -228,7 +234,7 @@ export const loadCharacterList = (list, page, total, more, type, showCancel) => 
     $(e.target).remove()
   })
 
-  $('.fill_auction').unbind('click')
+  $('.fill_auction').off('click')
   $('.fill_auction').on('click', (e) => {
     e.stopPropagation()
     const id = $(e.target).data('id')
@@ -271,6 +277,16 @@ export const loadCharacterList = (list, page, total, more, type, showCancel) => 
     })
   })
 
+  $('.begin_ico').off('click')
+  $('.begin_ico').on('click', (e) => {
+    e.stopPropagation()
+    const id = $(e.target).data('id')
+    const name = $(e.target).data('name')
+    if (confirm(`确定为 #${id}「${name}」开启 ICO？`)) {
+      autoBeginICO([id])
+    }
+  })
+
   $('#eden_tpc_list .item_list').on('click', listItemClicked)
   if (page !== total && total > 0) {
     const loadMore = `<li class="load_more"><button id="loadMoreButton" class="load_more_button" data-page="${page + 1}">[加载更多]</button></li>`
@@ -286,3 +302,42 @@ export const loadCharacterList = (list, page, total, more, type, showCancel) => 
     $('#eden_tpc_list ul').append(`<li class="load_more sub">[${noMore}]</li>`)
   }
 }
+
+const getNonCharacter = async id => {
+  try {
+    const bgmPage = await getData(`/rakuen/topic/crt/${id}`)
+    const bgmInfo = bgmPage.match(/class="avatar"><img\s+src="([^"]+)"\s+class="avatar\s+ll"><\/a>\s+<a href=".*"\s+target="_parent">.*<\/a><\/span><br\s*\/>(.+)<\/h1>/)
+    return {
+      Id: id,
+      CharacterId: id,
+      Icon: bgmInfo[1],
+      Name: bgmInfo[2],
+      NotExist: true
+    }
+  } catch (e) {
+    console.log(`获取 #${id} 信息出错`, e)
+    return {
+      Id: id,
+      CharacterId: id,
+      Name: `未知角色 #${id}`,
+      NotExist: true
+    }
+  }
+}
+
+const generateCharacterList = async ids => {
+  const charas = await postData('chara/list', ids)
+  const charasInfo = []
+  if (charas.State === 0) {
+    for (let i = 0; i < ids.length; i++) {
+      let item = charas.Value.find(chara => chara.CharacterId === parseInt(ids[i]))
+      if (!item) item = await getNonCharacter(ids[i])
+      charasInfo.push(item)
+    }
+    return charasInfo
+  } else {
+    console.log(charas)
+  }
+}
+
+export { loadCharacterList, generateCharacterList }

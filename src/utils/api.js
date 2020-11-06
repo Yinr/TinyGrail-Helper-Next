@@ -1,7 +1,7 @@
 const api = 'https://tinygrail.com/api/'
 
 const getData = (url) => {
-  if (!url.startsWith('http')) url = api + url
+  if (!url.startsWith('http') && !url.startsWith('/')) url = api + url
   return new Promise((resolve, reject) => {
     $.ajax({
       url: url,
@@ -15,7 +15,7 @@ const getData = (url) => {
 
 const postData = (url, data) => {
   const d = JSON.stringify(data)
-  if (!url.startsWith('http')) url = api + url
+  if (!url.startsWith('http') && !url.startsWith('/')) url = api + url
   return new Promise((resolve, reject) => {
     $.ajax({
       url: url,

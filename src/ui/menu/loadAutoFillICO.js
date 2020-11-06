@@ -1,6 +1,4 @@
-import { postData } from '../../utils/api'
-
-import { loadCharacterList } from './loadCharacterList'
+import { generateCharacterList, loadCharacterList } from './loadCharacterList'
 import { loadAutoBuild } from './loadAutoBuild'
 
 import { FillICOList } from '../../config/fillICOList'
@@ -12,9 +10,7 @@ export const loadAutoFillICO = (page) => {
   const start = 50 * (page - 1)
   const ids = charas.slice(start, start + 50)
   const totalPages = Math.ceil(charas.length / 50)
-  postData('chara/list', ids).then((d) => {
-    if (d.State === 0) {
-      loadCharacterList(d.Value, page, totalPages, loadAutoBuild, 'chara_ico', false)
-    }
+  generateCharacterList(ids).then(list => {
+    loadCharacterList(list, page, totalPages, loadAutoBuild, 'chara_ico', false)
   })
 }

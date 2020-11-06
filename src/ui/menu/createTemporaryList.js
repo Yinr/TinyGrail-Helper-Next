@@ -3,7 +3,7 @@ import { showDialog, closeDialog } from '../../utils/dialog'
 
 import { loadFollowChara } from './loadFollowChara'
 import { loadFollowAuction } from './loadFollowAuction'
-import { loadCharacterList } from './loadCharacterList'
+import { generateCharacterList, loadCharacterList } from './loadCharacterList'
 import { joinAuctions } from './joinAuctions'
 
 import { autoJoinICO, autoBeginICO } from '../../trade/ico'
@@ -28,10 +28,8 @@ const loadTemperaryList = (page) => {
   const ids = charasList.slice(start, start + 50)
   console.log(ids)
   const totalPages = Math.ceil(charasList.length / 50)
-  postData('chara/list', ids).then((d) => {
-    if (d.State === 0) {
-      loadCharacterList(d.Value, page, totalPages, loadTemperaryList, 'chara', false)
-    }
+  generateCharacterList(ids).then(list => {
+    loadCharacterList(list, page, totalPages, loadTemperaryList, 'chara', false)
   })
 }
 
@@ -118,10 +116,10 @@ export const createTemporaryList = (page) => {
 
   $('#begin_ico').on('click', () => {
     getCharasList()
-    autoBeginICO(charasList)
-    setTimeout(() => {
+    $('#begin_ico').attr('value', '正在开启 ICO...').closest('.bibeBox').find('.inputBtn').attr('disabled', true)
+    autoBeginICO(charasList).then(() => {
       loadTemperaryList(1)
       closeDialog()
-    }, 1000)
+    })
   })
 }
