@@ -24,11 +24,16 @@ const cancelAllBids = async (charas, Balance) => {
 }
 
 export const cancelBids = () => { // 取消买单
-  if (!confirm('取消全部买单？')) return
+  if (!confirm('此操作将无法恢复，确定取消全部买单？')) return
   $('#eden_tpc_list ul').html('')
   getData('chara/user/assets').then((d) => {
     const Balance = d.Value.Balance
     getData('chara/bids/0/1/1000').then((d) => {
+      if (d.Value.TotalItems > 1000) {
+        try {
+          d = getData(`chara/user/initial/0/1/${d.Value.TotalItems}`)
+        } catch (e) { console.log(`获取全部 ${d.Value.TotalItems} 条买单数据出错`, e) }
+      }
       cancelAllBids(d.Value.Items, Balance)
     })
   })
