@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.9
+// @version     3.1.10
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -1144,11 +1144,16 @@
   const loadMyICO = (page) => {
     getData(`chara/user/initial/0/${page}/50`).then((d) => {
       if (d.State === 0) {
-        loadCharacterList(d.Value.Items, d.Value.CurrentPage, d.Value.TotalPages, loadMyICO, 'ico', false);
+        loadCharacterList(d.Value.Items.sort((a, b) => (new Date(a.End)) - (new Date(b.End))), d.Value.CurrentPage, d.Value.TotalPages, loadMyICO, 'ico', false);
         if (d.Value.TotalItems > 0 && page === 1) {
           $('#eden_tpc_list ul').prepend('<li id="copyICO" class="line_odd item_list item_function" style="text-align: center;">[复制我的 ICO]</li>');
           $('#copyICO').on('click', function () {
-            getData('chara/user/initial/0/1/1000').then(d => {
+            getData('chara/user/initial/0/1/1000').then(async d => {
+              if (d.Value.TotalItems > 1000) {
+                try {
+                  d = getData(`chara/user/initial/0/1/${d.Value.TotalItems}`);
+                } catch (e) { console.log(`获取全部 ${d.Value.TotalItems} 个 ICO 列表出错`, e); }
+              }
               const list_text = d.Value.Items.map(i => `https://bgm.tv/character/${i.CharacterId} ${i.Name}`).join('\n');
               closeDialog();
               const dialog = `<div class="bibeBox" style="padding:10px">
@@ -1692,11 +1697,16 @@
     }
   };
   const cancelBids = () => {
-    if (!confirm('取消全部买单？')) return
+    if (!confirm('此操作将无法恢复，确定取消全部买单？')) return
     $('#eden_tpc_list ul').html('');
     getData('chara/user/assets').then((d) => {
       const Balance = d.Value.Balance;
       getData('chara/bids/0/1/1000').then((d) => {
+        if (d.Value.TotalItems > 1000) {
+          try {
+            d = getData(`chara/user/initial/0/1/${d.Value.TotalItems}`);
+          } catch (e) { console.log(`获取全部 ${d.Value.TotalItems} 条买单数据出错`, e); }
+        }
         cancelAllBids(d.Value.Items, Balance);
       });
     });
