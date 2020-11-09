@@ -3,6 +3,8 @@ import { getData, postData } from '../utils/api'
 import { ItemsSetting } from '../config/itemsSetting'
 
 const autoFillTemple = () => {
+  if (ItemsSetting.get().autoFill === false) return
+
   const autoFillCosts = async (autoFillCostList) => {
     for (let i = 0; i < autoFillCostList.length; i++) {
       const id = autoFillCostList[i].id

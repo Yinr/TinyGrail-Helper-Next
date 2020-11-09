@@ -109,6 +109,65 @@ img.cover {
       height: fit-content;
       min-width: fit-content;
     }
+
+    .setting-tab-titlebar {
+      display: flex;
+      margin-top: 8px;
+      border-bottom: solid 2px;
+      padding: 0 8px;
+
+      .setting-tab-title {
+        cursor: pointer;
+        padding: 2px 8px;
+        opacity: 0.8;
+        border: solid 1px {
+          bottom: none;
+          radius: 5px 5px 0 0;
+        }
+
+        &.open {
+          font-weight: bold;
+          opacity: 1;
+          border-width: 2px;
+        }
+      }
+    }
+
+    .setting-tab table {
+      width: 98%;
+      text-align: center;
+      border-spacing: 0;
+
+      tr {
+        border-top: dotted 1px;
+
+        td {
+          text-align: left;
+          vertical-align: middle;
+          padding: 5px;
+          &:first-child {
+            width: 60%;
+          }
+        }
+      }
+
+      input[type=number] {
+        width: 7em;
+        &.chara-id {
+          width: 5em;
+        }
+      }
+
+      .setting-row-btn td {
+        vertical-align: baseline;
+      }
+
+      .txtBtn {
+        font-size: smaller;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
 }
 

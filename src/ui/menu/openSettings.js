@@ -6,37 +6,88 @@ import { exportConfig, importConfig } from '../../config/export'
 
 export const openSettings = () => { // 设置
   closeDialog()
-  const settings = Settings.get()
-  const dialog = `<table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
-    <tbody><tr><td valign="top" width="60%">用户主页小圣杯默认状态</td><td valign="top">
-    <select id="set1"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
-    <tr><td valign="top" width="60%">将自己圣殿或连接排到第一个显示</td><td valign="top">
-    <select id="set2"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-    <tr><td valign="top" width="60%">默认拍卖数量</td><td valign="top">
-    <select id="set3"><option value="one" selected="selected">1</option><option value="all">全部</option></td></tr>
-    <tr><td valign="top" width="60%" title="合并同一时间同一价格的历史订单记录">合并历史订单</td><td valign="top">
-    <select id="set4"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-    <tr><td valign="top" width="60%">周六自动提醒领取股息</td><td valign="top">
-    <select id="set5"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-    <tr><td valign="top" width="60%">圣殿画廊</td><td valign="top">
-    <select id="set6"><option value="off" selected="selected">关</option><option value="on">开</option></td></tr>
-    <tr><td valign="top" width="60%">幻想乡自动抽奖金额上限</td><td valign="top">
-    <input id="item_set1" type="number" min="0" step="1000" value="0"></td></tr>
-    <tr valign="buttom">
-      <td><span id="export_setting" style="font-size: smaller; text-decoration: underline; cursor: pointer;">[导入导出设置]</span></td>
-      <td><input class="inputBtn" value="保存" id="submit_setting" type="submit"></td>
-    </tr>
-    </tbody></table>`
+  const dialog = `
+    <div class="setting-tab-titlebar">
+      <div data-settingid="setting-tab-feat" class="setting-tab-title open">功能</div>
+      <div data-settingid="setting-tab-ui" class="setting-tab-title">界面</div>
+      <div data-settingid="setting-tab-magic" class="setting-tab-title">魔法</div>
+    </div>
+    <div class="setting-tab-content">
+      <div id="setting-tab-feat" class="setting-tab">
+        <table class="settings-tab-table"><tbody>
+          <tr><td>默认拍卖数量</td>
+            <td><select id="set_auction_num"><option value="one" selected="selected">1</option><option value="all">全部</option></td></tr>
+          <tr><td>周六自动提醒领取股息</td>
+            <td><select id="set_get_bonus"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
+          <tr><td title="小圣杯界面左右键切换查看圣殿图">圣殿画廊</td>
+            <td><select id="set_gallery"><option value="off" selected="selected">关</option><option value="on">开</option></td></tr>
+          <tr><td>幻想乡自动抽奖金额上限</td>
+            <td><input id="item_set_lotus" type="number" min="0" step="1000" value="0"> cc</td></tr>
+          <tr class="setting-row-btn">
+            <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
+            <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
+          </tr>
+        </tbody></table>
+      </div>
+      <div id="setting-tab-ui" class="setting-tab" style="display: none;">
+        <table class="settings-tab-table"><tbody>
+          <tr><td>用户主页小圣杯默认状态</td>
+            <td><select id="set_hide_grail"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+          <tr><td>将自己圣殿或连接排到第一个显示</td>
+            <td><select id="set_pre_temple"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
+          <tr><td>合并历史订单</td>
+            <td><select id="set_merge_order"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
+          <tr class="setting-row-btn">
+            <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
+            <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
+          </tr>
+        </tbody></table>
+      </div>
+      <div id="setting-tab-magic" class="setting-tab" style="display: none;">
+        <table class="settings-tab-table"><tbody>
+          <tr><td>混沌魔方 - 炮塔角色ID</td>
+            <td><input id="item_set_chaos" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td>虚空道标 - 炮塔角色ID</td>
+            <td><input id="item_set_guidepost" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td>虚空道标 - 目标角色ID</td>
+            <td><input id="item_set_guidepost_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td title="根据设置自动使用星光碎片为受损 100 股以上的塔进行充能">自动补塔</td>
+            <td><select id="item_set_autofill"><option value="on" selected="selected">开</option><option value="off">关</option></td></tr>
+          <tr class="setting-row-btn">
+            <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
+            <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
+          </tr>
+        </tbody></table>
+      </div>
+    </div>
+  `
   showDialog(dialog)
 
-  $('#set1').val(settings.hide_grail)
-  $('#set2').val(settings.pre_temple)
-  $('#set3').val(settings.auction_num)
-  $('#set4').val(settings.merge_order)
-  $('#set5').val(settings.get_bonus)
-  $('#set6').val(settings.gallery)
-  $('#item_set1').val(ItemsSetting.get().lotusland || 0)
-  $('#item_set1').on('change', (e) => {
+  $('.setting-tab-title').on('click', e => {
+    $('.setting-tab').hide()
+    $(`#${e.target.dataset.settingid}`).show()
+    $('.setting-tab-title').removeClass('open')
+    $(e.target).addClass('open')
+  })
+
+  const settings = Settings.get()
+  const itemSetting = ItemsSetting.get()
+  $('#set_hide_grail').val(settings.hide_grail)
+  $('#set_pre_temple').val(settings.pre_temple)
+  $('#set_auction_num').val(settings.auction_num)
+  $('#set_merge_order').val(settings.merge_order)
+  $('#set_get_bonus').val(settings.get_bonus)
+  $('#set_gallery').val(settings.gallery)
+
+  $('#item_set_lotus').val(itemSetting.lotusland || 0)
+  $('#item_set_chaos').val(itemSetting.chaosCube || 0)
+  $('#item_set_autofill').val(itemSetting.autoFill === false ? 'off' : 'on')
+  if (itemSetting.guidepost) {
+    $('#item_set_guidepost').val(itemSetting.guidepost.monoId || 0)
+    $('#item_set_guidepost_to').val(itemSetting.guidepost.toMonoId || 0)
+  }
+
+  $('#item_set_lotus').on('change', (e) => {
     const el = e.target
     if (parseInt(el.value) > 3000) {
       el.style.color = 'red'
@@ -47,20 +98,29 @@ export const openSettings = () => { // 设置
     }
   })
 
-  $('#submit_setting').on('click', () => {
-    settings.hide_grail = $('#set1').val()
-    settings.pre_temple = $('#set2').val()
-    settings.auction_num = $('#set3').val()
-    settings.merge_order = $('#set4').val()
-    settings.get_bonus = $('#set5').val()
-    settings.gallery = $('#set6').val()
+  $('.setting-btn-submit').on('click', () => {
+    settings.hide_grail = $('#set_hide_grail').val()
+    settings.pre_temple = $('#set_pre_temple').val()
+    settings.auction_num = $('#set_auction_num').val()
+    settings.merge_order = $('#set_merge_order').val()
+    settings.get_bonus = $('#set_get_bonus').val()
+    settings.gallery = $('#set_gallery').val()
     Settings.set(settings)
-    ItemsSetting.set({ ...ItemsSetting.get(), lotusland: parseInt($('#item_set1').val()) })
+    ItemsSetting.set({
+      ...ItemsSetting.get(),
+      lotusland: parseInt($('#item_set_lotus').val()),
+      autoFill: $('#item_set_autofill').val() !== 'off',
+      chaosCube: parseInt($('#item_set_chaos').val()),
+      guidepost: {
+        monoId: parseInt($('#item_set_guidepost').val()),
+        toMonoId: parseInt($('#item_set_guidepost_to').val())
+      }
+    })
     $('#submit_setting').val('已保存')
     setTimeout(() => { closeDialog() }, 500)
   })
 
-  $('#export_setting').on('click', () => {
+  $('.setting-btn-export').on('click', () => {
     const dialog = `<div class="bibeBox" style="padding:10px">
       <label>设置导入/导出</label>
       <p><b>导入方式：</b>将之前导出的设置文本粘贴到下方输入框后点击导入按钮</p>

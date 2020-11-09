@@ -32,6 +32,7 @@ export const loadMagic = () => {
   $('#submit_chaosCube').on('click', () => {
     const templeId = parseInt($('#chaosCube').val())
     ItemsSetting.set({ ...ItemsSetting.get(), chaosCube: templeId })
+    if (templeId === 0) return
     postData(`magic/chaos/${templeId}`, null).then((d) => {
       closeDialog()
       console.log(d)
@@ -55,6 +56,7 @@ export const loadMagic = () => {
     const monoId = parseInt($('#monoId').val())
     const toMonoId = parseInt($('#toMonoId').val())
     ItemsSetting.set({ ...ItemsSetting.get(), guidepost: { monoId: monoId, toMonoId: toMonoId } })
+    if (monoId === 0 || toMonoId === 0) return
     postData(`magic/guidepost/${monoId}/${toMonoId}`, null).then((d) => {
       closeDialog()
       console.log(d)
@@ -79,6 +81,7 @@ export const loadMagic = () => {
     const toSupplyId = $('#toSupplyId').val()
     const isTemple = $('#isTemple').val()
     const amount = $('#amount').val()
+    if (supplyId === 0 || toSupplyId === 0 || amount === 0) return
     postData(`magic/stardust/${supplyId}/${toSupplyId}/${amount}/${isTemple}`, null).then((d) => {
       closeDialog()
       console.log(d)
