@@ -71,10 +71,12 @@ if (location.pathname.startsWith('/rakuen/home')) {
   })
   launchObserver({
     parentNode: document.body,
-    selector: '#lastLinks.tab_page_item .assets .link.item',
+    selector: '#lastLinks.tab_page_item .assets .link.item:not(.swap-checked)',
     successCallback: () => {
       changeLinkPos('#lastLinks') // 修改连接顺序
-    }
+      $('#lastLinks.tab_page_item .assets .link.item:not(.swap-checked)').addClass('swap-checked')
+    },
+    stopWhenSuccess: false
   })
   listenToGrailBox(document.body)
 
