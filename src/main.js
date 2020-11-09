@@ -14,6 +14,7 @@ import { addCharaInfo, addICOInfo } from './ui/trade/addCharaInfo'
 import { changeLinkPos } from './ui/trade/changeLinkPos'
 import { showGallery } from './ui/trade/showGallery'
 import { showHideGrailBox } from './ui/trade/showHideGrailBox'
+import { openAuctionDialogSimple } from './ui/trade/openAuctionDialog'
 
 import { Settings } from './config/settings'
 
@@ -76,6 +77,19 @@ if (location.pathname.startsWith('/rakuen/home')) {
     }
   })
   listenToGrailBox(document.body)
+
+  // 修改拍卖按钮
+  launchObserver({
+    parentNode: document.body,
+    selector: '.grail_index .auction_button',
+    successCallback: () => {
+      $(document).off('click', '.grail_index .auction_button')
+      $(document).on('click', '.grail_index .auction_button', (e) => {
+        openAuctionDialogSimple($(e.currentTarget).data('chara'))
+      })
+    },
+    stopWhenSuccess: false
+  })
 } else
 
 // menu page

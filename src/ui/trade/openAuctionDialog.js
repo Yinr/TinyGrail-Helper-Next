@@ -1,11 +1,12 @@
 import { showDialog } from '../../utils/dialog'
 import { formatNumber } from '../../utils/formatter'
+import { postData } from '../../utils/api'
 
 import { loadUserAuctions, bidAuction, cancelAuction } from '../../trade/auction'
 
 import { Settings } from '../../config/settings'
 
-export const openAuctionDialog = (chara, auction) => {
+const openAuctionDialog = (chara, auction) => {
   let auction_num = chara.State
   if (Settings.get().auction_num === 'one') auction_num = 1
   const charaId = chara.CharacterId || chara.Id
@@ -76,3 +77,11 @@ export const openAuctionDialog = (chara, auction) => {
     $('#TB_window .label .total').text(`合计 -₵${formatNumber(price * amount, 2)}`)
   })
 }
+
+const openAuctionDialogSimple = (chara) => {
+  postData('chara/auction/list', [chara.CharacterId || chara.Id]).then((d) => {
+    openAuctionDialog(chara, d)
+  })
+}
+
+export { openAuctionDialog, openAuctionDialogSimple }
