@@ -94,7 +94,17 @@ if (location.pathname.startsWith('/rakuen/home')) {
 
 // menu page
 if (location.pathname.startsWith('/rakuen/topiclist')) {
-  setTimeout(function () { loadHelperMenu() }, 500)
+  if ($('.timelineTabs #recentMenu').length > 0) {
+    loadHelperMenu()
+  } else {
+    launchObserver({
+      parentNode: document.querySelector('.timelineTabs'),
+      selector: '#recentMenu',
+      successCallback: () => {
+        loadHelperMenu()
+      }
+    })
+  }
 } else
 
 // user homepage

@@ -24,8 +24,6 @@ export const loadHelperMenu = () => {
     <li><a href="#" id="temporaryList">临时列表</a></li>
     <li><a href="#" id="followChara">关注角色</a></li>
     <li><a href="#" id="followAuction">关注竞拍</a></li>
-    <li><a href="#" id="myICO">我的ICO</a></li>
-    <li><a href="#" id="myTemple">我的圣殿</a></li>
     <li><a href="#" id="scratch">抽奖</a></li>
     <li><a href="#" id="magic">魔法道具</a></li>
     <li><a href="#" id="balance">资金日志分类</a></li>
@@ -36,6 +34,11 @@ export const loadHelperMenu = () => {
     <li><a href="#" id="settings">设置</a></li>
     </ul></li>`
   $('.timelineTabs').append(item)
+
+  $('#logMenu').closest('li').before(`
+    <li><a href="#" id="myICO">我的 ICO</a></li>
+    <li><a href="#" id="myTemple">我的圣殿</a></li>
+  `)
 
   $('#followChara').on('click', () => menuItemClicked(loadFollowChara))
   $('#followAuction').on('click', () => menuItemClicked(loadFollowAuction))
