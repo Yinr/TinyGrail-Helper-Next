@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.12
+// @version     3.1.13
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -906,7 +906,8 @@
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}</a> <small class="grey"></small>
               <div class="row"><small class="time"></small>
-              <span><small data-id="${id}" data-name="${item.Name}" class="begin_ico" title="开启 ICO">[开启 ICO]</small></span>
+              <span><small data-id="${id}" class="reload_chara" title="刷新角色信息" style="display: none;">[重新加载]</small>
+                <small data-id="${id}" data-name="${item.Name}" class="begin_ico" title="开启 ICO">[开启 ICO]</small></span>
               </div></div></li>`;
     } else if (type === 'auction') {
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
@@ -1069,6 +1070,12 @@
         autoBeginICO([id]);
       }
     });
+    $('.reload_chara').off('click');
+    $('.reload_chara').on('click', (e) => {
+      e.stopPropagation();
+      const id = $(e.target).data('id');
+      getNonCharacter(id);
+    });
     $('#eden_tpc_list .item_list').on('click', listItemClicked);
     if (page !== total && total > 0) {
       const loadMore = `<li class="load_more"><button id="loadMoreButton" class="load_more_button" data-page="${page + 1}">[加载更多]</button></li>`;
@@ -1083,25 +1090,42 @@
       $('#eden_tpc_list ul').append(`<li class="load_more sub">[${noMore}]</li>`);
     }
   };
-  const getNonCharacter = async id => {
-    try {
-      const bgmPage = await getData(`/rakuen/topic/crt/${id}`);
+  const updateNonCharacter = chara => {
+    const $item = $(`.item_list[data-id=${chara.CharacterId}]`);
+    if (chara.Icon) $item.find('span.avatarNeue').css('background-image', `url('${normalizeAvatar(chara.Icon)}')`);
+    $item.find('.title.avatar.l').text(chara.Name);
+    $item.find('.row .begin_ico').attr('data-name', chara.Name).data('name', chara.Name);
+    if (chara.Reload) {
+      $item.find('.row .reload_chara').show();
+    } else {
+      $item.find('.row .reload_chara').hide();
+    }
+  };
+  const getNonCharacter = id => {
+    getData(`/rakuen/topic/crt/${id}`).then(bgmPage => {
       const bgmInfo = bgmPage.match(/class="avatar"><img\s+src="([^"]+)"\s+class="avatar\s+ll"><\/a>\s+<a href=".*"\s+target="_parent">.*<\/a><\/span><br\s*\/>(.+)<\/h1>/);
-      return {
+      updateNonCharacter({
         Id: id,
         CharacterId: id,
         Icon: bgmInfo[1],
         Name: bgmInfo[2],
         NotExist: true
-      }
-    } catch (e) {
-      console.log(`获取 #${id} 信息出错`, e);
-      return {
+      });
+    }).catch(e => {
+      console.log(`未开启 ICO 角色 #${id} 信息加载失败`, e);
+      updateNonCharacter({
         Id: id,
         CharacterId: id,
         Name: `未知角色 #${id}`,
+        Reload: true,
         NotExist: true
-      }
+      });
+    });
+    return {
+      Id: id,
+      CharacterId: id,
+      Name: `角色 #${id} 信息加载中...`,
+      NotExist: true
     }
   };
   const generateCharacterList = async ids => {
@@ -1110,7 +1134,7 @@
     if (charas.State === 0) {
       for (let i = 0; i < ids.length; i++) {
         let item = charas.Value.find(chara => chara.CharacterId === parseInt(ids[i]));
-        if (!item) item = await getNonCharacter(ids[i]);
+        if (!item) item = getNonCharacter(ids[i]);
         charasInfo.push(item);
       }
       return charasInfo
