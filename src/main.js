@@ -26,35 +26,33 @@ setInterval(autoBuildTemple, 60 * 60 * 1000)
 // ico自动补款
 setInterval(autoFillICO, 30 * 1000)
 
+const listenToGrailBox = (parentNode = document.body, listenIco = true) => {
+  // charater trade info
+  launchObserver({
+    parentNode: parentNode,
+    selector: '#grailBox:not(.tinygrail-helped) .assets_box',
+    successCallback: () => {
+      addCharaInfo(parseInt($('#grailBox:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]))
+    },
+    stopWhenSuccess: false
+  })
+  if (listenIco) {
+    // charater ico info
+    launchObserver({
+      parentNode: parentNode,
+      selector: '#grailBox:not(.tinygrail-helped) .trade .money',
+      successCallback: () => {
+        addICOInfo(parseInt($('#grailBox:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]))
+      },
+      stopWhenSuccess: false
+    })
+  }
+}
+
 // character page
 if (location.pathname.startsWith('/rakuen/topic/crt') || location.pathname.startsWith('/character')) {
   const parentNode = document.getElementById('subject_info') || document.getElementById('columnCrtB')
-  // charater trade info
-  let charaFetched = false
-  launchObserver({
-    parentNode: parentNode,
-    selector: '#grailBox .assets_box',
-    failCallback: () => { charaFetched = false },
-    successCallback: () => {
-      if (charaFetched) return
-      charaFetched = true
-      addCharaInfo()
-    },
-    stopWhenSuccess: false
-  })
-  // charater ico info
-  let ico_fetched = false
-  launchObserver({
-    parentNode: parentNode,
-    selector: '#grailBox .trade .money',
-    failCallback: () => { ico_fetched = false },
-    successCallback: () => {
-      if (ico_fetched) return
-      ico_fetched = true
-      addICOInfo()
-    },
-    stopWhenSuccess: false
-  })
+  listenToGrailBox(parentNode)
 } else
 
 // rakuen homepage
@@ -77,18 +75,7 @@ if (location.pathname.startsWith('/rakuen/home')) {
       changeLinkPos('#lastLinks') // 修改连接顺序
     }
   })
-  let chara_fetched = false
-  launchObserver({
-    parentNode: document.body,
-    selector: '#grailBox .assets_box',
-    failCallback: () => { chara_fetched = false },
-    successCallback: () => {
-      if (chara_fetched) return
-      chara_fetched = true
-      addCharaInfo()
-    },
-    stopWhenSuccess: false
-  })
+  listenToGrailBox(document.body)
 } else
 
 // menu page
@@ -115,16 +102,5 @@ if (location.pathname.startsWith('/user')) {
     },
     stopWhenSuccess: false
   })
-  let chara_fetched = false
-  launchObserver({
-    parentNode: document.body,
-    selector: '#grailBox .assets_box',
-    failCallback: () => { chara_fetched = false },
-    successCallback: () => {
-      if (chara_fetched) return
-      chara_fetched = true
-      addCharaInfo()
-    },
-    stopWhenSuccess: false
-  })
+  listenToGrailBox(document.body)
 }

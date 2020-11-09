@@ -124,7 +124,7 @@ const openICODialog = (chara) => {
     const index = fillICOList.findIndex(item => parseInt(item.Id) === chara.Id)
     if (index >= 0) {
       alert(`取消自动补款${chara.Name}`)
-      $('#followICOButton').text('[自动补款]')
+      $(`#grailBox.chara${chara.CharacterId} #followICOButton`).text('[自动补款]')
       fillICOList.splice(index, 1)
       FillICOList.set(fillICOList)
     }
@@ -151,7 +151,7 @@ const openICODialog = (chara) => {
     } else fillICOList.push(info)
     FillICOList.set(fillICOList)
     alert(`启动自动补款#${chara.Id} ${chara.Name}`)
-    $('#followICOButton').text('[自动补款中]')
+    $(`#grailBox.chara${chara.CharacterId} #followICOButton`).text('[自动补款中]')
     closeDialog()
     console.log(fillICOList)
   })
@@ -180,8 +180,8 @@ const setFullFillICO = (chara) => { // 设置自动补款
   if (FillICOList.get().some(item => parseInt(item.charaId) === chara.CharacterId)) {
     button = '<button id="followICOButton" class="text_button">[自动补款中]</button>'
   }
-  $('#grailBox .title .text').after(button)
-  $('#followICOButton').on('click', () => {
+  $(`#grailBox.chara${chara.CharacterId} .title .text`).after(button)
+  $(`#grailBox.chara${chara.CharacterId} #followICOButton`).on('click', () => {
     openICODialog(chara)
   })
 }

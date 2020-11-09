@@ -22,17 +22,17 @@ const followChara = (charaId) => { // 关注角色
   if (FollowList.get().charas.includes(charaId)) {
     button = '<button id="followCharaButton" class="text_button">[取消关注]</button>'
   }
-  if ($('#kChartButton').length) $('#kChartButton').before(button)
-  else $('#grailBox .title .text').after(button)
+  if ($(`#grailBox.chara${charaId} #kChartButton`).length) $(`#grailBox.chara${charaId} #kChartButton`).before(button)
+  else $(`#grailBox.chara${charaId} .title .text`).after(button)
 
-  $('#followCharaButton').on('click', () => {
+  $(`#grailBox.chara${charaId} #followCharaButton`).on('click', () => {
     const followList = FollowList.get()
     if (followList.charas.includes(charaId)) {
       followList.charas.splice(followList.charas.indexOf(charaId), 1)
-      $('#followCharaButton').text('[关注角色]')
+      $(`#grailBox.chara${charaId} #followCharaButton`).text('[关注角色]')
     } else {
       followList.charas.unshift(charaId)
-      $('#followCharaButton').text('[取消关注]')
+      $(`#grailBox.chara${charaId} #followCharaButton`).text('[取消关注]')
     }
     FollowList.set(followList)
   })
@@ -47,15 +47,15 @@ const followAuctions = (charaId) => { // 关注竞拍情况
       } else {
         button = '<button id="followAuctionButton" class="text_button">[关注竞拍]</button>'
       }
-      $('#buildButton').before(button)
-      $('#followAuctionButton').on('click', () => {
+      $(`#grailBox.chara${charaId} #buildButton`).before(button)
+      $(`#grailBox.chara${charaId} #followAuctionButton`).on('click', () => {
         const followList = FollowList.get()
         if (followList.auctions.includes(charaId)) {
           followList.auctions.splice(followList.auctions.indexOf(charaId), 1)
-          $('#followAuctionButton').text('[关注竞拍]')
+          $(`#grailBox.chara${charaId} #followAuctionButton`).text('[关注竞拍]')
         } else {
           followList.auctions.unshift(charaId)
-          $('#followAuctionButton').text('[取消关注]')
+          $(`#grailBox.chara${charaId} #followAuctionButton`).text('[取消关注]')
         }
         FollowList.set(followList)
       })
@@ -64,11 +64,11 @@ const followAuctions = (charaId) => { // 关注竞拍情况
 }
 
 const sell_out = (charaId, init_price) => {
-  $($('#grailBox .info .text')[1]).append('<button id="sell_out" class="text_button" title="以发行价全部卖出">[全部卖出]</button>')
-  $('#sell_out').on('click', function () {
+  $($(`#grailBox.chara${charaId} .info .text`)[1]).append('<button id="sell_out" class="text_button" title="以发行价全部卖出">[全部卖出]</button>')
+  $(`#grailBox.chara${charaId} #sell_out`).on('click', function () {
     getData(`chara/user/${charaId}`).then((d) => {
-      $('.ask .price').val(init_price)
-      $('.ask .amount').val(d.Value.Amount)
+      $(`#grailBox.chara${charaId} .ask .price`).val(init_price)
+      $(`#grailBox.chara${charaId} .ask .amount`).val(d.Value.Amount)
     })
   })
 }
@@ -78,7 +78,7 @@ const showInitialPrice = (charaId) => {
   if (charaInitPrice[charaId]) {
     const init_price = charaInitPrice[charaId].init_price
     const time = charaInitPrice[charaId].time
-    $($('#grailBox .info .text')[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
+    $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
     sell_out(charaId, init_price)
   } else {
     getData(`chara/charts/${charaId}/2019-08-08`).then((d) => {
@@ -88,35 +88,35 @@ const showInitialPrice = (charaId) => {
         const charaInitPrice = CharaInitPrice.get()
         charaInitPrice[charaId] = { init_price: init_price, time: time }
         CharaInitPrice.set(charaInitPrice)
-        $($('#grailBox .info .text')[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
+        $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
         sell_out(charaId, init_price)
       }
     })
   }
 }
 
-const priceWarning = () => {
-  const price = $('.bid .price').val()
-  $('#bidButton').after('<button style="display:none" id="confirm_bidButton" class="active bid">买入</button>')
-  $('.bid .price').on('input', function () {
-    const price_now = $('.bid .price').val()
+const priceWarning = (charaId) => {
+  const price = $(`#grailBox.chara${charaId} .bid .price`).val()
+  $(`#grailBox.chara${charaId} #bidButton`).after('<button style="display:none" id="confirm_bidButton" class="active bid">买入</button>')
+  $(`#grailBox.chara${charaId} .bid .price`).on('input', function () {
+    const price_now = $(`#grailBox.chara${charaId} .bid .price`).val()
     if (price_now > Math.max(price * 3, 100)) {
-      $('.bid .price').css({ color: 'red' })
-      $('#confirm_bidButton').show()
-      $('#bidButton').hide()
+      $(`#grailBox.chara${charaId} .bid .price`).css({ color: 'red' })
+      $(`#grailBox.chara${charaId} #confirm_bidButton`).show()
+      $(`#grailBox.chara${charaId} #bidButton`).hide()
     } else {
-      $('#confirm_bidButton').hide()
-      $('#bidButton').show()
-      $('.bid .price').css({ color: 'inherit' })
+      $(`#grailBox.chara${charaId} #confirm_bidButton`).hide()
+      $(`#grailBox.chara${charaId} #bidButton`).show()
+      $(`#grailBox.chara${charaId} .bid .price`).css({ color: 'inherit' })
     }
   })
-  $('#confirm_bidButton').on('click', function () {
-    const price = $('.bid .price').val()
-    const amount = $('.bid .amount').val()
+  $(`#grailBox.chara${charaId} #confirm_bidButton`).on('click', function () {
+    const price = $(`#grailBox.chara${charaId} .bid .price`).val()
+    const amount = $(`#grailBox.chara${charaId} .bid .amount`).val()
     if (!confirm(`买入价格过高提醒！\n确定以${price}的价格买入${amount}股？`)) {
       return
     }
-    $('#bidButton').click()
+    $(`#grailBox.chara${charaId} #bidButton`).click()
   })
 }
 
@@ -139,37 +139,37 @@ const mergeorderListHistory = (charaId) => {
   if (Settings.get().merge_order === 'on') {
     getData(`chara/user/${charaId}`).then((d) => {
       if (d.State === 0 && d.Value) {
-        $('.ask .ask_list li[class!=ask]').hide()
+        $(`.chara${charaId} .ask .ask_list li[class!=ask]`).hide()
         const askHistory = mergeorderList(d.Value.AskHistory)
         for (let i = 0; i < askHistory.length; i++) {
           const ask = askHistory[i]
-          if (ask) $('.ask .ask_list').prepend(`<li title="${formatDate(ask.TradeTime)}">₵${formatNumber(ask.Price, 2)} / ${formatNumber(ask.Amount, 0)} / +${formatNumber(ask.Amount * ask.Price, 2)}<span class="cancel">[成交]</span></li>`)
+          if (ask) $(`.chara${charaId} .ask .ask_list`).prepend(`<li title="${formatDate(ask.TradeTime)}">₵${formatNumber(ask.Price, 2)} / ${formatNumber(ask.Amount, 0)} / +${formatNumber(ask.Amount * ask.Price, 2)}<span class="cancel">[成交]</span></li>`)
         }
-        $('.bid .bid_list li[class!=bid]').hide()
+        $(`.chara${charaId} .bid .bid_list li[class!=bid]`).hide()
         const bidHistory = mergeorderList(d.Value.BidHistory)
         for (let i = 0; i < bidHistory.length; i++) {
           const bid = bidHistory[i]
-          if (bid) $('.bid .bid_list').prepend(`<li title="${formatDate(bid.TradeTime)}">₵${formatNumber(bid.Price, 2)} / ${formatNumber(bid.Amount, 0)} / -${formatNumber(bid.Amount * bid.Price, 2)}<span class="cancel">[成交]</span></li>`)
+          if (bid) $(`.chara${charaId} .bid .bid_list`).prepend(`<li title="${formatDate(bid.TradeTime)}">₵${formatNumber(bid.Price, 2)} / ${formatNumber(bid.Amount, 0)} / -${formatNumber(bid.Amount * bid.Price, 2)}<span class="cancel">[成交]</span></li>`)
         }
       }
     })
   }
 }
 
-const showOwnTemple = () => {
+const showOwnTemple = (charaId) => {
   const pre_temple = Settings.get().pre_temple
-  const temples = $('#grailBox .assets_box #lastTemples.assets .item')
+  const temples = $(`#grailBox.chara${charaId} .assets_box #lastTemples.assets .item`)
   const me = getMe()
   for (let i = 0; i < temples.length; i++) {
     const user = temples[i].querySelector('.name a').href.split('/').pop()
     if (user === me) {
       temples[i].classList.add('my_temple')
       temples[i].classList.remove('replicated')
-      if (pre_temple === 'on') $('#grailBox .assets_box #lastTemples.assets').prepend(temples[i])
+      if (pre_temple === 'on') $(`#grailBox.chara${charaId} .assets_box #lastTemples.assets`).prepend(temples[i])
       break
     }
   }
-  $('#expandButton').on('click', () => { showOwnTemple() })
+  $(`#grailBox.chara${charaId} #expandButton`).on('click', () => { showOwnTemple(charaId) })
 }
 
 const changeTempleCover = (charaId) => {
@@ -192,7 +192,7 @@ const changeTempleCover = (charaId) => {
         if (d.State === 0) {
           alert('更换封面成功。')
           $('#TB_window img.cover').attr('src', cover)
-          $('#grailBox .assets_box .assets .item').each(function () {
+          $(`#grailBox.chara${charaId} .assets_box .assets .item`).each(function () {
             if (user === this.querySelector('.name a').href.split('/').pop()) { $(this).find('div.card').css({ 'background-image': 'url(https://tinygrail.mange.cn/' + cover.match(/cover\/\S+\.jpg/)[0] + '!w150)' }) }
           })
         } else {
@@ -215,7 +215,7 @@ const changeTempleCover = (charaId) => {
     })
   }
 
-  $('#grailBox .assets .item').on('click', (e) => {
+  $(`#grailBox.chara${charaId} .assets .item`).on('click', (e) => {
     const me = getMe()
     const $el = $(e.currentTarget)
     let temple = $el.data('temple')
@@ -246,9 +246,9 @@ const changeTempleCover = (charaId) => {
   })
 }
 
-const showOwnLink = () => {
+const showOwnLink = (charaId) => {
   const pre_link = Settings.get().pre_temple
-  const links = $('#grailBox .assets_box #lastLinks.assets .link.item')
+  const links = $(`#grailBox.chara${charaId} .assets_box #lastLinks.assets .link.item`)
   const me = getMe()
   for (let i = 0; i < links.length; i++) {
     const user = links[i].querySelector('.name a').href.split('/').pop()
@@ -318,10 +318,11 @@ const openHistoryDialog = (chara, page) => {
 }
 
 const showAuctionHistory = (chara) => {
+  const charaId = chara.CharacterId || chara.Id
   const button = '<button id="auctionHistorys" class="text_button">[往期拍卖]</button>'
-  $('#auctionHistoryButton').after(button)
-  $('#auctionHistoryButton').hide()
-  $('#auctionHistorys').on('click', () => {
+  $(`#grailBox.chara${charaId} #auctionHistoryButton`).after(button)
+  $(`#grailBox.chara${charaId} #auctionHistoryButton`).hide()
+  $(`#grailBox.chara${charaId} #auctionHistorys`).on('click', () => {
     openHistoryDialog(chara, 1)
   })
 }
@@ -379,18 +380,21 @@ const openTradeHistoryDialog = (chara) => {
 }
 
 const showTradeHistory = (chara) => {
-  $('#kChartButton').after('<button id="tradeHistoryButton" class="text_button">[交易记录]</button>')
-  $('#tradeHistoryButton').on('click', () => {
+  const charaId = chara.CharacterId || chara.Id
+  $(`#grailBox.chara${charaId} #kChartButton`).after('<button id="tradeHistoryButton" class="text_button">[交易记录]</button>')
+  $(`#grailBox.chara${charaId} #tradeHistoryButton`).on('click', () => {
     openTradeHistoryDialog(chara)
   })
 }
 
 const showPrice = (chara) => {
+  const charaId = chara.CharacterId || chara.Id
   const price = chara.Price.toFixed(2)
-  $($('#grailBox .info .text')[1]).append(`<span>评估价：${price}</span>`)
+  $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span>评估价：${price}</span>`)
 }
 
 const showTempleRate = (chara) => {
+  const charaId = chara.CharacterId || chara.Id
   const rate = chara.Rate
   const level = chara.Level
   getData(`chara/temple/${chara.Id}`).then((d) => {
@@ -399,9 +403,19 @@ const showTempleRate = (chara) => {
       templeAll[d.Value[i].Level]++
     }
     const templeRate = rate * (level + 1) * 0.3
-    $('#grailBox .assets_box .bold .sub').attr('title', '活股股息:' + formatNumber(rate, 2))
-    $('#grailBox .assets_box .bold .sub').before(`<span class="sub"> (${templeAll[3]} + ${templeAll[2]} + ${templeAll[1]})</span>`)
-    $('#showTempleButton').before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate, 2)}"> (${formatNumber(templeRate, 2)})</span>`)
+    $(`#grailBox.chara${charaId} .assets_box .bold .sub`).attr('title', '活股股息:' + formatNumber(rate, 2))
+    $(`#grailBox.chara${charaId} .assets_box .bold .sub`).before(`<span class="sub"> (${templeAll[3]} + ${templeAll[2]} + ${templeAll[1]})</span>`)
+    if ($(`#grailBox.chara${charaId} #expandButton`).length) {
+      $(`#grailBox.chara${charaId} #expandButton`).before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate, 2)}"> (${formatNumber(templeRate, 2)})</span>`)
+    } else {
+      launchObserver({
+        parentNode: document.querySelector(`#grailBox.chara${charaId}`),
+        selector: `#grailBox.chara${charaId} #expandButton`,
+        successCallback: () => {
+          $(`#grailBox.chara${charaId} #expandButton`).before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate, 2)}"> (${formatNumber(templeRate, 2)})</span>`)
+        }
+      })
+    }
   })
 }
 
@@ -434,7 +448,7 @@ const openBuildDialog = (chara) => {
       AutoTempleList.set(autoTempleList)
       alert(`取消自动建塔${chara.Name}`)
     }
-    $('#autobuildButton').text('[自动建塔]')
+    $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]')
     closeDialog()
   })
 
@@ -454,7 +468,7 @@ const openBuildDialog = (chara) => {
     AutoTempleList.set(autoTempleList)
     alert(`启动自动建塔#${info.charaId} ${info.name}`)
     closeDialog()
-    $('#autobuildButton').text('[自动建塔中]')
+    $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔中]')
     autoBuildTemple([info])
   })
 }
@@ -465,32 +479,33 @@ const setBuildTemple = (chara) => {
   if (AutoTempleList.get().some(item => parseInt(item.charaId) === parseInt(charaId))) {
     button = '<button id="autobuildButton" class="text_button">[自动建塔中]</button>'
   }
-  if ($('#buildButton').length) $('#buildButton').after(button)
-  else $('#grailBox .title .text').after(button)
+  if ($(`#grailBox.chara${charaId} #buildButton`).length) $(`#grailBox.chara${charaId} #buildButton`).after(button)
+  else $(`#grailBox.chara${charaId} .title .text`).after(button)
 
-  $('#autobuildButton').on('click', () => {
+  $(`#grailBox.chara${charaId} #autobuildButton`).on('click', () => {
     openBuildDialog(chara)
   })
 }
 
 const fixAuctions = (chara) => {
+  const charaId = chara.CharacterId || chara.Id
   getData(`chara/user/${chara.Id}/tinygrail/false`).then((d) => {
     chara.Price = d.Value.Price
     chara.State = d.Value.Amount
     let button = '<button id="auctionButton2" class="text_button">[萌王投票]</button>'
     if (d.State === 0 && d.Value.Amount > 0) button = '<button id="auctionButton2" class="text_button">[参与竞拍]</button>'
-    $('#buildButton').before(button)
-    $('#auctionButton').hide()
+    $(`#grailBox.chara${charaId} #buildButton`).before(button)
+    $(`#grailBox.chara${charaId} #auctionButton`).hide()
     launchObserver({
       parentNode: document.body,
-      selector: '#auctionButton',
+      selector: `#grailBox.chara${charaId} #auctionButton`,
       successCallback: () => {
-        $('#auctionButton').hide()
+        $(`#grailBox.chara${charaId} #auctionButton`).hide()
       }
     })
     postData('chara/auction/list', [chara.Id]).then((d) => {
       loadUserAuctions(d)
-      $('#auctionButton2').on('click', () => {
+      $(`#grailBox.chara${charaId} #auctionButton2`).on('click', () => {
         openAuctionDialog(chara, d)
       })
     })
@@ -498,32 +513,34 @@ const fixAuctions = (chara) => {
 }
 
 const showEndTime = (chara) => {
+  const charaId = chara.CharacterId || chara.Id
   const endTime = (chara.End).slice(0, 19)
-  $('#grailBox .title .text').append(`<div class="sub" style="margin-left: 20px">结束时间: ${endTime}</div>`)
+  $(`#grailBox.chara${charaId} .title .text`).append(`<div class="sub" style="margin-left: 20px">结束时间: ${endTime}</div>`)
 }
 
-const addCharaInfo = () => {
+const addCharaInfo = (cid) => {
   try {
-    const charaId = parseInt($('#grailBox .title .name a')[0].href.split('/').pop())
+    const charaId = cid || parseInt($('#grailBox .title .name a')[0].href.split('/').pop())
+    $(`#grailBox.chara${charaId}`).addClass('tinygrail-helped')
     followChara(charaId) // 关注角色
     followAuctions(charaId) // 关注竞拍情况
     showInitialPrice(charaId) // 显示发行价
-    priceWarning() // 买入价格过高提醒
+    priceWarning(charaId) // 买入价格过高提醒
     mergeorderListHistory(charaId) // 合并同一时间订单历史记录
     launchObserver({
       parentNode: document.body,
-      selector: '#lastTemples .item',
+      selector: `#grailBox.chara${charaId} #lastTemples .item`,
       successCallback: () => {
-        showOwnTemple() // 显示自己的圣殿
+        showOwnTemple(charaId) // 显示自己的圣殿
         changeTempleCover(charaId) // 修改他人圣殿封面
       }
     })
     launchObserver({
       parentNode: document.body,
-      selector: '#lastLinks .link.item',
+      selector: `#grailBox.chara${charaId} #lastLinks .link.item`,
       successCallback: () => {
-        showOwnLink() // 前置自己的连接
-        changeLinkPos('#lastLinks') // 修改连接顺序
+        showOwnLink(charaId) // 前置自己的连接
+        changeLinkPos(`#grailBox.chara${charaId} #lastLinks`) // 修改连接顺序
       }
     })
     showGallery() // 查看画廊
@@ -536,11 +553,12 @@ const addCharaInfo = () => {
       setBuildTemple(chara) // 自动建塔
       fixAuctions(chara) // 修改默认拍卖底价和数量
     })
-  } catch (e) {}
+  } catch (e) { console.log(e) }
 }
 
-const addICOInfo = () => {
-  const charaId = parseInt(location.pathname.split('/').pop())
+const addICOInfo = (cid) => {
+  const charaId = cid || parseInt(location.pathname.split('/').pop())
+  $(`#grailBox.chara${charaId}`).addClass('tinygrail-helped')
   followChara(charaId) // 关注角色
   getData(`chara/${charaId}`).then((d) => {
     const chara = d.Value

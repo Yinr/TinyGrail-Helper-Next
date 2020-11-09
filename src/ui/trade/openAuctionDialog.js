@@ -8,6 +8,7 @@ import { Settings } from '../../config/settings'
 export const openAuctionDialog = (chara, auction) => {
   let auction_num = chara.State
   if (Settings.get().auction_num === 'one') auction_num = 1
+  const charaId = chara.CharacterId || chara.Id
   const price = Math.ceil(chara.Price * 100) / 100
   const total = formatNumber(price * chara.State, 2)
   const dialog = `<div class="title" title="拍卖底价 / 竞拍数量 / 流通股份">股权拍卖 - #${chara.Id} 「${chara.Name}」 ₵${formatNumber(chara.Price, 2)} / ${chara.State} / ${chara.Total}</div>
@@ -24,7 +25,7 @@ export const openAuctionDialog = (chara, auction) => {
                   <div class="loading" style="display:none"></div>`
   showDialog(dialog)
 
-  $('.assets_box .auction_tip').remove()
+  $(`#grailBox.chara${charaId} .assets_box .auction_tip`).remove()
   loadUserAuctions(auction)
 
   $('#cancelAuctionButton').on('click', function () {

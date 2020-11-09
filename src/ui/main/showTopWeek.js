@@ -24,7 +24,7 @@ export const showTopWeek = () => {
               <span title="竞拍人数 / 竞拍数量 / 拍卖总数">${d.Value[i].Type} / ${d.Value[i].Assets} / ${d.Value[i].Sacrifices}</span></div>`)
       $($('#topWeek .assets .item')[i]).append(auction_button)
       const chara = { Id: d.Value[i].CharacterId, Name: d.Value[i].CharacterName, Price: d.Value[i].Price, State: d.Value[i].Sacrifices, Total: 0 }
-      auction_button.on('click', () => {
+      auction_button.css('cursor', 'pointer').on('click', () => {
         postData('chara/auction/list', [charaId]).then((d) => {
           openAuctionDialog(chara, d)
         })

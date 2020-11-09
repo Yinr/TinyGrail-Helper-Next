@@ -5,12 +5,14 @@ import { Settings } from '../../config/settings'
 export const showGallery = () => { // 显示画廊
   if (Settings.get().gallery === 'on') {
     let index = 0
-    $('body').on('keydown', function (e) {
-      switch (event.keyCode) {
+    $('body').on('keydown', function (event) {
+      switch (event.key || event.keyCode) {
+        case 'ArrowLeft':
         case 37:
           closeDialog()
           $('.item .card')[index - 1].click()
           break
+        case 'ArrowRight':
         case 39:
           closeDialog()
           $('.item .card')[index + 1].click()

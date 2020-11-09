@@ -12,7 +12,7 @@ const removeBuildTemple = (charaId) => {
       break
     }
   }
-  $('#autobuildButton').text('[自动建塔]')
+  $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]')
   AutoTempleList.set(autoTempleList)
 }
 
@@ -21,7 +21,7 @@ const autoBuildTemple = async (charas = undefined) => {
     postData(`chara/sacrifice/${chara.charaId}/${amount}/false`, null).then((d) => {
       if (d.State === 0) {
         console.log(`#${chara.charaId} ${chara.name} 献祭${amount} 获得金额 ₵${d.Value.Balance.toFixed(2)}`)
-        $('#autobuildButton').text('[自动建塔]')
+        $(`#grailBox.chara${chara.charaId} #autobuildButton`).text('[自动建塔]')
         removeBuildTemple(chara.charaId)
       } else {
         console.log(`${d.Message}`)
