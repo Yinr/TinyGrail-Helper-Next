@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.13
+// @version     3.1.14
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -714,6 +714,9 @@
   const Settings = configGenerator('settings', {
     pre_temple: 'on',
     hide_grail: 'off',
+    hide_link: 'off',
+    hide_temple: 'off',
+    hide_board: 'off',
     auction_num: 'one',
     merge_order: 'off',
     get_bonus: 'on',
@@ -1808,6 +1811,8 @@
             <td><select id="set_get_bonus"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
           <tr><td title="小圣杯界面左右键切换查看圣殿图">圣殿画廊</td>
             <td><select id="set_gallery"><option value="off" selected="selected">关</option><option value="on">开</option></td></tr>
+          <tr><td>合并历史订单</td>
+            <td><select id="set_merge_order"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
           <tr><td>幻想乡自动抽奖金额上限</td>
             <td><input id="item_set_lotus" type="number" min="0" step="1000" value="0"> cc</td></tr>
           <tr class="setting-row-btn">
@@ -1818,12 +1823,16 @@
       </div>
       <div id="setting-tab-ui" class="setting-tab" style="display: none;">
         <table class="settings-tab-table"><tbody>
-          <tr><td>用户主页小圣杯默认状态</td>
+          <tr><td>用户主页小圣杯默认显示状态</td>
             <td><select id="set_hide_grail"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+          <tr><td>[连接] 默认显示状态</td>
+            <td><select id="set_hide_link"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+          <tr><td>[圣殿] 默认显示状态</td>
+            <td><select id="set_hide_temple"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+          <tr><td>[董事会] 默认显示状态</td>
+            <td><select id="set_hide_board"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>将自己圣殿或连接排到第一个显示</td>
             <td><select id="set_pre_temple"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-          <tr><td>合并历史订单</td>
-            <td><select id="set_merge_order"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
           <tr class="setting-row-btn">
             <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
             <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
@@ -1858,6 +1867,9 @@
     const settings = Settings.get();
     const itemSetting = ItemsSetting.get();
     $('#set_hide_grail').val(settings.hide_grail);
+    $('#set_hide_link').val(settings.hide_link);
+    $('#set_hide_temple').val(settings.hide_temple);
+    $('#set_hide_board').val(settings.hide_board);
     $('#set_pre_temple').val(settings.pre_temple);
     $('#set_auction_num').val(settings.auction_num);
     $('#set_merge_order').val(settings.merge_order);
@@ -1882,6 +1894,9 @@
     });
     $('.setting-btn-submit').on('click', () => {
       settings.hide_grail = $('#set_hide_grail').val();
+      settings.hide_link = $('#set_hide_link').val();
+      settings.hide_temple = $('#set_hide_temple').val();
+      settings.hide_board = $('#set_hide_board').val();
       settings.pre_temple = $('#set_pre_temple').val();
       settings.auction_num = $('#set_auction_num').val();
       settings.merge_order = $('#set_merge_order').val();
@@ -2544,6 +2559,39 @@
     const endTime = (chara.End).slice(0, 19);
     $(`#grailBox.chara${charaId} .title .text`).append(`<div class="sub" style="margin-left: 20px">结束时间: ${endTime}</div>`);
   };
+  const showHideBlock = (titleSelector, blockSelector, settings) => {
+    const toggleBlock = () => {
+      const $linkTitle = $(titleSelector);
+      const $linkBlock = $(blockSelector);
+      if ($linkTitle.hasClass('hide_grail_block_title')) {
+        $linkTitle.removeClass('hide_grail_block_title');
+        $linkBlock.removeClass('hide_grail_block');
+      } else {
+        $linkTitle.addClass('hide_grail_block_title');
+        $linkBlock.addClass('hide_grail_block');
+      }
+    };
+    if (settings === 'on') toggleBlock();
+    $(titleSelector).css('cursor', 'pointer').attr('title', '显示/隐藏').off('click').on('click', toggleBlock);
+  };
+  const showHideLink = (charaId) => {
+    const titleSelector = `#grailBox.chara${charaId} .link_desc .link_count`;
+    const blockSelector = `#grailBox.chara${charaId} #lastLinks`;
+    const config = Settings.get().hide_link;
+    showHideBlock(titleSelector, blockSelector, config);
+  };
+  const showHideTemple = (charaId) => {
+    const titleSelector = `#grailBox.chara${charaId} .temple_desc .temple_count`;
+    const blockSelector = `#grailBox.chara${charaId} #lastTemples`;
+    const config = Settings.get().hide_temple;
+    showHideBlock(titleSelector, blockSelector, config);
+  };
+  const showHideBoard = (charaId) => {
+    const titleSelector = `#grailBox.chara${charaId} .board_box .desc .bold`;
+    const blockSelector = `#grailBox.chara${charaId} .board_box .users, #grailBox.chara${charaId} #loadBoardMemeberButton`;
+    const config = Settings.get().hide_board;
+    showHideBlock(titleSelector, blockSelector, config);
+  };
   const addCharaInfo = (cid) => {
     try {
       const charaId = cid || parseInt($('#grailBox .title .name a')[0].href.split('/').pop());
@@ -2567,6 +2615,15 @@
         successCallback: () => {
           showOwnLink(charaId);
           changeLinkPos(`#grailBox.chara${charaId} #lastLinks`);
+        }
+      });
+      launchObserver({
+        parentNode: document.body,
+        selector: `#grailBox.chara${charaId} .board_box .users .user`,
+        successCallback: () => {
+          showHideLink(charaId);
+          showHideTemple(charaId);
+          showHideBoard(charaId);
         }
       });
       showGallery();
@@ -2665,10 +2722,12 @@
     });
     launchObserver({
       parentNode: document.body,
-      selector: '#lastLinks.tab_page_item .assets .link.item',
+      selector: '#lastLinks.tab_page_item .assets .link.item:not(.swap-checked)',
       successCallback: () => {
         changeLinkPos('#lastLinks');
-      }
+        $('#lastLinks.tab_page_item .assets .link.item:not(.swap-checked)').addClass('swap-checked');
+      },
+      stopWhenSuccess: false
     });
     listenToGrailBox(document.body);
     launchObserver({

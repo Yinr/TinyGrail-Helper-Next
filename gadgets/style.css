@@ -41,6 +41,13 @@ img.cover {
   min-width: 50px;
   padding: 0 9px; }
 
+#grailBox .hide_grail_block_title:after {
+  font-size: 40%;
+  content: ' (点击显示)'; }
+
+#grailBox .hide_grail_block {
+  display: none !important; }
+
 .link.swapped .swapPos {
   text-decoration: underline; }
 
