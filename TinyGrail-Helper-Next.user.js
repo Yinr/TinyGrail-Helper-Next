@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.10
+// @version     3.1.11
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -15,7 +15,7 @@
 (function () {
   'use strict';
 
-  var css_248z = "@charset \"UTF-8\";\nul.timelineTabs li a {\n  margin: 2px 0 0 0;\n  padding: 5px 10px 5px 10px; }\n\nimg.cover {\n  background-color: transparent; }\n\n.assets .my_temple.item .card {\n  box-shadow: 3px 3px 5px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets .my_temple.item .name a {\n  font-weight: bold;\n  color: #0084b4; }\n\n.assets_box .item {\n  margin: 5px 5px 5px 0;\n  width: 90px; }\n  .assets_box .item .card {\n    width: 90px;\n    height: 120px; }\n\n#lastTemples .assets .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.item .card {\n  width: 105px;\n  height: 140px; }\n\n#grailBox .my_auction, #TB_window .my_auction {\n  color: #ffa7cc;\n  margin-right: 5px; }\n\n#grailBox .user_auction, #TB_window .user_auction {\n  color: #a7e3ff;\n  margin-right: 5px; }\n\n#grailBox .trade_box button {\n  min-width: 50px;\n  padding: 0 9px; }\n\n.link.swapped .swapPos {\n  text-decoration: underline; }\n\n.link .swapPos {\n  margin-left: 0.5em;\n  cursor: pointer; }\n\n#grail li.title.hide_grail_title h2:after {\n  font-size: 40%;\n  content: '(点击显示)'; }\n\n#grail .temple_list .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.hide_grail {\n  display: none !important; }\n\n#TB_overlay {\n  z-index: 102; }\n\n#TB_window[data-name] {\n  z-index: 102;\n  padding: 7px;\n  box-shadow: 0px 0px 4px 1px #56bce0; }\n\n#TB_window.temple .container {\n  text-align: center; }\n  #TB_window.temple .container .line {\n    text-align: left; }\n\n#TB_window .action .text_button {\n  margin: 0 8px 0 0;\n  padding: 0;\n  width: fit-content;\n  height: fit-content;\n  min-width: fit-content; }\n\nhtml[data-theme='dark'] #grailBox .title {\n  background-color: transparent; }\n\nhtml[data-theme='dark'] .assets .my_temple.item .card {\n  box-shadow: 0px 0px 15px #FFEB3B;\n  border: 1px solid #FFC107; }\n";
+  var css_248z = "@charset \"UTF-8\";\nul.timelineTabs li a {\n  margin: 2px 0 0 0;\n  padding: 5px 10px 5px 10px; }\n\nimg.cover {\n  background-color: transparent; }\n\n.assets .my_temple.item .card {\n  box-shadow: 3px 3px 5px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets .my_temple.item .name a {\n  font-weight: bold;\n  color: #0084b4; }\n\n.assets_box .item {\n  margin: 5px 5px 5px 0;\n  width: 90px; }\n  .assets_box .item .card {\n    width: 90px;\n    height: 120px; }\n\n#lastTemples .assets .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.item .card {\n  width: 105px;\n  height: 140px; }\n\n#grailBox .my_auction, #TB_window .my_auction {\n  color: #ffa7cc;\n  margin-right: 5px; }\n\n#grailBox .user_auction, #TB_window .user_auction {\n  color: #a7e3ff;\n  margin-right: 5px; }\n\n#grailBox .trade_box button {\n  min-width: 50px;\n  padding: 0 9px; }\n\n.link.swapped .swapPos {\n  text-decoration: underline; }\n\n.link .swapPos {\n  margin-left: 0.5em;\n  cursor: pointer; }\n\n#grail li.title.hide_grail_title h2:after {\n  font-size: 40%;\n  content: '(点击显示)'; }\n\n#grail .temple_list .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.hide_grail {\n  display: none !important; }\n\n#TB_overlay {\n  z-index: 102; }\n\n#TB_window[data-name] {\n  z-index: 102;\n  padding: 7px;\n  box-shadow: 0px 0px 4px 1px #56bce0; }\n\n#TB_window.temple .container {\n  text-align: center; }\n  #TB_window.temple .container .line {\n    text-align: left; }\n\n#TB_window .action .text_button {\n  margin: 0 8px 0 0;\n  padding: 0;\n  width: fit-content;\n  height: fit-content;\n  min-width: fit-content; }\n\n#TB_window .setting-tab-titlebar {\n  display: flex;\n  margin-top: 8px;\n  border-bottom: solid 2px;\n  padding: 0 8px; }\n  #TB_window .setting-tab-titlebar .setting-tab-title {\n    cursor: pointer;\n    padding: 2px 8px;\n    opacity: 0.8;\n    border: solid 1px;\n      border-bottom: none;\n      border-radius: 5px 5px 0 0; }\n    #TB_window .setting-tab-titlebar .setting-tab-title.open {\n      font-weight: bold;\n      opacity: 1;\n      border-width: 2px; }\n\n#TB_window .setting-tab table {\n  width: 98%;\n  text-align: center;\n  border-spacing: 0; }\n  #TB_window .setting-tab table tr {\n    border-top: dotted 1px; }\n    #TB_window .setting-tab table tr td {\n      text-align: left;\n      vertical-align: middle;\n      padding: 5px; }\n      #TB_window .setting-tab table tr td:first-child {\n        width: 60%; }\n  #TB_window .setting-tab table input[type=number] {\n    width: 7em; }\n    #TB_window .setting-tab table input[type=number].chara-id {\n      width: 5em; }\n  #TB_window .setting-tab table .setting-row-btn td {\n    vertical-align: baseline; }\n  #TB_window .setting-tab table .txtBtn {\n    font-size: smaller;\n    text-decoration: underline;\n    cursor: pointer; }\n\nhtml[data-theme='dark'] #grailBox .title {\n  background-color: transparent; }\n\nhtml[data-theme='dark'] .assets .my_temple.item .card {\n  box-shadow: 0px 0px 15px #FFEB3B;\n  border: 1px solid #FFC107; }\n";
   GM_addStyle(css_248z);
 
   const configGenerator = (name, defaultValue, config = {
@@ -227,6 +227,7 @@
   const ItemsSetting = configGenerator('ItemsSetting', {});
 
   const autoFillTemple = () => {
+    if (ItemsSetting.get().autoFill === false) return
     const autoFillCosts = async (autoFillCostList) => {
       for (let i = 0; i < autoFillCostList.length; i++) {
         const id = autoFillCostList[i].id;
@@ -281,7 +282,7 @@
         break
       }
     }
-    $('#autobuildButton').text('[自动建塔]');
+    $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]');
     AutoTempleList.set(autoTempleList);
   };
   const autoBuildTemple = async (charas = undefined) => {
@@ -289,7 +290,7 @@
       postData(`chara/sacrifice/${chara.charaId}/${amount}/false`, null).then((d) => {
         if (d.State === 0) {
           console.log(`#${chara.charaId} ${chara.name} 献祭${amount} 获得金额 ₵${d.Value.Balance.toFixed(2)}`);
-          $('#autobuildButton').text('[自动建塔]');
+          $(`#grailBox.chara${chara.charaId} #autobuildButton`).text('[自动建塔]');
           removeBuildTemple(chara.charaId);
         } else {
           console.log(`${d.Message}`);
@@ -496,7 +497,7 @@
       const index = fillICOList.findIndex(item => parseInt(item.Id) === chara.Id);
       if (index >= 0) {
         alert(`取消自动补款${chara.Name}`);
-        $('#followICOButton').text('[自动补款]');
+        $(`#grailBox.chara${chara.CharacterId} #followICOButton`).text('[自动补款]');
         fillICOList.splice(index, 1);
         FillICOList.set(fillICOList);
       }
@@ -522,7 +523,7 @@
       } else fillICOList.push(info);
       FillICOList.set(fillICOList);
       alert(`启动自动补款#${chara.Id} ${chara.Name}`);
-      $('#followICOButton').text('[自动补款中]');
+      $(`#grailBox.chara${chara.CharacterId} #followICOButton`).text('[自动补款中]');
       closeDialog();
       console.log(fillICOList);
     });
@@ -549,8 +550,8 @@
     if (FillICOList.get().some(item => parseInt(item.charaId) === chara.CharacterId)) {
       button = '<button id="followICOButton" class="text_button">[自动补款中]</button>';
     }
-    $('#grailBox .title .text').after(button);
-    $('#followICOButton').on('click', () => {
+    $(`#grailBox.chara${chara.CharacterId} .title .text`).after(button);
+    $(`#grailBox.chara${chara.CharacterId} #followICOButton`).on('click', () => {
       openICODialog(chara);
     });
   };
@@ -629,13 +630,13 @@
       if (a.State !== 0) {
         const userAuction = `<span class="user_auction auction_tip" title="竞拍人数 / 竞拍数量">${formatNumber(a.State, 0)} / ${formatNumber(a.Type, 0)}</span>`;
         $(`.item_list[data-id=${a.CharacterId}] .time`).after(userAuction);
-        $('#auctionHistoryButton').before(userAuction);
+        $(`#grailBox.chara${a.CharacterId} #auctionHistoryButton`).before(userAuction);
         $('#TB_window.dialog .desc').append(userAuction);
       }
       if (a.Price !== 0) {
         const myAuction = `<span class="my_auction auction_tip" title="出价 / 数量">₵${formatNumber(a.Price, 2)} / ${formatNumber(a.Amount, 0)}</span>`;
         $(`.item_list[data-id=${a.CharacterId}] .time`).after(myAuction);
-        $('#auctionHistoryButton').before(myAuction);
+        $(`#grailBox.chara${a.CharacterId} #auctionHistoryButton`).before(myAuction);
         $('#TB_window.dialog .desc').append(myAuction);
       }
     });
@@ -725,6 +726,7 @@
   const openAuctionDialog = (chara, auction) => {
     let auction_num = chara.State;
     if (Settings.get().auction_num === 'one') auction_num = 1;
+    const charaId = chara.CharacterId || chara.Id;
     const price = Math.ceil(chara.Price * 100) / 100;
     const total = formatNumber(price * chara.State, 2);
     const dialog = `<div class="title" title="拍卖底价 / 竞拍数量 / 流通股份">股权拍卖 - #${chara.Id} 「${chara.Name}」 ₵${formatNumber(chara.Price, 2)} / ${chara.State} / ${chara.Total}</div>
@@ -740,7 +742,7 @@
                   <button id="bidAuctionButton" class="active">确定</button><button id="cancelAuctionButton" style="display: none">取消竞拍</button></div>
                   <div class="loading" style="display:none"></div>`;
     showDialog(dialog);
-    $('.assets_box .auction_tip').remove();
+    $(`#grailBox.chara${charaId} .assets_box .auction_tip`).remove();
     loadUserAuctions(auction);
     $('#cancelAuctionButton').on('click', function () {
       cancelAuction(chara);
@@ -787,6 +789,11 @@
       $('#TB_window .label .total').text(`合计 -₵${formatNumber(price * amount, 2)}`);
     });
   };
+  const openAuctionDialogSimple = (chara) => {
+    postData('chara/auction/list', [chara.CharacterId || chara.Id]).then((d) => {
+      openAuctionDialog(chara, d);
+    });
+  };
 
   const showTopWeek = () => {
     getData('chara/topweek').then((d) => {
@@ -809,7 +816,7 @@
               <span title="竞拍人数 / 竞拍数量 / 拍卖总数">${d.Value[i].Type} / ${d.Value[i].Assets} / ${d.Value[i].Sacrifices}</span></div>`);
         $($('#topWeek .assets .item')[i]).append(auction_button);
         const chara = { Id: d.Value[i].CharacterId, Name: d.Value[i].CharacterName, Price: d.Value[i].Price, State: d.Value[i].Sacrifices, Total: 0 };
-        auction_button.on('click', () => {
+        auction_button.css('cursor', 'pointer').on('click', () => {
           postData('chara/auction/list', [charaId]).then((d) => {
             openAuctionDialog(chara, d);
           });
@@ -1579,6 +1586,7 @@
     $('#submit_chaosCube').on('click', () => {
       const templeId = parseInt($('#chaosCube').val());
       ItemsSetting.set({ ...ItemsSetting.get(), chaosCube: templeId });
+      if (templeId === 0) return
       postData(`magic/chaos/${templeId}`, null).then((d) => {
         closeDialog();
         console.log(d);
@@ -1602,6 +1610,7 @@
       const monoId = parseInt($('#monoId').val());
       const toMonoId = parseInt($('#toMonoId').val());
       ItemsSetting.set({ ...ItemsSetting.get(), guidepost: { monoId: monoId, toMonoId: toMonoId } });
+      if (monoId === 0 || toMonoId === 0) return
       postData(`magic/guidepost/${monoId}/${toMonoId}`, null).then((d) => {
         closeDialog();
         console.log(d);
@@ -1626,6 +1635,7 @@
       const toSupplyId = $('#toSupplyId').val();
       const isTemple = $('#isTemple').val();
       const amount = $('#amount').val();
+      if (supplyId === 0 || toSupplyId === 0 || amount === 0) return
       postData(`magic/stardust/${supplyId}/${toSupplyId}/${amount}/${isTemple}`, null).then((d) => {
         closeDialog();
         console.log(d);
@@ -1762,36 +1772,84 @@
 
   const openSettings = () => {
     closeDialog();
-    const settings = Settings.get();
-    const dialog = `<table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
-    <tbody><tr><td valign="top" width="60%">用户主页小圣杯默认状态</td><td valign="top">
-    <select id="set1"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
-    <tr><td valign="top" width="60%">将自己圣殿或连接排到第一个显示</td><td valign="top">
-    <select id="set2"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-    <tr><td valign="top" width="60%">默认拍卖数量</td><td valign="top">
-    <select id="set3"><option value="one" selected="selected">1</option><option value="all">全部</option></td></tr>
-    <tr><td valign="top" width="60%" title="合并同一时间同一价格的历史订单记录">合并历史订单</td><td valign="top">
-    <select id="set4"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-    <tr><td valign="top" width="60%">周六自动提醒领取股息</td><td valign="top">
-    <select id="set5"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-    <tr><td valign="top" width="60%">圣殿画廊</td><td valign="top">
-    <select id="set6"><option value="off" selected="selected">关</option><option value="on">开</option></td></tr>
-    <tr><td valign="top" width="60%">幻想乡自动抽奖金额上限</td><td valign="top">
-    <input id="item_set1" type="number" min="0" step="1000" value="0"></td></tr>
-    <tr valign="buttom">
-      <td><span id="export_setting" style="font-size: smaller; text-decoration: underline; cursor: pointer;">[导入导出设置]</span></td>
-      <td><input class="inputBtn" value="保存" id="submit_setting" type="submit"></td>
-    </tr>
-    </tbody></table>`;
+    const dialog = `
+    <div class="setting-tab-titlebar">
+      <div data-settingid="setting-tab-feat" class="setting-tab-title open">功能</div>
+      <div data-settingid="setting-tab-ui" class="setting-tab-title">界面</div>
+      <div data-settingid="setting-tab-magic" class="setting-tab-title">魔法</div>
+    </div>
+    <div class="setting-tab-content">
+      <div id="setting-tab-feat" class="setting-tab">
+        <table class="settings-tab-table"><tbody>
+          <tr><td>默认拍卖数量</td>
+            <td><select id="set_auction_num"><option value="one" selected="selected">1</option><option value="all">全部</option></td></tr>
+          <tr><td>周六自动提醒领取股息</td>
+            <td><select id="set_get_bonus"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
+          <tr><td title="小圣杯界面左右键切换查看圣殿图">圣殿画廊</td>
+            <td><select id="set_gallery"><option value="off" selected="selected">关</option><option value="on">开</option></td></tr>
+          <tr><td>幻想乡自动抽奖金额上限</td>
+            <td><input id="item_set_lotus" type="number" min="0" step="1000" value="0"> cc</td></tr>
+          <tr class="setting-row-btn">
+            <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
+            <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
+          </tr>
+        </tbody></table>
+      </div>
+      <div id="setting-tab-ui" class="setting-tab" style="display: none;">
+        <table class="settings-tab-table"><tbody>
+          <tr><td>用户主页小圣杯默认状态</td>
+            <td><select id="set_hide_grail"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+          <tr><td>将自己圣殿或连接排到第一个显示</td>
+            <td><select id="set_pre_temple"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
+          <tr><td>合并历史订单</td>
+            <td><select id="set_merge_order"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
+          <tr class="setting-row-btn">
+            <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
+            <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
+          </tr>
+        </tbody></table>
+      </div>
+      <div id="setting-tab-magic" class="setting-tab" style="display: none;">
+        <table class="settings-tab-table"><tbody>
+          <tr><td>混沌魔方 - 炮塔角色ID</td>
+            <td><input id="item_set_chaos" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td>虚空道标 - 炮塔角色ID</td>
+            <td><input id="item_set_guidepost" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td>虚空道标 - 目标角色ID</td>
+            <td><input id="item_set_guidepost_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td title="根据设置自动使用星光碎片为受损 100 股以上的塔进行充能">自动补塔</td>
+            <td><select id="item_set_autofill"><option value="on" selected="selected">开</option><option value="off">关</option></td></tr>
+          <tr class="setting-row-btn">
+            <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
+            <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
+          </tr>
+        </tbody></table>
+      </div>
+    </div>
+  `;
     showDialog(dialog);
-    $('#set1').val(settings.hide_grail);
-    $('#set2').val(settings.pre_temple);
-    $('#set3').val(settings.auction_num);
-    $('#set4').val(settings.merge_order);
-    $('#set5').val(settings.get_bonus);
-    $('#set6').val(settings.gallery);
-    $('#item_set1').val(ItemsSetting.get().lotusland || 0);
-    $('#item_set1').on('change', (e) => {
+    $('.setting-tab-title').on('click', e => {
+      $('.setting-tab').hide();
+      $(`#${e.target.dataset.settingid}`).show();
+      $('.setting-tab-title').removeClass('open');
+      $(e.target).addClass('open');
+    });
+    const settings = Settings.get();
+    const itemSetting = ItemsSetting.get();
+    $('#set_hide_grail').val(settings.hide_grail);
+    $('#set_pre_temple').val(settings.pre_temple);
+    $('#set_auction_num').val(settings.auction_num);
+    $('#set_merge_order').val(settings.merge_order);
+    $('#set_get_bonus').val(settings.get_bonus);
+    $('#set_gallery').val(settings.gallery);
+    $('#item_set_lotus').val(itemSetting.lotusland || 0);
+    $('#item_set_chaos').val(itemSetting.chaosCube || 0);
+    $('#item_set_autofill').val(itemSetting.autoFill === false ? 'off' : 'on');
+    if (itemSetting.guidepost) {
+      $('#item_set_guidepost').val(itemSetting.guidepost.monoId || 0);
+      $('#item_set_guidepost_to').val(itemSetting.guidepost.toMonoId || 0);
+    }
+    $('#item_set_lotus').on('change', (e) => {
       const el = e.target;
       if (parseInt(el.value) > 3000) {
         el.style.color = 'red';
@@ -1801,19 +1859,28 @@
         el.style.fontWeight = '';
       }
     });
-    $('#submit_setting').on('click', () => {
-      settings.hide_grail = $('#set1').val();
-      settings.pre_temple = $('#set2').val();
-      settings.auction_num = $('#set3').val();
-      settings.merge_order = $('#set4').val();
-      settings.get_bonus = $('#set5').val();
-      settings.gallery = $('#set6').val();
+    $('.setting-btn-submit').on('click', () => {
+      settings.hide_grail = $('#set_hide_grail').val();
+      settings.pre_temple = $('#set_pre_temple').val();
+      settings.auction_num = $('#set_auction_num').val();
+      settings.merge_order = $('#set_merge_order').val();
+      settings.get_bonus = $('#set_get_bonus').val();
+      settings.gallery = $('#set_gallery').val();
       Settings.set(settings);
-      ItemsSetting.set({ ...ItemsSetting.get(), lotusland: parseInt($('#item_set1').val()) });
+      ItemsSetting.set({
+        ...ItemsSetting.get(),
+        lotusland: parseInt($('#item_set_lotus').val()),
+        autoFill: $('#item_set_autofill').val() !== 'off',
+        chaosCube: parseInt($('#item_set_chaos').val()),
+        guidepost: {
+          monoId: parseInt($('#item_set_guidepost').val()),
+          toMonoId: parseInt($('#item_set_guidepost_to').val())
+        }
+      });
       $('#submit_setting').val('已保存');
       setTimeout(() => { closeDialog(); }, 500);
     });
-    $('#export_setting').on('click', () => {
+    $('.setting-btn-export').on('click', () => {
       const dialog = `<div class="bibeBox" style="padding:10px">
       <label>设置导入/导出</label>
       <p><b>导入方式：</b>将之前导出的设置文本粘贴到下方输入框后点击导入按钮</p>
@@ -1947,12 +2014,14 @@
   const showGallery = () => {
     if (Settings.get().gallery === 'on') {
       let index = 0;
-      $('body').on('keydown', function (e) {
-        switch (event.keyCode) {
+      $('body').on('keydown', function (event) {
+        switch (event.key || event.keyCode) {
+          case 'ArrowLeft':
           case 37:
             closeDialog();
             $('.item .card')[index - 1].click();
             break
+          case 'ArrowRight':
           case 39:
             closeDialog();
             $('.item .card')[index + 1].click();
@@ -1991,16 +2060,16 @@
     if (FollowList.get().charas.includes(charaId)) {
       button = '<button id="followCharaButton" class="text_button">[取消关注]</button>';
     }
-    if ($('#kChartButton').length) $('#kChartButton').before(button);
-    else $('#grailBox .title .text').after(button);
-    $('#followCharaButton').on('click', () => {
+    if ($(`#grailBox.chara${charaId} #kChartButton`).length) $(`#grailBox.chara${charaId} #kChartButton`).before(button);
+    else $(`#grailBox.chara${charaId} .title .text`).after(button);
+    $(`#grailBox.chara${charaId} #followCharaButton`).on('click', () => {
       const followList = FollowList.get();
       if (followList.charas.includes(charaId)) {
         followList.charas.splice(followList.charas.indexOf(charaId), 1);
-        $('#followCharaButton').text('[关注角色]');
+        $(`#grailBox.chara${charaId} #followCharaButton`).text('[关注角色]');
       } else {
         followList.charas.unshift(charaId);
-        $('#followCharaButton').text('[取消关注]');
+        $(`#grailBox.chara${charaId} #followCharaButton`).text('[取消关注]');
       }
       FollowList.set(followList);
     });
@@ -2014,15 +2083,15 @@
         } else {
           button = '<button id="followAuctionButton" class="text_button">[关注竞拍]</button>';
         }
-        $('#buildButton').before(button);
-        $('#followAuctionButton').on('click', () => {
+        $(`#grailBox.chara${charaId} #buildButton`).before(button);
+        $(`#grailBox.chara${charaId} #followAuctionButton`).on('click', () => {
           const followList = FollowList.get();
           if (followList.auctions.includes(charaId)) {
             followList.auctions.splice(followList.auctions.indexOf(charaId), 1);
-            $('#followAuctionButton').text('[关注竞拍]');
+            $(`#grailBox.chara${charaId} #followAuctionButton`).text('[关注竞拍]');
           } else {
             followList.auctions.unshift(charaId);
-            $('#followAuctionButton').text('[取消关注]');
+            $(`#grailBox.chara${charaId} #followAuctionButton`).text('[取消关注]');
           }
           FollowList.set(followList);
         });
@@ -2030,11 +2099,11 @@
     });
   };
   const sell_out = (charaId, init_price) => {
-    $($('#grailBox .info .text')[1]).append('<button id="sell_out" class="text_button" title="以发行价全部卖出">[全部卖出]</button>');
-    $('#sell_out').on('click', function () {
+    $($(`#grailBox.chara${charaId} .info .text`)[1]).append('<button id="sell_out" class="text_button" title="以发行价全部卖出">[全部卖出]</button>');
+    $(`#grailBox.chara${charaId} #sell_out`).on('click', function () {
       getData(`chara/user/${charaId}`).then((d) => {
-        $('.ask .price').val(init_price);
-        $('.ask .amount').val(d.Value.Amount);
+        $(`#grailBox.chara${charaId} .ask .price`).val(init_price);
+        $(`#grailBox.chara${charaId} .ask .amount`).val(d.Value.Amount);
       });
     });
   };
@@ -2043,7 +2112,7 @@
     if (charaInitPrice[charaId]) {
       const init_price = charaInitPrice[charaId].init_price;
       const time = charaInitPrice[charaId].time;
-      $($('#grailBox .info .text')[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
+      $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
       sell_out(charaId, init_price);
     } else {
       getData(`chara/charts/${charaId}/2019-08-08`).then((d) => {
@@ -2053,34 +2122,34 @@
           const charaInitPrice = CharaInitPrice.get();
           charaInitPrice[charaId] = { init_price: init_price, time: time };
           CharaInitPrice.set(charaInitPrice);
-          $($('#grailBox .info .text')[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
+          $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
           sell_out(charaId, init_price);
         }
       });
     }
   };
-  const priceWarning = () => {
-    const price = $('.bid .price').val();
-    $('#bidButton').after('<button style="display:none" id="confirm_bidButton" class="active bid">买入</button>');
-    $('.bid .price').on('input', function () {
-      const price_now = $('.bid .price').val();
+  const priceWarning = (charaId) => {
+    const price = $(`#grailBox.chara${charaId} .bid .price`).val();
+    $(`#grailBox.chara${charaId} #bidButton`).after('<button style="display:none" id="confirm_bidButton" class="active bid">买入</button>');
+    $(`#grailBox.chara${charaId} .bid .price`).on('input', function () {
+      const price_now = $(`#grailBox.chara${charaId} .bid .price`).val();
       if (price_now > Math.max(price * 3, 100)) {
-        $('.bid .price').css({ color: 'red' });
-        $('#confirm_bidButton').show();
-        $('#bidButton').hide();
+        $(`#grailBox.chara${charaId} .bid .price`).css({ color: 'red' });
+        $(`#grailBox.chara${charaId} #confirm_bidButton`).show();
+        $(`#grailBox.chara${charaId} #bidButton`).hide();
       } else {
-        $('#confirm_bidButton').hide();
-        $('#bidButton').show();
-        $('.bid .price').css({ color: 'inherit' });
+        $(`#grailBox.chara${charaId} #confirm_bidButton`).hide();
+        $(`#grailBox.chara${charaId} #bidButton`).show();
+        $(`#grailBox.chara${charaId} .bid .price`).css({ color: 'inherit' });
       }
     });
-    $('#confirm_bidButton').on('click', function () {
-      const price = $('.bid .price').val();
-      const amount = $('.bid .amount').val();
+    $(`#grailBox.chara${charaId} #confirm_bidButton`).on('click', function () {
+      const price = $(`#grailBox.chara${charaId} .bid .price`).val();
+      const amount = $(`#grailBox.chara${charaId} .bid .amount`).val();
       if (!confirm(`买入价格过高提醒！\n确定以${price}的价格买入${amount}股？`)) {
         return
       }
-      $('#bidButton').click();
+      $(`#grailBox.chara${charaId} #bidButton`).click();
     });
   };
   const mergeorderList = (orderListHistory) => {
@@ -2100,36 +2169,36 @@
     if (Settings.get().merge_order === 'on') {
       getData(`chara/user/${charaId}`).then((d) => {
         if (d.State === 0 && d.Value) {
-          $('.ask .ask_list li[class!=ask]').hide();
+          $(`.chara${charaId} .ask .ask_list li[class!=ask]`).hide();
           const askHistory = mergeorderList(d.Value.AskHistory);
           for (let i = 0; i < askHistory.length; i++) {
             const ask = askHistory[i];
-            if (ask) $('.ask .ask_list').prepend(`<li title="${formatDate(ask.TradeTime)}">₵${formatNumber(ask.Price, 2)} / ${formatNumber(ask.Amount, 0)} / +${formatNumber(ask.Amount * ask.Price, 2)}<span class="cancel">[成交]</span></li>`);
+            if (ask) $(`.chara${charaId} .ask .ask_list`).prepend(`<li title="${formatDate(ask.TradeTime)}">₵${formatNumber(ask.Price, 2)} / ${formatNumber(ask.Amount, 0)} / +${formatNumber(ask.Amount * ask.Price, 2)}<span class="cancel">[成交]</span></li>`);
           }
-          $('.bid .bid_list li[class!=bid]').hide();
+          $(`.chara${charaId} .bid .bid_list li[class!=bid]`).hide();
           const bidHistory = mergeorderList(d.Value.BidHistory);
           for (let i = 0; i < bidHistory.length; i++) {
             const bid = bidHistory[i];
-            if (bid) $('.bid .bid_list').prepend(`<li title="${formatDate(bid.TradeTime)}">₵${formatNumber(bid.Price, 2)} / ${formatNumber(bid.Amount, 0)} / -${formatNumber(bid.Amount * bid.Price, 2)}<span class="cancel">[成交]</span></li>`);
+            if (bid) $(`.chara${charaId} .bid .bid_list`).prepend(`<li title="${formatDate(bid.TradeTime)}">₵${formatNumber(bid.Price, 2)} / ${formatNumber(bid.Amount, 0)} / -${formatNumber(bid.Amount * bid.Price, 2)}<span class="cancel">[成交]</span></li>`);
           }
         }
       });
     }
   };
-  const showOwnTemple = () => {
+  const showOwnTemple = (charaId) => {
     const pre_temple = Settings.get().pre_temple;
-    const temples = $('#grailBox .assets_box #lastTemples.assets .item');
+    const temples = $(`#grailBox.chara${charaId} .assets_box #lastTemples.assets .item`);
     const me = getMe();
     for (let i = 0; i < temples.length; i++) {
       const user = temples[i].querySelector('.name a').href.split('/').pop();
       if (user === me) {
         temples[i].classList.add('my_temple');
         temples[i].classList.remove('replicated');
-        if (pre_temple === 'on') $('#grailBox .assets_box #lastTemples.assets').prepend(temples[i]);
+        if (pre_temple === 'on') $(`#grailBox.chara${charaId} .assets_box #lastTemples.assets`).prepend(temples[i]);
         break
       }
     }
-    $('#expandButton').on('click', () => { showOwnTemple(); });
+    $(`#grailBox.chara${charaId} #expandButton`).on('click', () => { showOwnTemple(charaId); });
   };
   const changeTempleCover = (charaId) => {
     const setChaosCube = (temple) => {
@@ -2150,7 +2219,7 @@
           if (d.State === 0) {
             alert('更换封面成功。');
             $('#TB_window img.cover').attr('src', cover);
-            $('#grailBox .assets_box .assets .item').each(function () {
+            $(`#grailBox.chara${charaId} .assets_box .assets .item`).each(function () {
               if (user === this.querySelector('.name a').href.split('/').pop()) { $(this).find('div.card').css({ 'background-image': 'url(https://tinygrail.mange.cn/' + cover.match(/cover\/\S+\.jpg/)[0] + '!w150)' }); }
             });
           } else {
@@ -2171,7 +2240,7 @@
         });
       });
     };
-    $('#grailBox .assets .item').on('click', (e) => {
+    $(`#grailBox.chara${charaId} .assets .item`).on('click', (e) => {
       const me = getMe();
       const $el = $(e.currentTarget);
       let temple = $el.data('temple');
@@ -2201,9 +2270,9 @@
       }
     });
   };
-  const showOwnLink = () => {
+  const showOwnLink = (charaId) => {
     const pre_link = Settings.get().pre_temple;
-    const links = $('#grailBox .assets_box #lastLinks.assets .link.item');
+    const links = $(`#grailBox.chara${charaId} .assets_box #lastLinks.assets .link.item`);
     const me = getMe();
     for (let i = 0; i < links.length; i++) {
       const user = links[i].querySelector('.name a').href.split('/').pop();
@@ -2270,10 +2339,11 @@
     });
   };
   const showAuctionHistory = (chara) => {
+    const charaId = chara.CharacterId || chara.Id;
     const button = '<button id="auctionHistorys" class="text_button">[往期拍卖]</button>';
-    $('#auctionHistoryButton').after(button);
-    $('#auctionHistoryButton').hide();
-    $('#auctionHistorys').on('click', () => {
+    $(`#grailBox.chara${charaId} #auctionHistoryButton`).after(button);
+    $(`#grailBox.chara${charaId} #auctionHistoryButton`).hide();
+    $(`#grailBox.chara${charaId} #auctionHistorys`).on('click', () => {
       openHistoryDialog(chara, 1);
     });
   };
@@ -2324,16 +2394,19 @@
     });
   };
   const showTradeHistory = (chara) => {
-    $('#kChartButton').after('<button id="tradeHistoryButton" class="text_button">[交易记录]</button>');
-    $('#tradeHistoryButton').on('click', () => {
+    const charaId = chara.CharacterId || chara.Id;
+    $(`#grailBox.chara${charaId} #kChartButton`).after('<button id="tradeHistoryButton" class="text_button">[交易记录]</button>');
+    $(`#grailBox.chara${charaId} #tradeHistoryButton`).on('click', () => {
       openTradeHistoryDialog(chara);
     });
   };
   const showPrice = (chara) => {
+    const charaId = chara.CharacterId || chara.Id;
     const price = chara.Price.toFixed(2);
-    $($('#grailBox .info .text')[1]).append(`<span>评估价：${price}</span>`);
+    $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span>评估价：${price}</span>`);
   };
   const showTempleRate = (chara) => {
+    const charaId = chara.CharacterId || chara.Id;
     const rate = chara.Rate;
     const level = chara.Level;
     getData(`chara/temple/${chara.Id}`).then((d) => {
@@ -2342,9 +2415,19 @@
         templeAll[d.Value[i].Level]++;
       }
       const templeRate = rate * (level + 1) * 0.3;
-      $('#grailBox .assets_box .bold .sub').attr('title', '活股股息:' + formatNumber(rate, 2));
-      $('#grailBox .assets_box .bold .sub').before(`<span class="sub"> (${templeAll[3]} + ${templeAll[2]} + ${templeAll[1]})</span>`);
-      $('#showTempleButton').before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate, 2)}"> (${formatNumber(templeRate, 2)})</span>`);
+      $(`#grailBox.chara${charaId} .assets_box .bold .sub`).attr('title', '活股股息:' + formatNumber(rate, 2));
+      $(`#grailBox.chara${charaId} .assets_box .bold .sub`).before(`<span class="sub"> (${templeAll[3]} + ${templeAll[2]} + ${templeAll[1]})</span>`);
+      if ($(`#grailBox.chara${charaId} #expandButton`).length) {
+        $(`#grailBox.chara${charaId} #expandButton`).before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate, 2)}"> (${formatNumber(templeRate, 2)})</span>`);
+      } else {
+        launchObserver({
+          parentNode: document.querySelector(`#grailBox.chara${charaId}`),
+          selector: `#grailBox.chara${charaId} #expandButton`,
+          successCallback: () => {
+            $(`#grailBox.chara${charaId} #expandButton`).before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate, 2)}"> (${formatNumber(templeRate, 2)})</span>`);
+          }
+        });
+      }
     });
   };
   const openBuildDialog = (chara) => {
@@ -2374,7 +2457,7 @@
         AutoTempleList.set(autoTempleList);
         alert(`取消自动建塔${chara.Name}`);
       }
-      $('#autobuildButton').text('[自动建塔]');
+      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]');
       closeDialog();
     });
     $('#startBuildButton').on('click', function () {
@@ -2393,7 +2476,7 @@
       AutoTempleList.set(autoTempleList);
       alert(`启动自动建塔#${info.charaId} ${info.name}`);
       closeDialog();
-      $('#autobuildButton').text('[自动建塔中]');
+      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔中]');
       autoBuildTemple([info]);
     });
   };
@@ -2403,61 +2486,64 @@
     if (AutoTempleList.get().some(item => parseInt(item.charaId) === parseInt(charaId))) {
       button = '<button id="autobuildButton" class="text_button">[自动建塔中]</button>';
     }
-    if ($('#buildButton').length) $('#buildButton').after(button);
-    else $('#grailBox .title .text').after(button);
-    $('#autobuildButton').on('click', () => {
+    if ($(`#grailBox.chara${charaId} #buildButton`).length) $(`#grailBox.chara${charaId} #buildButton`).after(button);
+    else $(`#grailBox.chara${charaId} .title .text`).after(button);
+    $(`#grailBox.chara${charaId} #autobuildButton`).on('click', () => {
       openBuildDialog(chara);
     });
   };
   const fixAuctions = (chara) => {
+    const charaId = chara.CharacterId || chara.Id;
     getData(`chara/user/${chara.Id}/tinygrail/false`).then((d) => {
       chara.Price = d.Value.Price;
       chara.State = d.Value.Amount;
       let button = '<button id="auctionButton2" class="text_button">[萌王投票]</button>';
       if (d.State === 0 && d.Value.Amount > 0) button = '<button id="auctionButton2" class="text_button">[参与竞拍]</button>';
-      $('#buildButton').before(button);
-      $('#auctionButton').hide();
+      $(`#grailBox.chara${charaId} #buildButton`).before(button);
+      $(`#grailBox.chara${charaId} #auctionButton`).hide();
       launchObserver({
         parentNode: document.body,
-        selector: '#auctionButton',
+        selector: `#grailBox.chara${charaId} #auctionButton`,
         successCallback: () => {
-          $('#auctionButton').hide();
+          $(`#grailBox.chara${charaId} #auctionButton`).hide();
         }
       });
       postData('chara/auction/list', [chara.Id]).then((d) => {
         loadUserAuctions(d);
-        $('#auctionButton2').on('click', () => {
+        $(`#grailBox.chara${charaId} #auctionButton2`).on('click', () => {
           openAuctionDialog(chara, d);
         });
       });
     });
   };
   const showEndTime = (chara) => {
+    const charaId = chara.CharacterId || chara.Id;
     const endTime = (chara.End).slice(0, 19);
-    $('#grailBox .title .text').append(`<div class="sub" style="margin-left: 20px">结束时间: ${endTime}</div>`);
+    $(`#grailBox.chara${charaId} .title .text`).append(`<div class="sub" style="margin-left: 20px">结束时间: ${endTime}</div>`);
   };
-  const addCharaInfo = () => {
+  const addCharaInfo = (cid) => {
     try {
-      const charaId = parseInt($('#grailBox .title .name a')[0].href.split('/').pop());
+      const charaId = cid || parseInt($('#grailBox .title .name a')[0].href.split('/').pop());
+      $(`#grailBox.chara${charaId}`).addClass('tinygrail-helped');
       followChara(charaId);
       followAuctions(charaId);
       showInitialPrice(charaId);
-      priceWarning();
+      priceWarning(charaId);
       mergeorderListHistory(charaId);
       launchObserver({
         parentNode: document.body,
-        selector: '#lastTemples .item',
+        selector: `#grailBox.chara${charaId} #lastTemples .item`,
         successCallback: () => {
-          showOwnTemple();
+          showOwnTemple(charaId);
           changeTempleCover(charaId);
         }
       });
       launchObserver({
         parentNode: document.body,
-        selector: '#lastLinks .link.item',
+        selector: `#grailBox.chara${charaId} #lastLinks .link.item`,
         successCallback: () => {
-          showOwnLink();
-          changeLinkPos('#lastLinks');
+          showOwnLink(charaId);
+          changeLinkPos(`#grailBox.chara${charaId} #lastLinks`);
         }
       });
       showGallery();
@@ -2470,10 +2556,11 @@
         setBuildTemple(chara);
         fixAuctions(chara);
       });
-    } catch (e) {}
+    } catch (e) { console.log(e); }
   };
-  const addICOInfo = () => {
-    const charaId = parseInt(location.pathname.split('/').pop());
+  const addICOInfo = (cid) => {
+    const charaId = cid || parseInt(location.pathname.split('/').pop());
+    $(`#grailBox.chara${charaId}`).addClass('tinygrail-helped');
     followChara(charaId);
     getData(`chara/${charaId}`).then((d) => {
       const chara = d.Value;
@@ -2518,32 +2605,29 @@
   setInterval(autoFillTemple, 60 * 60 * 1000);
   setInterval(autoBuildTemple, 60 * 60 * 1000);
   setInterval(autoFillICO, 30 * 1000);
+  const listenToGrailBox = (parentNode = document.body, listenIco = true) => {
+    launchObserver({
+      parentNode: parentNode,
+      selector: '#grailBox:not(.tinygrail-helped) .assets_box',
+      successCallback: () => {
+        addCharaInfo(parseInt($('#grailBox:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]));
+      },
+      stopWhenSuccess: false
+    });
+    if (listenIco) {
+      launchObserver({
+        parentNode: parentNode,
+        selector: '#grailBox:not(.tinygrail-helped) .trade .money',
+        successCallback: () => {
+          addICOInfo(parseInt($('#grailBox:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]));
+        },
+        stopWhenSuccess: false
+      });
+    }
+  };
   if (location.pathname.startsWith('/rakuen/topic/crt') || location.pathname.startsWith('/character')) {
     const parentNode = document.getElementById('subject_info') || document.getElementById('columnCrtB');
-    let charaFetched = false;
-    launchObserver({
-      parentNode: parentNode,
-      selector: '#grailBox .assets_box',
-      failCallback: () => { charaFetched = false; },
-      successCallback: () => {
-        if (charaFetched) return
-        charaFetched = true;
-        addCharaInfo();
-      },
-      stopWhenSuccess: false
-    });
-    let ico_fetched = false;
-    launchObserver({
-      parentNode: parentNode,
-      selector: '#grailBox .trade .money',
-      failCallback: () => { ico_fetched = false; },
-      successCallback: () => {
-        if (ico_fetched) return
-        ico_fetched = true;
-        addICOInfo();
-      },
-      stopWhenSuccess: false
-    });
+    listenToGrailBox(parentNode);
   } else
   if (location.pathname.startsWith('/rakuen/home')) {
     if (Settings.get().get_bonus === 'on') getShareBonus();
@@ -2563,15 +2647,15 @@
         changeLinkPos('#lastLinks');
       }
     });
-    let chara_fetched = false;
+    listenToGrailBox(document.body);
     launchObserver({
       parentNode: document.body,
-      selector: '#grailBox .assets_box',
-      failCallback: () => { chara_fetched = false; },
+      selector: '.grail_index .auction_button',
       successCallback: () => {
-        if (chara_fetched) return
-        chara_fetched = true;
-        addCharaInfo();
+        $(document).off('click', '.grail_index .auction_button');
+        $(document).on('click', '.grail_index .auction_button', (e) => {
+          openAuctionDialogSimple($(e.currentTarget).data('chara'));
+        });
       },
       stopWhenSuccess: false
     });
@@ -2597,18 +2681,7 @@
       },
       stopWhenSuccess: false
     });
-    let chara_fetched = false;
-    launchObserver({
-      parentNode: document.body,
-      selector: '#grailBox .assets_box',
-      failCallback: () => { chara_fetched = false; },
-      successCallback: () => {
-        if (chara_fetched) return
-        chara_fetched = true;
-        addCharaInfo();
-      },
-      stopWhenSuccess: false
-    });
+    listenToGrailBox(document.body);
   }
 
 }());
