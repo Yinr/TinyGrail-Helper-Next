@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.11
+// @version     3.1.12
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -1930,8 +1930,6 @@
     <li><a href="#" id="temporaryList">临时列表</a></li>
     <li><a href="#" id="followChara">关注角色</a></li>
     <li><a href="#" id="followAuction">关注竞拍</a></li>
-    <li><a href="#" id="myICO">我的ICO</a></li>
-    <li><a href="#" id="myTemple">我的圣殿</a></li>
     <li><a href="#" id="scratch">抽奖</a></li>
     <li><a href="#" id="magic">魔法道具</a></li>
     <li><a href="#" id="balance">资金日志分类</a></li>
@@ -1942,6 +1940,10 @@
     <li><a href="#" id="settings">设置</a></li>
     </ul></li>`;
     $('.timelineTabs').append(item);
+    $('#logMenu').closest('li').before(`
+    <li><a href="#" id="myICO">我的 ICO</a></li>
+    <li><a href="#" id="myTemple">我的圣殿</a></li>
+  `);
     $('#followChara').on('click', () => menuItemClicked(loadFollowChara));
     $('#followAuction').on('click', () => menuItemClicked(loadFollowAuction));
     $('#myICO').on('click', () => menuItemClicked(loadMyICO));
@@ -2658,7 +2660,17 @@
     });
   } else
   if (location.pathname.startsWith('/rakuen/topiclist')) {
-    setTimeout(function () { loadHelperMenu(); }, 500);
+    if ($('.timelineTabs #recentMenu').length > 0) {
+      loadHelperMenu();
+    } else {
+      launchObserver({
+        parentNode: document.querySelector('.timelineTabs'),
+        selector: '#recentMenu',
+        successCallback: () => {
+          loadHelperMenu();
+        }
+      });
+    }
   } else
   if (location.pathname.startsWith('/user')) {
     launchObserver({
