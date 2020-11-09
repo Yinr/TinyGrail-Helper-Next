@@ -38,12 +38,3 @@ jobs:
         message: Release ${{ steps.tags.outputs.tag }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  sync-to-gitee:
-    name: Sync to Gitee
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check Out Repository
-        uses: actions/checkout@v2
-      - name: Use Sync Action
-        uses: ./.github/workflows
