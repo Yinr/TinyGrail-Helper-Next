@@ -21,6 +21,8 @@ export const openSettings = () => { // 设置
             <td><select id="set_get_bonus"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
           <tr><td title="小圣杯界面左右键切换查看圣殿图">圣殿画廊</td>
             <td><select id="set_gallery"><option value="off" selected="selected">关</option><option value="on">开</option></td></tr>
+          <tr><td>合并历史订单</td>
+            <td><select id="set_merge_order"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
           <tr><td>幻想乡自动抽奖金额上限</td>
             <td><input id="item_set_lotus" type="number" min="0" step="1000" value="0"> cc</td></tr>
           <tr class="setting-row-btn">
@@ -31,12 +33,16 @@ export const openSettings = () => { // 设置
       </div>
       <div id="setting-tab-ui" class="setting-tab" style="display: none;">
         <table class="settings-tab-table"><tbody>
-          <tr><td>用户主页小圣杯默认状态</td>
+          <tr><td>用户主页小圣杯默认显示状态</td>
             <td><select id="set_hide_grail"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+          <tr><td>[连接] 默认显示状态</td>
+            <td><select id="set_hide_link"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+          <tr><td>[圣殿] 默认显示状态</td>
+            <td><select id="set_hide_temple"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+          <tr><td>[董事会] 默认显示状态</td>
+            <td><select id="set_hide_board"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>将自己圣殿或连接排到第一个显示</td>
             <td><select id="set_pre_temple"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-          <tr><td>合并历史订单</td>
-            <td><select id="set_merge_order"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
           <tr class="setting-row-btn">
             <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
             <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
@@ -73,6 +79,9 @@ export const openSettings = () => { // 设置
   const settings = Settings.get()
   const itemSetting = ItemsSetting.get()
   $('#set_hide_grail').val(settings.hide_grail)
+  $('#set_hide_link').val(settings.hide_link)
+  $('#set_hide_temple').val(settings.hide_temple)
+  $('#set_hide_board').val(settings.hide_board)
   $('#set_pre_temple').val(settings.pre_temple)
   $('#set_auction_num').val(settings.auction_num)
   $('#set_merge_order').val(settings.merge_order)
@@ -100,6 +109,9 @@ export const openSettings = () => { // 设置
 
   $('.setting-btn-submit').on('click', () => {
     settings.hide_grail = $('#set_hide_grail').val()
+    settings.hide_link = $('#set_hide_link').val()
+    settings.hide_temple = $('#set_hide_temple').val()
+    settings.hide_board = $('#set_hide_board').val()
     settings.pre_temple = $('#set_pre_temple').val()
     settings.auction_num = $('#set_auction_num').val()
     settings.merge_order = $('#set_merge_order').val()

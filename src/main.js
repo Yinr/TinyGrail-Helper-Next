@@ -13,8 +13,8 @@ import { loadHelperMenu } from './ui/menu/menu'
 import { addCharaInfo, addICOInfo } from './ui/trade/addCharaInfo'
 import { changeLinkPos } from './ui/trade/changeLinkPos'
 import { showGallery } from './ui/trade/showGallery'
-import { showHideGrailBox } from './ui/trade/showHideGrailBox'
 import { openAuctionDialogSimple } from './ui/trade/openAuctionDialog'
+import { showHideGrailBox } from './ui/user/showHideGrailBox'
 
 import { Settings } from './config/settings'
 

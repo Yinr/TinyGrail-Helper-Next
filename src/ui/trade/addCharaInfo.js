@@ -518,6 +518,42 @@ const showEndTime = (chara) => {
   $(`#grailBox.chara${charaId} .title .text`).append(`<div class="sub" style="margin-left: 20px">结束时间: ${endTime}</div>`)
 }
 
+const showHideBlock = (titleSelector, blockSelector, settings) => {
+  const toggleBlock = () => {
+    const $linkTitle = $(titleSelector)
+    const $linkBlock = $(blockSelector)
+    if ($linkTitle.hasClass('hide_grail_block_title')) {
+      $linkTitle.removeClass('hide_grail_block_title')
+      $linkBlock.removeClass('hide_grail_block')
+    } else {
+      $linkTitle.addClass('hide_grail_block_title')
+      $linkBlock.addClass('hide_grail_block')
+    }
+  }
+
+  if (settings === 'on') toggleBlock()
+  $(titleSelector).css('cursor', 'pointer').attr('title', '显示/隐藏').off('click').on('click', toggleBlock)
+}
+
+const showHideLink = (charaId) => {
+  const titleSelector = `#grailBox.chara${charaId} .link_desc .link_count`
+  const blockSelector = `#grailBox.chara${charaId} #lastLinks`
+  const config = Settings.get().hide_link
+  showHideBlock(titleSelector, blockSelector, config)
+}
+const showHideTemple = (charaId) => {
+  const titleSelector = `#grailBox.chara${charaId} .temple_desc .temple_count`
+  const blockSelector = `#grailBox.chara${charaId} #lastTemples`
+  const config = Settings.get().hide_temple
+  showHideBlock(titleSelector, blockSelector, config)
+}
+const showHideBoard = (charaId) => {
+  const titleSelector = `#grailBox.chara${charaId} .board_box .desc .bold`
+  const blockSelector = `#grailBox.chara${charaId} .board_box .users, #grailBox.chara${charaId} #loadBoardMemeberButton`
+  const config = Settings.get().hide_board
+  showHideBlock(titleSelector, blockSelector, config)
+}
+
 const addCharaInfo = (cid) => {
   try {
     const charaId = cid || parseInt($('#grailBox .title .name a')[0].href.split('/').pop())
@@ -541,6 +577,15 @@ const addCharaInfo = (cid) => {
       successCallback: () => {
         showOwnLink(charaId) // 前置自己的连接
         changeLinkPos(`#grailBox.chara${charaId} #lastLinks`) // 修改连接顺序
+      }
+    })
+    launchObserver({
+      parentNode: document.body,
+      selector: `#grailBox.chara${charaId} .board_box .users .user`,
+      successCallback: () => {
+        showHideLink(charaId)
+        showHideTemple(charaId)
+        showHideBoard(charaId)
       }
     })
     showGallery() // 查看画廊

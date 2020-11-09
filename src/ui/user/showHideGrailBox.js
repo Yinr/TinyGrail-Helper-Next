@@ -27,6 +27,7 @@ export const showHideGrailBox = () => {
     parentNode: document.querySelector('#user_home'),
     selector: '.grail.page_inner',
     successCallback: () => {
+      console.log('modify page inner')
       if ($('#grail li.title').hasClass('hide_grail_title')) {
         $('div.grail.page_inner').addClass('hide_grail')
       }
