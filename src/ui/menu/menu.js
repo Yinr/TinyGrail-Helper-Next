@@ -12,10 +12,10 @@ import { sellOut } from './sellOut'
 import { cancelBids } from './cancelBids'
 import { openSettings } from './openSettings'
 
-const menuItemClicked = (callback) => {
+const menuItemClicked = (callback, parentNodeId = '#helperMenu') => {
   $('.timelineTabs a').removeClass('focus')
   $('.timelineTabs a').removeClass('top_focus')
-  $('#helperMenu').addClass('focus')
+  $(parentNodeId).addClass('focus')
   if (callback) callback(1)
 }
 
@@ -35,15 +35,8 @@ export const loadHelperMenu = () => {
     </ul></li>`
   $('.timelineTabs').append(item)
 
-  $('#logMenu').closest('li').before(`
-    <li><a href="#" id="myICO">我的 ICO</a></li>
-    <li><a href="#" id="myTemple">我的圣殿</a></li>
-  `)
-
   $('#followChara').on('click', () => menuItemClicked(loadFollowChara))
   $('#followAuction').on('click', () => menuItemClicked(loadFollowAuction))
-  $('#myICO').on('click', () => menuItemClicked(loadMyICO))
-  $('#myTemple').on('click', () => menuItemClicked(loadMyTemple))
   $('#balance').on('click', () => menuItemClicked(loadBalance))
   $('#autoBuild').on('click', () => menuItemClicked(loadAutoBuild))
   $('#autoICO').on('click', () => menuItemClicked(loadAutoFillICO))
@@ -53,4 +46,13 @@ export const loadHelperMenu = () => {
   $('#sell').on('click', () => menuItemClicked(sellOut))
   $('#cancelBids').on('click', () => menuItemClicked(cancelBids))
   $('#settings').on('click', () => menuItemClicked(openSettings))
+
+  $('#logMenu').closest('li').before(`
+    <li><a href="#" id="myICO">我的 ICO</a></li>
+    <li><a href="#" id="myTemple">我的圣殿</a></li>
+  `)
+
+  const tinygrailMenuId = '#recentMenu'
+  $('#myICO').on('click', () => menuItemClicked(loadMyICO, tinygrailMenuId))
+  $('#myTemple').on('click', () => menuItemClicked(loadMyTemple, tinygrailMenuId))
 }
