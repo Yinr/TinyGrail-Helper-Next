@@ -120,6 +120,10 @@ const priceWarning = (charaId) => {
   })
 }
 
+const changeBaseAmount = (charaId) => {
+  $(`#grailBox.chara${charaId} input.amount`).val(1)
+}
+
 const mergeorderList = (orderListHistory) => {
   const mergedorderList = []; let i = 0
   mergedorderList.push(orderListHistory[0])
@@ -562,6 +566,7 @@ const addCharaInfo = (cid) => {
     followAuctions(charaId) // 关注竞拍情况
     showInitialPrice(charaId) // 显示发行价
     priceWarning(charaId) // 买入价格过高提醒
+    changeBaseAmount(charaId) // 修改初始买卖单股数
     mergeorderListHistory(charaId) // 合并同一时间订单历史记录
     launchObserver({
       parentNode: document.body,
