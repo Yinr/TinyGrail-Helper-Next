@@ -121,6 +121,10 @@ img.cover {
       min-width: fit-content;
     }
 
+    .desc .text_button {
+      cursor: pointer;
+    }
+
     .setting-tab-titlebar {
       display: flex;
       margin-top: 8px;
