@@ -42,7 +42,7 @@ img.cover {
   padding: 0 9px; }
 
 #grailBox .hide_grail_block_title:after {
-  font-size: 40%;
+  font-size: 12px;
   content: ' (点击显示)'; }
 
 #grailBox .hide_grail_block {
@@ -85,6 +85,9 @@ img.cover {
   width: fit-content;
   height: fit-content;
   min-width: fit-content; }
+
+#TB_window .desc .text_button {
+  cursor: pointer; }
 
 #TB_window .setting-tab-titlebar {
   display: flex;
