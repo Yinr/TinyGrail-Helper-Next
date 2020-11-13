@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.15
+// @version     3.1.16
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -2611,7 +2611,7 @@
   const addCharaInfo = (cid) => {
     try {
       const charaId = cid || parseInt($('#grailBox .title .name a')[0].href.split('/').pop());
-      $(`#grailBox.chara${charaId}`).addClass('tinygrail-helped');
+      $(`#grailBox.chara${charaId} .assets_box`).addClass('tinygrail-helped');
       followChara(charaId);
       followAuctions(charaId);
       showInitialPrice(charaId);
@@ -2657,7 +2657,7 @@
   };
   const addICOInfo = (cid) => {
     const charaId = cid || parseInt(location.pathname.split('/').pop());
-    $(`#grailBox.chara${charaId}`).addClass('tinygrail-helped');
+    $(`#grailBox.chara${charaId} .trade .money`).addClass('tinygrail-helped');
     followChara(charaId);
     getData(`chara/${charaId}`).then((d) => {
       const chara = d.Value;
@@ -2705,18 +2705,18 @@
   const listenToGrailBox = (parentNode = document.body, listenIco = true) => {
     launchObserver({
       parentNode: parentNode,
-      selector: '#grailBox:not(.tinygrail-helped) .assets_box',
+      selector: '#grailBox .assets_box:not(.tinygrail-helped)',
       successCallback: () => {
-        addCharaInfo(parseInt($('#grailBox:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]));
+        addCharaInfo(parseInt($('#grailBox .assets_box:not(.tinygrail-helped)').closest('#grailBox').attr('class').match(/chara(\d+)/)[1]));
       },
       stopWhenSuccess: false
     });
     if (listenIco) {
       launchObserver({
         parentNode: parentNode,
-        selector: '#grailBox:not(.tinygrail-helped) .trade .money',
+        selector: '#grailBox .trade .money:not(.tinygrail-helped)',
         successCallback: () => {
-          addICOInfo(parseInt($('#grailBox:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]));
+          addICOInfo(parseInt($('#grailBox .trade .money:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]));
         },
         stopWhenSuccess: false
       });
