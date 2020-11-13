@@ -507,7 +507,7 @@ const showHideBoard = (charaId) => {
 const addCharaInfo = (cid) => {
   try {
     const charaId = cid || parseInt($('#grailBox .title .name a')[0].href.split('/').pop())
-    $(`#grailBox.chara${charaId}`).addClass('tinygrail-helped')
+    $(`#grailBox.chara${charaId} .assets_box`).addClass('tinygrail-helped')
     followChara(charaId) // 关注角色
     followAuctions(charaId) // 关注竞拍情况
     showInitialPrice(charaId) // 显示发行价
@@ -554,7 +554,7 @@ const addCharaInfo = (cid) => {
 
 const addICOInfo = (cid) => {
   const charaId = cid || parseInt(location.pathname.split('/').pop())
-  $(`#grailBox.chara${charaId}`).addClass('tinygrail-helped')
+  $(`#grailBox.chara${charaId} .trade .money`).addClass('tinygrail-helped')
   followChara(charaId) // 关注角色
   getData(`chara/${charaId}`).then((d) => {
     const chara = d.Value

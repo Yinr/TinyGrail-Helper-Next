@@ -31,9 +31,9 @@ const listenToGrailBox = (parentNode = document.body, listenIco = true) => {
   // charater trade info
   launchObserver({
     parentNode: parentNode,
-    selector: '#grailBox:not(.tinygrail-helped) .assets_box',
+    selector: '#grailBox .assets_box:not(.tinygrail-helped)',
     successCallback: () => {
-      addCharaInfo(parseInt($('#grailBox:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]))
+      addCharaInfo(parseInt($('#grailBox .assets_box:not(.tinygrail-helped)').closest('#grailBox').attr('class').match(/chara(\d+)/)[1]))
     },
     stopWhenSuccess: false
   })
@@ -41,9 +41,9 @@ const listenToGrailBox = (parentNode = document.body, listenIco = true) => {
     // charater ico info
     launchObserver({
       parentNode: parentNode,
-      selector: '#grailBox:not(.tinygrail-helped) .trade .money',
+      selector: '#grailBox .trade .money:not(.tinygrail-helped)',
       successCallback: () => {
-        addICOInfo(parseInt($('#grailBox:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]))
+        addICOInfo(parseInt($('#grailBox .trade .money:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]))
       },
       stopWhenSuccess: false
     })
