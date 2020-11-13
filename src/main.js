@@ -4,7 +4,7 @@ import { launchObserver } from './utils/utils'
 
 import { autoFillTemple } from './trade/magic'
 import { autoBuildTemple } from './trade/temple'
-import { autoFillICO } from './trade/ico'
+import { autoFillICO, autoJoinFollowIco } from './trade/ico'
 import { getShareBonus } from './trade/bonus'
 
 import { hideBonusButton } from './ui/main/hideBonusButton'
@@ -24,8 +24,11 @@ setInterval(autoFillTemple, 60 * 60 * 1000)
 // 自动建塔
 setInterval(autoBuildTemple, 60 * 60 * 1000)
 
-// ico自动补款
+// ICO 自动补款
 setInterval(autoFillICO, 30 * 1000)
+
+// 关注角色 ICO 自动凑人头
+setInterval(autoJoinFollowIco, 60 * 60 * 1000)
 
 const listenToGrailBox = (parentNode = document.body, listenIco = true) => {
   // charater trade info

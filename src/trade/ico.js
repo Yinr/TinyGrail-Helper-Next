@@ -2,6 +2,7 @@ import { getData, postData, getDataOrNull } from '../utils/api'
 import { removeEmpty } from '../utils/formatter'
 import { showDialog, closeDialog } from '../utils/dialog'
 
+import { FollowList } from '../config/followList'
 import { FillICOList } from '../config/fillICOList'
 
 const calculateICO = (ico) => {
@@ -229,4 +230,24 @@ const autoBeginICO = async (icoList) => {
   }
 }
 
-export { calculateICO, fullfillICO, autoFillICO, setFullFillICO, autoJoinICO, autoBeginICO }
+const autoJoinFollowIco = () => {
+  const followList = FollowList.get()
+  const joinList = []
+  if (followList.charas.length) {
+    postData('chara/list', followList.charas).then(d => {
+      d.Value.forEach(chara => {
+        if (chara.End) {
+          const endTime = new Date(new Date(chara.End) - (new Date().getTimezoneOffset() + 8 * 60) * 60 * 1000)
+          const leftTime = (new Date(endTime).getTime() - new Date().getTime()) / 1000 // 剩余时间：秒
+          console.log(`ICO check #${chara.CharacterId} -「${chara.Name}」 ${leftTime}s left`)
+          if (leftTime > 0 && leftTime <= 60 * 60) {
+            joinList.push(chara)
+          }
+        }
+      })
+      autoJoinICO(joinList)
+    })
+  }
+}
+
+export { calculateICO, fullfillICO, autoFillICO, setFullFillICO, autoJoinICO, autoBeginICO, autoJoinFollowIco }
