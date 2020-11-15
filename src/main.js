@@ -43,7 +43,7 @@ const listenToGrailBox = (parentNode = document.body, listenIco = true) => {
       parentNode: parentNode,
       selector: '#grailBox .trade .money:not(.tinygrail-helped)',
       successCallback: () => {
-        addICOInfo(parseInt($('#grailBox .trade .money:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]))
+        addICOInfo(parseInt($('#grailBox .trade .money:not(.tinygrail-helped)').closest('#grailBox').attr('class').match(/chara(\d+)/)[1]))
       },
       stopWhenSuccess: false
     })
