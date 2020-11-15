@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.16
+// @version     3.1.17
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -2713,7 +2713,7 @@
         parentNode: parentNode,
         selector: '#grailBox .trade .money:not(.tinygrail-helped)',
         successCallback: () => {
-          addICOInfo(parseInt($('#grailBox .trade .money:not(.tinygrail-helped)').attr('class').match(/chara(\d+)/)[1]));
+          addICOInfo(parseInt($('#grailBox .trade .money:not(.tinygrail-helped)').closest('#grailBox').attr('class').match(/chara(\d+)/)[1]));
         },
         stopWhenSuccess: false
       });
