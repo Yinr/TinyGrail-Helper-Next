@@ -1,45 +1,55 @@
-import { getData, postData, getDataOrNull } from '../utils/api'
+import { getData, postData } from '../utils/api'
 import { removeEmpty } from '../utils/formatter'
 import { showDialog, closeDialog } from '../utils/dialog'
 
 import { FollowList } from '../config/followList'
 import { FillICOList } from '../config/fillICOList'
 
-const calculateICO = (ico) => {
-  let level = 0
-  let price = 0
-  let amount = 0
-  let next = 100000
-  let nextUser = 15
+const ICOStandardList = []
 
-  // 人数等级
-  const heads = ico.Users
-  let headLevel = Math.floor((heads - 10) / 5)
-  if (headLevel < 0) headLevel = 0
+const calculateICO = (ico, targetLevel, joined, balance) => {
+  ICOStandard(targetLevel)
+  // 人数最高等级
+  const heads = ico.Users + (joined ? 0 : 1)
+  const headLevel = Math.max(Math.floor((heads - 10) / 5), 0)
 
-  // 资金等级
-  while (ico.Total >= next && level < headLevel) {
-    level += 1
-    next += Math.pow(level + 1, 2) * 100000
+  // 资金最高等级
+  const moneyTotal = ico.Total + (balance || 0)
+  const moneyLevel = ICOStandardList.filter(i => i.Total <= moneyTotal).length
+
+  // 最高等级
+  const level = balance === undefined ? Math.min(targetLevel, headLevel) : Math.min(targetLevel, headLevel, moneyLevel)
+  const levelInfo = level ? ICOStandard(level) : { Amount: 0, Total: 0, Users: 0 }
+
+  const price = Math.max(ico.Total, levelInfo.Total) / levelInfo.Amount
+  const needMoney = Math.max(levelInfo.Total - ico.Total, 0)
+
+  let message = ''
+  if (headLevel === 0) {
+    message = '人数不足'
+  } else if (level === 0 && moneyLevel === 0) {
+    message = '余额不足'
+  } else if (level === targetLevel) {
+    message = '设定目标等级'
+  } else if (level === headLevel) {
+    message = '人数最高等级'
+  } else if (level === moneyLevel) {
+    message = '余额最高等级'
   }
-  if (level) {
-    amount = 10000 + (level - 1) * 7500
-    price = ico.Total / amount
-  }
-  nextUser = (level + 1) * 5 + 10
 
-  return { Level: level, Next: next, Price: price, Amount: amount, Users: nextUser - ico.Users }
+  return { Level: level, Total: levelInfo.Total, Price: price, Amount: levelInfo.Amount, Users: levelInfo.Users, NeedMoney: needMoney, Message: message }
 }
 
 const ICOStandard = (lv) => {
-  const users = lv * 5 + 10
-  let total = 100000
-  let level = 1
-  while (lv > level) {
-    level++
-    total += Math.pow(level, 2) * 100000
+  for (let level = ICOStandardList.length + 1; level <= lv; level++) {
+    ICOStandardList.push({
+      Level: level,
+      Users: level * 5 + 10,
+      Amount: (level - 1) * 5 + 10,
+      Total: level === 1 ? 100000 : (Math.pow(level, 2) * 100000 + ICOStandardList[level - 1 - 1].Total)
+    })
   }
-  return { Users: users, Total: total }
+  return ICOStandardList[lv - 1]
 }
 
 const fullfillICO = async (icoList) => {
@@ -53,38 +63,34 @@ const fullfillICO = async (icoList) => {
     const Id = icoList[i].Id
     const charaId = icoList[i].charaId
     const targetlv = icoList[i].target
-    const target = ICOStandard(targetlv)
-    await Promise.all([getData(`chara/${charaId}`), getDataOrNull(`chara/initial/${Id}`)]).then(([d, initial]) => {
-      if (d.State === 0) {
-        const predicted = calculateICO(d.Value)
-        if (!(initial && initial.State === 0 && initial.Value && initial.Value.Amount > 0)) {
-          // 本人尚未参与 ICO，补款后可增加一个人头
-          predicted.Users -= 1
-        }
-        if (predicted.Level >= targetlv) {
-          console.log(charaId + '总额:' + d.Value.Total + ',已达标，无需补款')
-          $('.info_box .result').prepend(`<div class="row">#${charaId} 目标: lv${targetlv} 总额: ${d.Value.Total} ,已达标，无需补款</div>`)
-        } else if (predicted.Users <= 0) {
-          let offer = predicted.Next - d.Value.Total
-          if (d.Value.Users >= target.Users) {
-            offer = target.Total - d.Value.Total
-          }
-          offer = Math.max(offer, 5000)
-          postData(`chara/join/${Id}/${offer}`, null).then((d) => {
-            if (d.State === 0) {
-              $('.info_box .result').prepend(`<div class="row">#${charaId} 目标: lv${targetlv} 补款: ${offer}</div>`)
-              console.log(charaId + '补款:' + offer)
-            } else {
-              $('.info_box .result').prepend(`<div class="row">#${charaId} ${d.Message}</div>`)
-              console.log(d.Message)
-            }
-          })
+    const icoInfo = await getData(`chara/${charaId}`).then(d => d.State === 0 ? d.Value : undefined).catch(() => undefined)
+    if (icoInfo) {
+      const myInitial = await getData(`chara/initial/${Id}`).then(d => d.Value).catch(() => null) // undefined 代表未参与
+      const joined = myInitial !== undefined // 本人已参与 ICO
+      const balance = await getData('chara/user/assets').then(d => d.Value ? d.Value.Balance : undefined).catch(() => undefined)
+      const predicted = calculateICO(icoInfo, targetlv, joined, balance)
+
+      if (!predicted.Level) {
+        $('.info_box .result').prepend(`<div class="row">#${charaId} 目标: lv${targetlv} 人数: ${icoInfo.Users}, ${predicted.Message}, 未补款</div>`)
+        console.log(`#${charaId},目标:lv${targetlv},人数:${icoInfo.Users},${predicted.Message},未补款`)
+      } else if (predicted.NeedMoney > 0) {
+        const offer = Math.max(predicted.NeedMoney, 5000)
+        const joinRes = await postData(`chara/join/${Id}/${offer}`, null)
+        if (joinRes.State === 0) {
+          $('.info_box .result').prepend(`<div class="row">#${charaId} 目标: lv${targetlv}, 自动补款至${predicted.Message} lv${predicted.Level}, 补款: ${offer}cc</div>`)
+          console.log(`#${charaId},目标:lv${targetlv},自动补款至${predicted.Message}lv${predicted.Level},补款:${offer}cc`)
         } else {
-          $('.info_box .result').prepend(`<div class="row">#${charaId} 目标: lv${targetlv} 人数: ${d.Value.Users}, 人数不足，未补款</div>`)
-          console.log(charaId + '人数:' + d.Value.Users + ',人数不足，未补款')
+          $('.info_box .result').prepend(`<div class="row">#${charaId} ${joinRes.Message}</div>`)
+          console.log(joinRes.Message)
         }
+      } else if (predicted.Level === targetlv) {
+        $('.info_box .result').prepend(`<div class="row">#${charaId} 目标: lv${targetlv} 总额: ${icoInfo.Total}, 已达标, 无需补款</div>`)
+        console.log(`#${charaId},目标:lv${targetlv},总额:${icoInfo.Total},已达标,无需补款`)
+      } else {
+        $('.info_box .result').prepend(`<div class="row">#${charaId} 目标: lv${targetlv} 总额: ${icoInfo.Total}, 已达到${predicted.Message} lv${predicted.Level}, 未补款</div>`)
+        console.log(`#${charaId},目标:lv${targetlv},总额:${icoInfo.Total},已达到${predicted.Message}lv${predicted.Level},未补款`)
       }
-    })
+    }
   }
 }
 
@@ -112,7 +118,7 @@ const openICODialog = (chara) => {
     target = item.target
   }
   const dialog = `<div class="title">自动补款 - #${chara.CharacterId} 「${chara.Name}」 lv${target}</div>
-                  <div class="desc">目标等级：<input type="number" class="target" min="1" max="10" step="1" value="${target}" style="width:50px"></div>
+                  <div class="desc">最高目标等级：<input type="number" class="target" min="1" max="20" step="1" value="${target}" style="width:50px"></div>
                   <div class="label"><div class="trade ico">
                   <button id="startfillICOButton" class="active">自动补款</button>
                   <button id="fillICOButton" style="background-color: #5fda15;">立即补款</button>

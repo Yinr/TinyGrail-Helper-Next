@@ -29,10 +29,6 @@ const postData = (url, data) => {
   })
 }
 
-const getDataOrNull = (url) => {
-  return new Promise((resolve) => {
-    getData(url).then(resolve).catch(() => resolve(null))
-  })
-}
+const getDataOrNull = (url) => getData(url).catch((e) => { console.warn(e); return null })
 
 export { getData, postData, getDataOrNull }
