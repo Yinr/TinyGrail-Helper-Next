@@ -10,6 +10,7 @@ import { getShareBonus } from './trade/bonus'
 import { hideBonusButton } from './ui/main/hideBonusButton'
 import { showTopWeek } from './ui/main/showTopWeek'
 import { loadHelperMenu } from './ui/menu/menu'
+import { markFollow } from './ui/menu/markFollow'
 import { addCharaInfo, addICOInfo } from './ui/trade/addCharaInfo'
 import { changeLinkPos } from './ui/trade/changeLinkPos'
 import { showGallery } from './ui/trade/showGallery'
@@ -110,6 +111,16 @@ if (location.pathname.startsWith('/rakuen/topiclist')) {
       }
     })
   }
+  launchObserver({
+    parentNode: document.body,
+    selector: 'ul .load_more',
+    successCallback: (mutationList) => {
+      if (mutationList.some(muRecord => Array.from(muRecord.addedNodes.values()).some(el => $(el).is('.load_more')))) {
+        markFollow()
+      }
+    },
+    stopWhenSuccess: false
+  })
 } else
 
 // user homepage

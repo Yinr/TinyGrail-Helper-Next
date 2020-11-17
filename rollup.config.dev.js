@@ -3,6 +3,8 @@ import postcss from 'rollup-plugin-postcss'
 import cleanup from 'rollup-plugin-cleanup'
 import notify from 'rollup-plugin-notify'
 import browsersync from 'rollup-plugin-browsersync'
+import autoprefixer from 'autoprefixer'
+import postcss_assets from 'postcss-assets'
 
 import { config, metabConfig } from './rollup.config'
 
@@ -26,6 +28,10 @@ export default {
     metab,
     postcss({
       inject: (css) => `GM_addStyle(${css})`,
+      plugins: [
+        autoprefixer,
+        postcss_assets
+      ]
     }),
     cleanup(),
     notify(),

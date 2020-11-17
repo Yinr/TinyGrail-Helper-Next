@@ -2,6 +2,8 @@ import metablock from 'rollup-plugin-userscript-metablock'
 import postcss from 'rollup-plugin-postcss'
 import cleanup from 'rollup-plugin-cleanup'
 import path from 'path'
+import autoprefixer from 'autoprefixer'
+import postcss_assets from 'postcss-assets'
 
 const pkg = require('./package.json')
 
@@ -35,7 +37,11 @@ export default [{
   plugins: [
     metab,
     postcss({
-      inject: (css) => `GM_addStyle(${css})`
+      inject: (css) => `GM_addStyle(${css})`,
+      plugins: [
+        autoprefixer,
+        postcss_assets
+      ]
     }),
     cleanup()
   ]
@@ -48,7 +54,11 @@ export default [{
   plugins: [
     metab,
     postcss({
-      extract: path.resolve('dist/gadgets/style.css')
+      extract: path.resolve('dist/gadgets/style.css'),
+      plugins: [
+        autoprefixer,
+        postcss_assets
+      ]
     }),
     cleanup()
   ]
