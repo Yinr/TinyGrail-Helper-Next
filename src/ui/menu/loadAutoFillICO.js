@@ -4,7 +4,7 @@ import { loadAutoBuild } from './loadAutoBuild'
 import { FillICOList } from '../../config/fillICOList'
 
 export const loadAutoFillICO = (page) => {
-  const list = FillICOList.get()
+  const list = FillICOList.get().sort((a, b) => (new Date(a.end)) - (new Date(b.end)))
   const charas = []
   for (let i = 0; i < list.length; i++) charas.push(list[i].charaId)
   const start = 50 * (page - 1)
