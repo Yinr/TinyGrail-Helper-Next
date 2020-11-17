@@ -56,7 +56,7 @@ img.cover {
   cursor: pointer; }
 
 #grail li.title.hide_grail_title h2:after {
-  font-size: 40%;
+  font-size: 12px;
   content: '(点击显示)'; }
 
 #grail .temple_list .item {

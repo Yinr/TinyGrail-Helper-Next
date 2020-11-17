@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.18
+// @version     3.1.19
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -383,13 +383,20 @@
 
   const ICOStandardList = [];
   const calculateICO = (ico, targetLevel, joined, balance) => {
-    ICOStandard(targetLevel);
-    const heads = ico.Users + (joined ? 0 : 1);
+    const heads = ico.Users + (targetLevel === undefined || joined ? 0 : 1);
     const headLevel = Math.max(Math.floor((heads - 10) / 5), 0);
+    ICOStandard(targetLevel || headLevel + 1);
     const moneyTotal = ico.Total + (balance || 0);
     const moneyLevel = ICOStandardList.filter(i => i.Total <= moneyTotal).length;
-    const level = balance === undefined ? Math.min(targetLevel, headLevel) : Math.min(targetLevel, headLevel, moneyLevel);
-    const levelInfo = level ? ICOStandard(level) : { Amount: 0, Total: 0, Users: 0 };
+    let level = 0;
+    if (targetLevel === undefined) {
+      level = headLevel;
+    } else if (balance === undefined) {
+      level = Math.min(targetLevel, headLevel);
+    } else {
+      level = Math.min(targetLevel, headLevel, moneyLevel);
+    }
+    const levelInfo = ICOStandard(Math.max(level, 1));
     const price = Math.max(ico.Total, levelInfo.Total) / levelInfo.Amount;
     const needMoney = Math.max(levelInfo.Total - ico.Total, 0);
     let message = '';
@@ -1331,7 +1338,7 @@
   };
 
   const loadAutoFillICO = (page) => {
-    const list = FillICOList.get();
+    const list = FillICOList.get().sort((a, b) => (new Date(a.end)) - (new Date(b.end)));
     const charas = [];
     for (let i = 0; i < list.length; i++) charas.push(list[i].charaId);
     const start = 50 * (page - 1);

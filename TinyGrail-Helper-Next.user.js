@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.18
+// @version     3.1.19
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -15,7 +15,7 @@
 (function () {
   'use strict';
 
-  var css_248z = "@charset \"UTF-8\";\nul.timelineTabs li a {\n  margin: 2px 0 0 0;\n  padding: 5px 10px 5px 10px; }\n\nimg.cover {\n  background-color: transparent; }\n\n.assets .my_temple.item .card {\n  box-shadow: 3px 3px 5px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets .my_temple.item .name a {\n  font-weight: bold;\n  color: #0084b4; }\n\n.assets_box .item {\n  margin: 5px 5px 5px 0;\n  width: 90px; }\n  .assets_box .item .card {\n    width: 90px;\n    height: 120px; }\n\n#lastTemples .assets .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.item .card {\n  width: 105px;\n  height: 140px; }\n\n#grailBox .my_auction, #TB_window .my_auction {\n  color: #ffa7cc;\n  margin-right: 5px; }\n\n#grailBox .user_auction, #TB_window .user_auction {\n  color: #a7e3ff;\n  margin-right: 5px; }\n\n#grailBox .trade_box button {\n  min-width: 50px;\n  padding: 0 9px; }\n\n#grailBox .hide_grail_block_title:after {\n  font-size: 12px;\n  content: ' (点击显示)'; }\n\n#grailBox .hide_grail_block {\n  display: none !important; }\n\n.link.swapped .swapPos {\n  text-decoration: underline; }\n\n.link .swapPos {\n  margin-left: 0.5em;\n  cursor: pointer; }\n\n#grail li.title.hide_grail_title h2:after {\n  font-size: 40%;\n  content: '(点击显示)'; }\n\n#grail .temple_list .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.hide_grail {\n  display: none !important; }\n\n#TB_overlay {\n  z-index: 102; }\n\n#TB_window[data-name] {\n  z-index: 102;\n  padding: 7px;\n  box-shadow: 0px 0px 4px 1px #56bce0; }\n\n#TB_window.temple .container {\n  text-align: center; }\n  #TB_window.temple .container .line {\n    text-align: left; }\n\n#TB_window .action .text_button {\n  margin: 0 8px 0 0;\n  padding: 0;\n  width: fit-content;\n  height: fit-content;\n  min-width: fit-content; }\n\n#TB_window .desc .text_button {\n  cursor: pointer; }\n\n#TB_window .setting-tab-titlebar {\n  display: flex;\n  margin-top: 8px;\n  border-bottom: solid 2px;\n  padding: 0 8px; }\n  #TB_window .setting-tab-titlebar .setting-tab-title {\n    cursor: pointer;\n    padding: 2px 8px;\n    opacity: 0.8;\n    border: solid 1px;\n      border-bottom: none;\n      border-radius: 5px 5px 0 0; }\n    #TB_window .setting-tab-titlebar .setting-tab-title.open {\n      font-weight: bold;\n      opacity: 1;\n      border-width: 2px; }\n\n#TB_window .setting-tab table {\n  width: 98%;\n  text-align: center;\n  border-spacing: 0; }\n  #TB_window .setting-tab table tr {\n    border-top: dotted 1px; }\n    #TB_window .setting-tab table tr td {\n      text-align: left;\n      vertical-align: middle;\n      padding: 5px; }\n      #TB_window .setting-tab table tr td:first-child {\n        width: 60%; }\n  #TB_window .setting-tab table input[type=number] {\n    width: 7em; }\n    #TB_window .setting-tab table input[type=number].chara-id {\n      width: 5em; }\n  #TB_window .setting-tab table .setting-row-btn td {\n    vertical-align: baseline; }\n  #TB_window .setting-tab table .txtBtn {\n    font-size: smaller;\n    text-decoration: underline;\n    cursor: pointer; }\n\nhtml[data-theme='dark'] #grailBox .title {\n  background-color: transparent; }\n\nhtml[data-theme='dark'] .assets .my_temple.item .card {\n  box-shadow: 0px 0px 15px #FFEB3B;\n  border: 1px solid #FFC107; }\n";
+  var css_248z = "@charset \"UTF-8\";\nul.timelineTabs li a {\n  margin: 2px 0 0 0;\n  padding: 5px 10px 5px 10px; }\n\nimg.cover {\n  background-color: transparent; }\n\n.assets .my_temple.item .card {\n  box-shadow: 3px 3px 5px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets .my_temple.item .name a {\n  font-weight: bold;\n  color: #0084b4; }\n\n.assets_box .item {\n  margin: 5px 5px 5px 0;\n  width: 90px; }\n  .assets_box .item .card {\n    width: 90px;\n    height: 120px; }\n\n#lastTemples .assets .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.item .card {\n  width: 105px;\n  height: 140px; }\n\n#grailBox .my_auction, #TB_window .my_auction {\n  color: #ffa7cc;\n  margin-right: 5px; }\n\n#grailBox .user_auction, #TB_window .user_auction {\n  color: #a7e3ff;\n  margin-right: 5px; }\n\n#grailBox .trade_box button {\n  min-width: 50px;\n  padding: 0 9px; }\n\n#grailBox .hide_grail_block_title:after {\n  font-size: 12px;\n  content: ' (点击显示)'; }\n\n#grailBox .hide_grail_block {\n  display: none !important; }\n\n.link.swapped .swapPos {\n  text-decoration: underline; }\n\n.link .swapPos {\n  margin-left: 0.5em;\n  cursor: pointer; }\n\n#grail li.title.hide_grail_title h2:after {\n  font-size: 12px;\n  content: '(点击显示)'; }\n\n#grail .temple_list .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.hide_grail {\n  display: none !important; }\n\n#TB_overlay {\n  z-index: 102; }\n\n#TB_window[data-name] {\n  z-index: 102;\n  padding: 7px;\n  box-shadow: 0px 0px 4px 1px #56bce0; }\n\n#TB_window.temple .container {\n  text-align: center; }\n  #TB_window.temple .container .line {\n    text-align: left; }\n\n#TB_window .action .text_button {\n  margin: 0 8px 0 0;\n  padding: 0;\n  width: fit-content;\n  height: fit-content;\n  min-width: fit-content; }\n\n#TB_window .desc .text_button {\n  cursor: pointer; }\n\n#TB_window .setting-tab-titlebar {\n  display: flex;\n  margin-top: 8px;\n  border-bottom: solid 2px;\n  padding: 0 8px; }\n  #TB_window .setting-tab-titlebar .setting-tab-title {\n    cursor: pointer;\n    padding: 2px 8px;\n    opacity: 0.8;\n    border: solid 1px;\n      border-bottom: none;\n      border-radius: 5px 5px 0 0; }\n    #TB_window .setting-tab-titlebar .setting-tab-title.open {\n      font-weight: bold;\n      opacity: 1;\n      border-width: 2px; }\n\n#TB_window .setting-tab table {\n  width: 98%;\n  text-align: center;\n  border-spacing: 0; }\n  #TB_window .setting-tab table tr {\n    border-top: dotted 1px; }\n    #TB_window .setting-tab table tr td {\n      text-align: left;\n      vertical-align: middle;\n      padding: 5px; }\n      #TB_window .setting-tab table tr td:first-child {\n        width: 60%; }\n  #TB_window .setting-tab table input[type=number] {\n    width: 7em; }\n    #TB_window .setting-tab table input[type=number].chara-id {\n      width: 5em; }\n  #TB_window .setting-tab table .setting-row-btn td {\n    vertical-align: baseline; }\n  #TB_window .setting-tab table .txtBtn {\n    font-size: smaller;\n    text-decoration: underline;\n    cursor: pointer; }\n\nhtml[data-theme='dark'] #grailBox .title {\n  background-color: transparent; }\n\nhtml[data-theme='dark'] .assets .my_temple.item .card {\n  box-shadow: 0px 0px 15px #FFEB3B;\n  border: 1px solid #FFC107; }\n";
   GM_addStyle(css_248z);
 
   const configGenerator = (name, defaultValue, config = {
@@ -386,13 +386,20 @@
 
   const ICOStandardList = [];
   const calculateICO = (ico, targetLevel, joined, balance) => {
-    ICOStandard(targetLevel);
-    const heads = ico.Users + (joined ? 0 : 1);
+    const heads = ico.Users + (targetLevel === undefined || joined ? 0 : 1);
     const headLevel = Math.max(Math.floor((heads - 10) / 5), 0);
+    ICOStandard(targetLevel || headLevel + 1);
     const moneyTotal = ico.Total + (balance || 0);
     const moneyLevel = ICOStandardList.filter(i => i.Total <= moneyTotal).length;
-    const level = balance === undefined ? Math.min(targetLevel, headLevel) : Math.min(targetLevel, headLevel, moneyLevel);
-    const levelInfo = level ? ICOStandard(level) : { Amount: 0, Total: 0, Users: 0 };
+    let level = 0;
+    if (targetLevel === undefined) {
+      level = headLevel;
+    } else if (balance === undefined) {
+      level = Math.min(targetLevel, headLevel);
+    } else {
+      level = Math.min(targetLevel, headLevel, moneyLevel);
+    }
+    const levelInfo = ICOStandard(Math.max(level, 1));
     const price = Math.max(ico.Total, levelInfo.Total) / levelInfo.Amount;
     const needMoney = Math.max(levelInfo.Total - ico.Total, 0);
     let message = '';
@@ -1334,7 +1341,7 @@
   };
 
   const loadAutoFillICO = (page) => {
-    const list = FillICOList.get();
+    const list = FillICOList.get().sort((a, b) => (new Date(a.end)) - (new Date(b.end)));
     const charas = [];
     for (let i = 0; i < list.length; i++) charas.push(list[i].charaId);
     const start = 50 * (page - 1);
