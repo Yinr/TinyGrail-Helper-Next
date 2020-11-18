@@ -52,7 +52,7 @@ const ICOStandard = (lv) => {
     ICOStandardList.push({
       Level: level,
       Users: level * 5 + 10,
-      Amount: (level - 1) * 5 + 10,
+      Amount: 10000 + (level - 1) * 7500,
       Total: level === 1 ? 100000 : (Math.pow(level, 2) * 100000 + ICOStandardList[level - 1 - 1].Total)
     })
   }
