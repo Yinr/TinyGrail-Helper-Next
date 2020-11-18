@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.20
+// @version     3.1.21
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -421,7 +421,7 @@
       ICOStandardList.push({
         Level: level,
         Users: level * 5 + 10,
-        Amount: (level - 1) * 5 + 10,
+        Amount: 10000 + (level - 1) * 7500,
         Total: level === 1 ? 100000 : (Math.pow(level, 2) * 100000 + ICOStandardList[level - 1 - 1].Total)
       });
     }
