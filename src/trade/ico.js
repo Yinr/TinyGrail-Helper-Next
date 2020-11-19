@@ -20,7 +20,7 @@ const calculateICO = (ico, targetLevel, joined, balance) => {
   // 最高等级
   let level = 0
   if (targetLevel === undefined) {
-    level = headLevel
+    level = Math.min(headLevel, moneyLevel)
   } else if (balance === undefined) {
     level = Math.min(targetLevel, headLevel)
   } else {
