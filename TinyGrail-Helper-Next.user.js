@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.21
+// @version     3.1.22
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -393,7 +393,7 @@
     const moneyLevel = ICOStandardList.filter(i => i.Total <= moneyTotal).length;
     let level = 0;
     if (targetLevel === undefined) {
-      level = headLevel;
+      level = Math.min(headLevel, moneyLevel);
     } else if (balance === undefined) {
       level = Math.min(targetLevel, headLevel);
     } else {
