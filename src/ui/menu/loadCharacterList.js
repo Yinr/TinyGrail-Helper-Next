@@ -115,12 +115,6 @@ const renderCharacter = (item, type, even, showCancel) => {
               <div class="row"><small class="time">${formatTime(time)}</small>
               <span><small data-id="${id}" class="fill_auction" title="当竞拍数量未满时补满数量" style="display: none;">[补满]</small>${cancel}</span>
               </div></div>${tag}</li>`
-  } else if (type === 'ico') {
-    badge = renderBadge(item, false, false, false)
-    chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
-              <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a>
-              <div class="row"><small class="time">${formatTime(item.End)}</small><span><small>${formatNumber(item.State, 0)} / ${formatNumber(item.Total, 1)}</small></span>
-              </div></div><div class="tags tag lv1">ICO进行中</div></li>`
   } else if (type === 'temple') {
     let costs = ''
     if (item.Assets - item.Sacrifices < 0) {
@@ -132,14 +126,16 @@ const renderCharacter = (item, type, even, showCancel) => {
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}<span class="badge lv${item.CharacterLevel}">lv${item.CharacterLevel}</span></a> <small class="grey">(+${item.Rate.toFixed(2)})</small>
               <div class="row"><small class="time" title="创建时间">${formatTime(item.Create)}</small><small title="固有资产 / 献祭值">${item.Assets} / ${item.Sacrifices}</small>${costs}</div></div>
               <div class="tag lv${item.Level}">${item.Level}级圣殿</div></li>`
-  } else if (item.Id !== item.CharacterId) {
+  } else if (item.Id !== item.CharacterId) { // ico
     const pre = calculateICO(item)
+    const percent = formatNumber(item.Total / pre.NextLevel.Total * 100, 0)
+    const icoState = item.Users === 0
+      ? `<small title="当前人数 / 当前资金">${formatNumber(item.State, 0)} / ${formatNumber(item.Total, 1)}</small>`
+      : `<small title="距下级还差${formatNumber(Math.max(pre.NextLevel.Users - item.Users, 0), 0)}人 / 当前资金(占下一等级百分比) / 预计价格">${formatNumber(item.Users, 0)}人 / ${formatNumber(item.Total, 1)}(${percent}%) / ₵${formatNumber(pre.Price, 2)}</small>`
     badge = renderBadge(item, false, false, false)
-    // let percent = formatNumber(item.Total / pre.Next * 100, 0);
     chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(ICO进行中: lv${pre.Level})</small>
-              <div class="row"><small class="time">${formatTime(item.End)}</small><span><small>${formatNumber(item.Users, 0)}人 / ${formatNumber(item.Total, 1)} / ₵${formatNumber(pre.Price, 2)}</small></span>
-              ${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`
+              <div class="row"><small class="time">${formatTime(item.End)}</small><span>${icoState}</span>${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`
   } else {
     chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)} / ${formatNumber(item.Total, 0)} / ₵${formatNumber(item.MarketValue, 0)})</small>
