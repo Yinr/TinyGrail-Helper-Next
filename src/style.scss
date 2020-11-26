@@ -191,9 +191,21 @@ img.cover {
       text-align: center;
       border-spacing: 0;
 
+      input[type=number] {
+        width: 7em;
+        &.chara-id {
+          width: 5em;
+        }
+        &.chara-level {
+          width: 4em;
+        }
+      }
+
       tr {
         border-top: dotted 1px;
-
+        &.hide-row {
+          display: none;
+        }
         td {
           text-align: left;
           vertical-align: middle;
@@ -202,12 +214,21 @@ img.cover {
             width: 60%;
           }
         }
-      }
-
-      input[type=number] {
-        width: 7em;
-        &.chara-id {
-          width: 5em;
+        &.setting-collapse {
+          cursor: pointer;
+          td:before {
+            content: "▾ ";
+          }
+          &.setting-collapse-close {
+            td:before {
+              content: "▸ ";
+            }
+          }
+        }
+        &.setting-collapse-item {
+          td:first-child {
+            padding-left: 1.2em;
+          }
         }
       }
 

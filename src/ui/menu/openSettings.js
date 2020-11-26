@@ -6,6 +6,19 @@ import { exportConfig, importConfig } from '../../config/export'
 
 export const openSettings = () => { // 设置
   closeDialog()
+  const settingRowBtn = `
+    <tr class="setting-row-btn">
+      <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
+      <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
+    </tr>
+  `
+  const autofillItem = (level, charaid) => `
+    <tr class="setting-collapse-item ${$('#autofill_collapse').hasClass('setting-collapse-close') ? 'hide-row' : ''}">
+      <td title="等级">等级 lv<input class="item_set_level chara-level" type="number" min="0" step="1" value="${level}"></td>
+      <td><input class="item_set_source chara-id" type="number" min="0" step="1" value="${charaid}" title="能源角色ID">
+        <span class="cancel-autofill-item" title="删除该等级充能设定" style="margin-left: 1em; cursor: pointer;">删除</span></td>
+    </tr>
+  `
   const dialog = `
     <div class="setting-tab-titlebar">
       <div data-settingid="setting-tab-feat" class="setting-tab-title open">功能</div>
@@ -25,10 +38,7 @@ export const openSettings = () => { // 设置
             <td><select id="set_merge_order"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
           <tr><td>幻想乡自动抽奖金额上限</td>
             <td><input id="item_set_lotus" type="number" min="0" step="1000" value="0"> cc</td></tr>
-          <tr class="setting-row-btn">
-            <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
-            <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
-          </tr>
+          ${settingRowBtn}
         </tbody></table>
       </div>
       <div id="setting-tab-ui" class="setting-tab" style="display: none;">
@@ -43,10 +53,7 @@ export const openSettings = () => { // 设置
             <td><select id="set_hide_board"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>将自己圣殿或连接排到第一个显示</td>
             <td><select id="set_pre_temple"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
-          <tr class="setting-row-btn">
-            <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
-            <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
-          </tr>
+          ${settingRowBtn}
         </tbody></table>
       </div>
       <div id="setting-tab-magic" class="setting-tab" style="display: none;">
@@ -59,10 +66,9 @@ export const openSettings = () => { // 设置
             <td><input id="item_set_guidepost_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           <tr><td title="根据设置自动使用星光碎片为受损 100 股以上的塔进行充能">自动补塔</td>
             <td><select id="item_set_autofill"><option value="on" selected="selected">开</option><option value="off">关</option></td></tr>
-          <tr class="setting-row-btn">
-            <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
-            <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
-          </tr>
+          <tr id="autofill_collapse" class="setting-collapse setting-collapse-close"><td title="设置各等级自动充能的能源角色" colspan="2">自动补塔详细设置</td></tr>
+          <tr id="add_autofill_item" class="hide-row"><td style="text-align: center; cursor: pointer;" colspan="2">添加补塔等级</td></tr>
+          ${settingRowBtn}
         </tbody></table>
       </div>
     </div>
@@ -88,14 +94,22 @@ export const openSettings = () => { // 设置
   $('#set_get_bonus').val(settings.get_bonus)
   $('#set_gallery').val(settings.gallery)
 
+  // 魔法道具设置
   $('#item_set_lotus').val(itemSetting.lotusland || 0)
   $('#item_set_chaos').val(itemSetting.chaosCube || 0)
-  $('#item_set_autofill').val(itemSetting.autoFill === false ? 'off' : 'on')
   if (itemSetting.guidepost) {
     $('#item_set_guidepost').val(itemSetting.guidepost.monoId || 0)
     $('#item_set_guidepost_to').val(itemSetting.guidepost.toMonoId || 0)
   }
+  $('#item_set_autofill').val(itemSetting.autoFill === false ? 'off' : 'on')
+  if (itemSetting.stardust) {
+    const prePos = $('#add_autofill_item')
+    Object.keys(itemSetting.stardust).forEach(i => {
+      prePos.before(autofillItem(i, itemSetting.stardust[i]))
+    })
+  }
 
+  // 幻想乡刮刮乐金额过高提示
   $('#item_set_lotus').on('change', (e) => {
     const el = e.target
     if (parseInt(el.value) > 3000) {
@@ -107,6 +121,41 @@ export const openSettings = () => { // 设置
     }
   })
 
+  // 自动补塔详细设置
+  const getAutofill = () => {
+    const items = $('#setting-tab-magic tr.setting-collapse-item').toArray()
+      .map(el => ({ level: $(el).find('input.item_set_level').val(), charaId: parseInt($(el).find('input.item_set_source').val()) }))
+      .filter(item => parseInt(item.level) > 0 && item.charaId > 0)
+    const stardust = {}
+    items.forEach(item => { stardust[item.level.toString()] = item.charaId })
+    return stardust
+  }
+  $('#autofill_collapse').on('click', () => {
+    const self = $('#autofill_collapse')
+    if (self.hasClass('setting-collapse-close')) {
+      self.removeClass('setting-collapse-close')
+      $('tr.setting-collapse-item').removeClass('hide-row')
+      $('#add_autofill_item').removeClass('hide-row')
+    } else {
+      self.addClass('setting-collapse-close')
+      $('tr.setting-collapse-item').addClass('hide-row')
+      $('#add_autofill_item').addClass('hide-row')
+    }
+  })
+  $('#add_autofill_item').on('click', () => {
+    $('#setting-tab-magic tr.setting-collapse-item input.item_set_source[value=0]').closest('tr').remove()
+    const levels = $('#setting-tab-magic tr.setting-collapse-item input.item_set_level').toArray().map(el => el.value)
+    for (let i = 1; i <= levels.length; i++) {
+      if (!levels.includes(i.toString())) {
+        $('#add_autofill_item').before(autofillItem(i, 0))
+        return
+      }
+    }
+    $('#add_autofill_item').before(autofillItem(levels.length + 1, 0))
+  })
+  $('#setting-tab-magic').on('click', '.cancel-autofill-item', (e) => $(e.currentTarget).closest('tr').remove())
+
+  // 保存按钮
   $('.setting-btn-submit').on('click', () => {
     settings.hide_grail = $('#set_hide_grail').val()
     settings.hide_link = $('#set_hide_link').val()
@@ -119,19 +168,20 @@ export const openSettings = () => { // 设置
     settings.gallery = $('#set_gallery').val()
     Settings.set(settings)
     ItemsSetting.set({
-      ...ItemsSetting.get(),
       lotusland: parseInt($('#item_set_lotus').val()),
       autoFill: $('#item_set_autofill').val() !== 'off',
       chaosCube: parseInt($('#item_set_chaos').val()),
       guidepost: {
         monoId: parseInt($('#item_set_guidepost').val()),
         toMonoId: parseInt($('#item_set_guidepost_to').val())
-      }
+      },
+      stardust: getAutofill()
     })
     $('#submit_setting').val('已保存')
     setTimeout(() => { closeDialog() }, 500)
   })
 
+  // 导出按钮
   $('.setting-btn-export').on('click', () => {
     const dialog = `<div class="bibeBox" style="padding:10px">
       <label>设置导入/导出</label>
