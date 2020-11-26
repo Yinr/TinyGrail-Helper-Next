@@ -68,6 +68,10 @@ const formatNumber = (number, decimals, dec_point, thousands_sep) => {
   return s.join(dec)
 }
 
+const formatMoney = (number) => {
+  return '₵' + formatNumber(number, 2)
+}
+
 const formatBidPrice = (price) => {
   return (price - Math.round(price)) >= 0 ? Math.round(price) : Math.round(price) - 0.5
 }
@@ -88,7 +92,7 @@ const removeEmpty = (array) => {
 }
 
 export {
-  formatDate, formatTime, formatNumber,
+  formatDate, formatTime, formatNumber, formatMoney,
   formatBidPrice, formatAskPrice,
   parseIntArray, removeEmpty
 }

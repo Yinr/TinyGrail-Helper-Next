@@ -12,6 +12,10 @@ import { sellOut } from './sellOut'
 import { cancelBids } from './cancelBids'
 import { openSettings } from './openSettings'
 
+import { bindShowBidsTotal } from './showBidsTotal'
+import { bindShowAsksTotal } from './showAsksTotal'
+import { bindShowAuctionTotal } from './showAuctionTotal'
+
 const menuItemClicked = (callback, parentNodeId = '#helperMenu') => {
   $('.timelineTabs a').removeClass('focus')
   $('.timelineTabs a').removeClass('top_focus')
@@ -47,6 +51,7 @@ export const loadHelperMenu = () => {
   $('#cancelBids').on('click', () => menuItemClicked(cancelBids))
   $('#settings').on('click', () => menuItemClicked(openSettings))
 
+  // 为小圣杯增加菜单项
   $('#logMenu').closest('li').before(`
     <li><a href="#" id="myICO">我的 ICO</a></li>
     <li><a href="#" id="myTemple">我的圣殿</a></li>
@@ -55,4 +60,9 @@ export const loadHelperMenu = () => {
   const tinygrailMenuId = '#recentMenu'
   $('#myICO').on('click', () => menuItemClicked(loadMyICO, tinygrailMenuId))
   $('#myTemple').on('click', () => menuItemClicked(loadMyTemple, tinygrailMenuId))
+
+  // 为小圣杯菜单项附加功能
+  bindShowBidsTotal()
+  bindShowAsksTotal()
+  bindShowAuctionTotal()
 }
