@@ -146,18 +146,30 @@ img.cover {
   width: 98%;
   text-align: center;
   border-spacing: 0; }
+  #TB_window .setting-tab table input[type=number] {
+    width: 7em; }
+    #TB_window .setting-tab table input[type=number].chara-id {
+      width: 5em; }
+    #TB_window .setting-tab table input[type=number].chara-level {
+      width: 4em; }
   #TB_window .setting-tab table tr {
     border-top: dotted 1px; }
+    #TB_window .setting-tab table tr.hide-row {
+      display: none; }
     #TB_window .setting-tab table tr td {
       text-align: left;
       vertical-align: middle;
       padding: 5px; }
       #TB_window .setting-tab table tr td:first-child {
         width: 60%; }
-  #TB_window .setting-tab table input[type=number] {
-    width: 7em; }
-    #TB_window .setting-tab table input[type=number].chara-id {
-      width: 5em; }
+    #TB_window .setting-tab table tr.setting-collapse {
+      cursor: pointer; }
+      #TB_window .setting-tab table tr.setting-collapse td:before {
+        content: "▾ "; }
+      #TB_window .setting-tab table tr.setting-collapse.setting-collapse-close td:before {
+        content: "▸ "; }
+    #TB_window .setting-tab table tr.setting-collapse-item td:first-child {
+      padding-left: 1.2em; }
   #TB_window .setting-tab table .setting-row-btn td {
     vertical-align: baseline; }
   #TB_window .setting-tab table .txtBtn {
