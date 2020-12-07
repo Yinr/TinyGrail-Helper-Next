@@ -3,7 +3,7 @@ import { getData, postData } from '../utils/api'
 import { ItemsSetting } from '../config/itemsSetting'
 
 const autoFillTemple = () => {
-  if (ItemsSetting.get().autoFill === false) return
+  if (ItemsSetting.get().autoFill !== true) return
 
   const autoFillCosts = async (autoFillCostList) => {
     for (let i = 0; i < autoFillCostList.length; i++) {

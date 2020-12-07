@@ -65,7 +65,7 @@ export const openSettings = () => { // 设置
           <tr><td>虚空道标 - 目标角色ID</td>
             <td><input id="item_set_guidepost_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           <tr><td title="根据设置自动使用星光碎片为受损 100 股以上的塔进行充能">自动补塔</td>
-            <td><select id="item_set_autofill"><option value="on" selected="selected">开</option><option value="off">关</option></td></tr>
+            <td><select id="item_set_autofill"><option value="on">开</option><option value="off" selected="selected">关</option></td></tr>
           <tr id="autofill_collapse" class="setting-collapse setting-collapse-close"><td title="设置各等级自动充能的能源角色" colspan="2">自动补塔详细设置</td></tr>
           <tr id="add_autofill_item" class="hide-row"><td style="text-align: center; cursor: pointer;" colspan="2">添加补塔等级</td></tr>
           ${settingRowBtn}
@@ -101,7 +101,7 @@ export const openSettings = () => { // 设置
     $('#item_set_guidepost').val(itemSetting.guidepost.monoId || 0)
     $('#item_set_guidepost_to').val(itemSetting.guidepost.toMonoId || 0)
   }
-  $('#item_set_autofill').val(itemSetting.autoFill === false ? 'off' : 'on')
+  $('#item_set_autofill').val(itemSetting.autoFill === true ? 'on' : 'off')
   if (itemSetting.stardust) {
     const prePos = $('#add_autofill_item')
     Object.keys(itemSetting.stardust).forEach(i => {
@@ -169,7 +169,7 @@ export const openSettings = () => { // 设置
     Settings.set(settings)
     ItemsSetting.set({
       lotusland: parseInt($('#item_set_lotus').val()),
-      autoFill: $('#item_set_autofill').val() !== 'off',
+      autoFill: $('#item_set_autofill').val() === 'on',
       chaosCube: parseInt($('#item_set_chaos').val()),
       guidepost: {
         monoId: parseInt($('#item_set_guidepost').val()),
