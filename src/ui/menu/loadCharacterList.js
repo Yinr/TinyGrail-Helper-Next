@@ -29,7 +29,7 @@ const renderBalanceLog = (item, even) => {
   }
 
   let id = ''
-  if (item.Type >= 2 && item.Type <= 13) {
+  if (item.Type >= 4 && item.Type <= 13) {
     id = `data-id="${item.RelatedId}"`
   }
 
