@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.25
+// @version     3.1.26
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -222,7 +222,7 @@
   const ItemsSetting = configGenerator('ItemsSetting', {});
 
   const autoFillTemple = () => {
-    if (ItemsSetting.get().autoFill === false) return
+    if (ItemsSetting.get().autoFill !== true) return
     const autoFillCosts = async (autoFillCostList) => {
       for (let i = 0; i < autoFillCostList.length; i++) {
         const id = autoFillCostList[i].id;
@@ -922,7 +922,7 @@
       amount = `<span class="tag even large">${formatNumber(item.Amount, 0)}</span>`;
     }
     let id = '';
-    if (item.Type >= 2 && item.Type <= 13) {
+    if (item.Type >= 4 && item.Type <= 13) {
       id = `data-id="${item.RelatedId}"`;
     }
     return `<li class="${line} item_list item_log" ${id}>
@@ -1250,6 +1250,17 @@
     });
   };
 
+  const loadMyICOAmount = async (charaList) => {
+    for (let i = 0; i < charaList.length; i++) {
+      const result = await getData(`chara/initial/${charaList[i].Id}`);
+      if (result && result.State === 0) {
+        const amount = formatMoney(result.Value.Amount);
+        const span = $(`#eden_tpc_list li.item_list[data-id=${charaList[i].CharacterId}] .row span`);
+        span.find('small.my_amount').remove();
+        span.append(`<small class="my_amount" title="已注资 ${amount}">/ ${amount}</small>`);
+      }
+    }
+  };
   const loadMyICO = (page) => {
     getData(`chara/user/initial/0/${page}/50`).then(d => {
       if (d.State === 0) {
@@ -1260,6 +1271,7 @@
             loadCharacterList(d.Value.Items.sort((a, b) => (new Date(a.End)) - (new Date(b.End))),
               d.Value.CurrentPage, d.Value.TotalPages, loadMyICO, 'ico', false);
           }
+          loadMyICOAmount(d.Value.Items);
           if (d.Value.TotalItems > 0 && page === 1) {
             $('#eden_tpc_list ul').prepend('<li id="copyICO" class="line_odd item_list item_function" style="text-align: center;">[复制我的 ICO]</li>');
             $('#copyICO').on('click', function () {
@@ -1764,34 +1776,41 @@
 
   const sellOut = () => {
     $('#eden_tpc_list .item_list').removeAttr('onclick');
-    $('#eden_tpc_list .item_list').each((i, e) => {
-      const id = $(e).data('id');
-      const sell_btn = `<span><small data-id="${id}" class="sell_btn">[卖出]</small></span>`;
-      if (!$(e).find('.sell_btn').length) {
-        $(`#eden_tpc_list li[data-id=${id}] .row`).append(sell_btn);
+    $('#eden_tpc_list .item_list').each((_, e) => {
+      let id = $(e).data('id');
+      if (!id) {
+        const result = $(e).find('small.time').text().match(/#(\d+)/);
+        if (result && result.length > 0) {
+          id = result[1];
+          $(e).attr('data-id', id).data('id', id);
+        }
       }
+      if (!id || $(e).find('.sell_btn').length > 0) return
+      $(`.sell_btn[data-id=${id}]`).remove();
+      $(`#eden_tpc_list li[data-id=${id}] .row`).append(`<span><small data-id="${id}" class="sell_btn">[卖出]</small></span>`);
     });
-    $('.sell_btn').on('click', (e) => {
+    $('.sell_btn').off('click').on('click', (e) => {
       const id = $(e.target).data('id');
-      const charaInitPrice = CharaInitPrice.get();
       if (id) {
-        const price_tag = $(`#eden_tpc_list li[data-id=${id}]`).find('div.tag')[0].innerText.match(/₵([0-9]*(\.[0-9]{1,2})?)/);
-        const price_now = price_tag ? price_tag[1] : 0;
-        getData(`chara/${id}`).then((d) => {
-          const initPrice = charaInitPrice[id] ? charaInitPrice[id].init_price : d.Value.Price;
-          const price = Math.max(parseFloat(price_now), parseFloat(initPrice).toFixed(2), d.Value.Current.toFixed(2));
-          getData(`chara/user/${id}`).then((d) => {
-            const amount = d.Value.Amount;
-            if (amount) {
+        const charaInitPrice = CharaInitPrice.get();
+        const priceTagEl = $(`#eden_tpc_list li[data-id=${id}]`).find('div.tag')[0];
+        const priceTag = priceTagEl ? priceTagEl.innerText.match(/₵([0-9]*(\.[0-9]{1,2})?)/) : null;
+        const priceNow = priceTag ? priceTag[1] : 0;
+        getData(`chara/user/${id}`).then((d) => {
+          const amount = d.Value.Amount;
+          if (amount) {
+            getData(`chara/${id}`).then((d) => {
+              const initPrice = charaInitPrice[id] ? charaInitPrice[id].init_price : d.Value.Price;
+              const price = Math.max(parseFloat(priceNow), parseFloat(initPrice).toFixed(2), d.Value.Current.toFixed(2));
               postData(`chara/ask/${id}/${price}/${amount}`, null).then((d) => {
                 if (d.Message) console.log(`#${id}: ${d.Message}`);
                 else console.log(`卖出委托#${id} ${price}*${amount}`);
               });
-            }
-          });
+            });
+          }
         });
       }
-      $(`#eden_tpc_list li[data-id=${id}]`).remove();
+      $(`.sell_btn[data-id=${id}]`).remove();
     });
   };
 
@@ -1940,7 +1959,7 @@
           <tr><td>虚空道标 - 目标角色ID</td>
             <td><input id="item_set_guidepost_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           <tr><td title="根据设置自动使用星光碎片为受损 100 股以上的塔进行充能">自动补塔</td>
-            <td><select id="item_set_autofill"><option value="on" selected="selected">开</option><option value="off">关</option></td></tr>
+            <td><select id="item_set_autofill"><option value="on">开</option><option value="off" selected="selected">关</option></td></tr>
           <tr id="autofill_collapse" class="setting-collapse setting-collapse-close"><td title="设置各等级自动充能的能源角色" colspan="2">自动补塔详细设置</td></tr>
           <tr id="add_autofill_item" class="hide-row"><td style="text-align: center; cursor: pointer;" colspan="2">添加补塔等级</td></tr>
           ${settingRowBtn}
@@ -1972,7 +1991,7 @@
       $('#item_set_guidepost').val(itemSetting.guidepost.monoId || 0);
       $('#item_set_guidepost_to').val(itemSetting.guidepost.toMonoId || 0);
     }
-    $('#item_set_autofill').val(itemSetting.autoFill === false ? 'off' : 'on');
+    $('#item_set_autofill').val(itemSetting.autoFill === true ? 'on' : 'off');
     if (itemSetting.stardust) {
       const prePos = $('#add_autofill_item');
       Object.keys(itemSetting.stardust).forEach(i => {
@@ -2034,7 +2053,7 @@
       Settings.set(settings);
       ItemsSetting.set({
         lotusland: parseInt($('#item_set_lotus').val()),
-        autoFill: $('#item_set_autofill').val() !== 'off',
+        autoFill: $('#item_set_autofill').val() === 'on',
         chaosCube: parseInt($('#item_set_chaos').val()),
         guidepost: {
           monoId: parseInt($('#item_set_guidepost').val()),
