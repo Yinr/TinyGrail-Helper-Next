@@ -1,7 +1,20 @@
 import { getData, postData } from '../../utils/api'
 import { showDialog, closeDialog } from '../../utils/dialog'
+import { formatMoney } from '../../utils/formatter'
 
 import { loadCharacterList } from './loadCharacterList'
+
+const loadMyICOAmount = async (charaList) => {
+  for (let i = 0; i < charaList.length; i++) {
+    const result = await getData(`chara/initial/${charaList[i].Id}`)
+    if (result && result.State === 0) {
+      const amount = formatMoney(result.Value.Amount)
+      const span = $(`#eden_tpc_list li.item_list[data-id=${charaList[i].CharacterId}] .row span`)
+      span.find('small.my_amount').remove()
+      span.append(`<small class="my_amount" title="已注资 ${amount}">/ ${amount}</small>`)
+    }
+  }
+}
 
 export const loadMyICO = (page) => {
   getData(`chara/user/initial/0/${page}/50`).then(d => {
@@ -13,6 +26,7 @@ export const loadMyICO = (page) => {
           loadCharacterList(d.Value.Items.sort((a, b) => (new Date(a.End)) - (new Date(b.End))),
             d.Value.CurrentPage, d.Value.TotalPages, loadMyICO, 'ico', false)
         }
+        loadMyICOAmount(d.Value.Items)
         if (d.Value.TotalItems > 0 && page === 1) {
           $('#eden_tpc_list ul').prepend('<li id="copyICO" class="line_odd item_list item_function" style="text-align: center;">[复制我的 ICO]</li>')
           $('#copyICO').on('click', function () {
