@@ -5,7 +5,7 @@ import { configGenerator } from './base'
  *  item.charaId: (int) chara.CharacterId
  *  item.name: (string) chara.Name
  *  item.target: (int) 目标等级
- *  item.end: (int?) chara.End, End Time
+ *  item.end: (string) chara.End, End Time
  */
 
 // ico自动补款

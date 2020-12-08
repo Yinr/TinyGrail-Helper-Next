@@ -11,6 +11,6 @@ export const loadAutoFillICO = (page) => {
   const ids = charas.slice(start, start + 50)
   const totalPages = Math.ceil(charas.length / 50)
   generateCharacterList(ids).then(list => {
-    loadCharacterList(list, page, totalPages, loadAutoBuild, 'chara_ico', false)
+    loadCharacterList(list, page, totalPages, loadAutoBuild, 'autofillico', false)
   })
 }

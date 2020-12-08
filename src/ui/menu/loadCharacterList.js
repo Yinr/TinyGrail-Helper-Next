@@ -3,10 +3,11 @@ import { formatNumber, formatTime } from '../../utils/formatter'
 import { normalizeAvatar } from '../../utils/utils'
 import { showDialog, closeDialog } from '../../utils/dialog'
 
-import { calculateICO, autoBeginICO } from '../../trade/ico'
+import { calculateICO, autoBeginICO, openICODialog } from '../../trade/ico'
 import { loadUserAuctions } from '../../trade/auction'
 
 import { FollowList } from '../../config/followList'
+import { FillICOList } from '../../config/fillICOList'
 import { ItemsSetting } from '../../config/itemsSetting'
 
 let lastEven = false
@@ -134,8 +135,9 @@ const renderCharacter = (item, type, even, showCancel) => {
       : `<small title="距下级还差${formatNumber(Math.max(pre.NextLevel.Users - item.Users, 0), 0)}人 / 当前资金(占下一等级百分比) / 预计价格">${formatNumber(item.Users, 0)}人 / ${formatNumber(item.Total, 1)}(${percent}%) / ₵${formatNumber(pre.Price, 2)}</small>`
     badge = renderBadge(item, false, false, false)
     chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
-              <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(ICO进行中: lv${pre.Level})</small>
-              <div class="row"><small class="time">${formatTime(item.End)}</small><span>${icoState}</span>${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`
+              <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a>
+              <small class="grey set_autofillico" title="点击设置自动补款" data-id="${id}" data-icoid="${item.Id}" data-name="${item.Name}" data-end="${item.End}">(ICO进行中: lv${pre.Level})</small>
+              <div class="row"><small class="time">${formatTime(item.End)}</small><span class="ico-state">${icoState}</span>${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`
   } else {
     chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)} / ${formatNumber(item.Total, 0)} / ₵${formatNumber(item.MarketValue, 0)})</small>
@@ -289,6 +291,15 @@ const loadCharacterList = (list, page, total, more, type, showCancel) => {
     e.stopPropagation()
     const id = $(e.target).data('id')
     getNonCharacter(id)
+  })
+
+  $('.set_autofillico').off('click')
+  $('.set_autofillico').on('click', (e) => {
+    e.stopPropagation()
+    const itemData = $(e.target).data()
+    const fillICOList = FillICOList.get()
+    const item = fillICOList.find(item => item.charaId === parseInt(itemData.id)) || { Id: parseInt(itemData.icoid), charaId: parseInt(itemData.id), name: itemData.name, end: itemData.end }
+    if (item) openICODialog({ Id: item.Id, CharacterId: item.charaId, Name: item.name, End: item.end })
   })
 
   $('#eden_tpc_list .item_list').on('click', listItemClicked)

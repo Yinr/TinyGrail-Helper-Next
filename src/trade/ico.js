@@ -321,4 +321,4 @@ const autoJoinFollowIco = () => {
   }
 }
 
-export { calculateICO, fullfillICO, autoFillICO, setFullFillICO, autoJoinICO, autoBeginICO, autoJoinFollowIco }
+export { calculateICO, fullfillICO, autoFillICO, setFullFillICO, autoJoinICO, autoBeginICO, autoJoinFollowIco, openICODialog }
