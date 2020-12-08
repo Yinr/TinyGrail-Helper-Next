@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.26
+// @version     3.1.27
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -238,14 +238,14 @@
       const autoFillCostList = [];
       getData(`chara/user/temple/0/${currentPage}/500`).then((d) => {
         if (d.State === 0) {
+          const itemsSetting = ItemsSetting.get();
           for (let i = 0; i < d.Value.Items.length; i++) {
             const info = {};
             const lv = d.Value.Items[i].CharacterLevel;
-            const itemsSetting = ItemsSetting.get();
             info.id = d.Value.Items[i].CharacterId;
             info.supplyId = itemsSetting.stardust ? parseInt(itemsSetting.stardust[lv]) : null;
             info.cost = d.Value.Items[i].Sacrifices - d.Value.Items[i].Assets;
-            if (info.cost >= 100 && info.cost <= 250 && info.id !== info.supplyId && info.supplyId) {
+            if (info.supplyId && info.id !== info.supplyId && info.cost >= itemsSetting.autoFillMin) {
               autoFillCostList.push(info);
             }
           }
@@ -1018,8 +1018,9 @@
         : `<small title="距下级还差${formatNumber(Math.max(pre.NextLevel.Users - item.Users, 0), 0)}人 / 当前资金(占下一等级百分比) / 预计价格">${formatNumber(item.Users, 0)}人 / ${formatNumber(item.Total, 1)}(${percent}%) / ₵${formatNumber(pre.Price, 2)}</small>`;
       badge = renderBadge(item, false, false, false);
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
-              <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(ICO进行中: lv${pre.Level})</small>
-              <div class="row"><small class="time">${formatTime(item.End)}</small><span>${icoState}</span>${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`;
+              <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a>
+              <small class="grey set_autofillico" title="点击设置自动补款" data-id="${id}" data-icoid="${item.Id}" data-name="${item.Name}" data-end="${item.End}">(ICO进行中: lv${pre.Level})</small>
+              <div class="row"><small class="time">${formatTime(item.End)}</small><span class="ico-state">${icoState}</span>${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`;
     } else {
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)} / ${formatNumber(item.Total, 0)} / ₵${formatNumber(item.MarketValue, 0)})</small>
@@ -1156,6 +1157,14 @@
       e.stopPropagation();
       const id = $(e.target).data('id');
       getNonCharacter(id);
+    });
+    $('.set_autofillico').off('click');
+    $('.set_autofillico').on('click', (e) => {
+      e.stopPropagation();
+      const itemData = $(e.target).data();
+      const fillICOList = FillICOList.get();
+      const item = fillICOList.find(item => item.charaId === parseInt(itemData.id)) || { Id: parseInt(itemData.icoid), charaId: parseInt(itemData.id), name: itemData.name, end: itemData.end };
+      if (item) openICODialog({ Id: item.Id, CharacterId: item.charaId, Name: item.name, End: item.end });
     });
     $('#eden_tpc_list .item_list').on('click', listItemClicked);
     if (page !== total && total > 0) {
@@ -1419,7 +1428,7 @@
     const ids = charas.slice(start, start + 50);
     const totalPages = Math.ceil(charas.length / 50);
     generateCharacterList(ids).then(list => {
-      loadCharacterList(list, page, totalPages, loadAutoBuild, 'chara_ico', false);
+      loadCharacterList(list, page, totalPages, loadAutoBuild, 'autofillico', false);
     });
   };
 
@@ -1958,9 +1967,11 @@
             <td><input id="item_set_guidepost" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           <tr><td>虚空道标 - 目标角色ID</td>
             <td><input id="item_set_guidepost_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
-          <tr><td title="根据设置自动使用星光碎片为受损 100 股以上的塔进行充能">自动补塔</td>
+          <tr><td title="根据设置自动使用星光碎片为受损的圣殿进行充能">自动补塔</td>
             <td><select id="item_set_autofill"><option value="on">开</option><option value="off" selected="selected">关</option></td></tr>
           <tr id="autofill_collapse" class="setting-collapse setting-collapse-close"><td title="设置各等级自动充能的能源角色" colspan="2">自动补塔详细设置</td></tr>
+          <tr class="setting-collapse-item hide-row"><td title="自动补塔的最低受损股数">自动补塔最低数量</td>
+            <td><input id="item_set_autofillmin" type="number" min="0" step="10" value="100"></td></tr>
           <tr id="add_autofill_item" class="hide-row"><td style="text-align: center; cursor: pointer;" colspan="2">添加补塔等级</td></tr>
           ${settingRowBtn}
         </tbody></table>
@@ -1992,6 +2003,7 @@
       $('#item_set_guidepost_to').val(itemSetting.guidepost.toMonoId || 0);
     }
     $('#item_set_autofill').val(itemSetting.autoFill === true ? 'on' : 'off');
+    $('#item_set_autofillmin').val(itemSetting.autoFillMin || 100);
     if (itemSetting.stardust) {
       const prePos = $('#add_autofill_item');
       Object.keys(itemSetting.stardust).forEach(i => {
@@ -2054,6 +2066,7 @@
       ItemsSetting.set({
         lotusland: parseInt($('#item_set_lotus').val()),
         autoFill: $('#item_set_autofill').val() === 'on',
+        autoFillMin: parseInt($('#item_set_autofillmin').val()),
         chaosCube: parseInt($('#item_set_chaos').val()),
         guidepost: {
           monoId: parseInt($('#item_set_guidepost').val()),
