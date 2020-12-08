@@ -2,6 +2,7 @@ import { configGenerator } from './base'
 
 /** Item Info
  *  ['autoFill']: (bool) 星光碎片自动补塔功能开关
+ *  ['autoFillMin']: (int) 星光碎片自动补塔最低值，缺损数小于此值不自动补塔
  *  ['lotusland']: (int) 幻想乡自动抽奖金额上限
  *  ['chaosCube']: (int) 混沌魔方炮塔角色 ID
  *  ['guidepost'].['monoId']: (int) 虚空道标炮塔角色 ID

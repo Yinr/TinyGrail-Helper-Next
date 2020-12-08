@@ -20,14 +20,14 @@ const autoFillTemple = () => {
     const autoFillCostList = []
     getData(`chara/user/temple/0/${currentPage}/500`).then((d) => {
       if (d.State === 0) {
+        const itemsSetting = ItemsSetting.get()
         for (let i = 0; i < d.Value.Items.length; i++) {
           const info = {}
           const lv = d.Value.Items[i].CharacterLevel
-          const itemsSetting = ItemsSetting.get()
           info.id = d.Value.Items[i].CharacterId
           info.supplyId = itemsSetting.stardust ? parseInt(itemsSetting.stardust[lv]) : null
           info.cost = d.Value.Items[i].Sacrifices - d.Value.Items[i].Assets
-          if (info.cost >= 100 && info.cost <= 250 && info.id !== info.supplyId && info.supplyId) {
+          if (info.supplyId && info.id !== info.supplyId && info.cost >= itemsSetting.autoFillMin) {
             autoFillCostList.push(info)
           }
         }
