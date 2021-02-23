@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.28
+// @version     3.1.29
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -2855,8 +2855,8 @@
     const charaId = chara.CharacterId || chara.Id;
     const starRank = chara.Rank;
     const starForces = chara.StarForces;
-    const starMultiplier = starRank === 0 ? 0 : (starRank - 1) * (0.5 - 3) / (500 - 1) + 3;
-    $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="星之力信息，临时显示，仅供参考，具体内容等待官方更新">[星之力：${starForces} | ${starRank === 0 ? '暂无排名' : '排名：' + starRank + `<small> (x${formatNumber(starMultiplier, 2)})</small>`}]</span>`);
+    const starMultiplier = starRank > 500 ? 0 : (starRank - 1) * (0.5 - 3) / (500 - 1) + 3;
+    $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="星之力信息，临时显示，仅供参考，具体内容等待官方更新">[星之力：${starForces} | 排名：${starRank}<small> (x${formatNumber(starMultiplier, 2)})</small>]</span>`);
   };
   const showTempleRate = (chara) => {
     const charaId = chara.CharacterId || chara.Id;
