@@ -2,7 +2,6 @@ import './style.scss'
 
 import { launchObserver } from './utils/utils'
 
-import { autoFillTemple } from './trade/magic'
 import { autoBuildTemple } from './trade/temple'
 import { autoFillICO, autoJoinFollowIco } from './trade/ico'
 import { getShareBonus } from './trade/bonus'
@@ -18,9 +17,6 @@ import { openAuctionDialogSimple } from './ui/trade/openAuctionDialog'
 import { showHideGrailBox } from './ui/user/showHideGrailBox'
 
 import { Settings } from './config/settings'
-
-// 自动补塔
-setInterval(autoFillTemple, 60 * 60 * 1000)
 
 // 自动建塔
 setInterval(autoBuildTemple, 60 * 60 * 1000)
