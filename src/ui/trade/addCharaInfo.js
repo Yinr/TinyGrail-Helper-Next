@@ -397,14 +397,6 @@ const showPrice = (chara) => {
   $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span>评估价：${price}</span>`)
 }
 
-const showStarForce = (chara) => {
-  const charaId = chara.CharacterId || chara.Id
-  const starRank = chara.Rank
-  const starForces = chara.StarForces
-  const starMultiplier = starRank > 500 ? 0 : (starRank - 1) * (0.5 - 3) / (500 - 1) + 3
-  $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="星之力信息，临时显示，仅供参考，具体内容等待官方更新">[星之力：${starForces} | 排名：${starRank}<small> (x${formatNumber(starMultiplier, 2)})</small>]</span>`)
-}
-
 const showTempleRate = (chara) => {
   const charaId = chara.CharacterId || chara.Id
   const rate = chara.Rate
@@ -553,7 +545,6 @@ const addCharaInfo = (cid) => {
       showAuctionHistory(chara) // 历史拍卖
       showTradeHistory(chara) // 交易记录
       showPrice(chara) // 显示评估价
-      showStarForce(chara) // 临时增加显示星之力
       showTempleRate(chara) // 显示各级圣殿数量及股息计算值
       setBuildTemple(chara) // 自动建塔
       fixAuctions(chara) // 修改默认拍卖底价和数量
