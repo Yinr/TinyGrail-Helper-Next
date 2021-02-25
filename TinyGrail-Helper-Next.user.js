@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.30
+// @version     3.1.31
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -865,6 +865,20 @@
         });
       }
     });
+  };
+
+  const showValhallaPersonal = async (itemList) => {
+    for (let i = 0; i < itemList.length; i++) {
+      const chara = $(itemList[i]);
+      const id = chara.find('a.avatar[data-id]').data('id');
+      const charaInfo = await getData(`chara/user/${id}`);
+      const amount = charaInfo.Value.Amount;
+      const userId = charaInfo.Value.Id;
+      const templeInfo = await getData(`chara/temple/${id}`);
+      const temple = templeInfo.Value.find(i => i.UserId === userId) || {};
+      const sacrifices = temple.Sacrifices || 0;
+      chara.find('a.avatar[data-id] > img').after(`<div style="text-align: center; line-height: 1em;" title="持股数 | 献祭值"><small>${amount} | ${sacrifices}</small></div>`);
+    }
   };
 
   const ItemsSetting = configGenerator('ItemsSetting', {});
@@ -1953,6 +1967,10 @@
             <td><input id="item_set_guidepost" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           <tr><td>虚空道标 - 目标角色ID</td>
             <td><input id="item_set_guidepost_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td>闪光结晶 - 炮塔角色ID</td>
+            <td><input id="item_set_starbreak" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td>闪光结晶 - 目标角色ID</td>
+            <td><input id="item_set_starbreak_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           ${settingRowBtn}
         </tbody></table>
       </div>
@@ -1982,6 +2000,10 @@
       $('#item_set_guidepost').val(itemSetting.guidepost.monoId || 0);
       $('#item_set_guidepost_to').val(itemSetting.guidepost.toMonoId || 0);
     }
+    if (itemSetting.starbreak) {
+      $('#item_set_starbreak').val(itemSetting.starbreak.attackId || 0);
+      $('#item_set_starbreak_to').val(itemSetting.starbreak.toAttackId || 0);
+    }
     $('#item_set_lotus').on('change', (e) => {
       const el = e.target;
       if (parseInt(el.value) > 3000) {
@@ -2009,6 +2031,10 @@
         guidepost: {
           monoId: parseInt($('#item_set_guidepost').val()),
           toMonoId: parseInt($('#item_set_guidepost_to').val())
+        },
+        starbreak: {
+          attackId: parseInt($('#item_set_starbreak').val()),
+          toAttackId: parseInt($('#item_set_starbreak_to').val())
         }
       });
       $('#submit_setting').val('已保存');
@@ -3009,6 +3035,21 @@
       stopWhenSuccess: false
     });
     listenToGrailBox(document.body);
+    launchObserver({
+      parentNode: document.body,
+      selector: '#valhalla',
+      successCallback: () => {
+        launchObserver({
+          parentNode: document.getElementById('valhalla'),
+          selector: '#valhalla li.initial_item.chara',
+          successCallback: (mutationList) => {
+            const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), []);
+            showValhallaPersonal(itemList);
+          },
+          stopWhenSuccess: false
+        });
+      }
+    });
     launchObserver({
       parentNode: document.body,
       selector: '.grail_index .auction_button',
