@@ -8,6 +8,7 @@ import { getShareBonus } from './trade/bonus'
 
 import { hideBonusButton } from './ui/main/hideBonusButton'
 import { showTopWeek } from './ui/main/showTopWeek'
+import { showValhallaPersonal } from './ui/main/showValhallaPersonal'
 import { loadHelperMenu } from './ui/menu/menu'
 import { markFollow } from './ui/menu/markFollow'
 import { addCharaInfo, addICOInfo } from './ui/trade/addCharaInfo'
@@ -79,6 +80,23 @@ if (location.pathname.startsWith('/rakuen/home')) {
     stopWhenSuccess: false
   })
   listenToGrailBox(document.body)
+
+  // 英灵殿个人持股显示
+  launchObserver({
+    parentNode: document.body,
+    selector: '#valhalla',
+    successCallback: () => {
+      launchObserver({
+        parentNode: document.getElementById('valhalla'),
+        selector: '#valhalla li.initial_item.chara',
+        successCallback: (mutationList) => {
+          const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), [])
+          showValhallaPersonal(itemList)
+        },
+        stopWhenSuccess: false
+      })
+    }
+  })
 
   // 修改拍卖按钮
   launchObserver({
