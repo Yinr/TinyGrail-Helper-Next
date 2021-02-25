@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.29
+// @version     3.1.30
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -216,47 +216,6 @@
         error: err => { reject(err); }
       });
     })
-  };
-
-  const ItemsSetting = configGenerator('ItemsSetting', {});
-
-  const autoFillTemple = () => {
-    if (ItemsSetting.get().autoFill !== true) return
-    const autoFillCosts = async (autoFillCostList) => {
-      for (let i = 0; i < autoFillCostList.length; i++) {
-        const id = autoFillCostList[i].id;
-        const supplyId = autoFillCostList[i].supplyId;
-        const cost = autoFillCostList[i].cost;
-        await postData(`magic/stardust/${supplyId}/${id}/${cost}/true`, null).then((d) => {
-          if (d.State === 0) console.log(`自动补塔 #${id} ${d.Value}`);
-          else console.log(`自动补塔 #${id} ${d.Message}`);
-        });
-      }
-    };
-    const checkLostTemple = (currentPage) => {
-      const autoFillCostList = [];
-      getData(`chara/user/temple/0/${currentPage}/500`).then((d) => {
-        if (d.State === 0) {
-          const itemsSetting = ItemsSetting.get();
-          for (let i = 0; i < d.Value.Items.length; i++) {
-            const info = {};
-            const lv = d.Value.Items[i].CharacterLevel;
-            info.id = d.Value.Items[i].CharacterId;
-            info.supplyId = itemsSetting.stardust ? parseInt(itemsSetting.stardust[lv]) : null;
-            info.cost = d.Value.Items[i].Sacrifices - d.Value.Items[i].Assets;
-            if (info.supplyId && info.id !== info.supplyId && info.cost >= itemsSetting.autoFillMin) {
-              autoFillCostList.push(info);
-            }
-          }
-          autoFillCosts(autoFillCostList);
-          if (currentPage < d.Value.TotalPages) {
-            currentPage++;
-            checkLostTemple(currentPage);
-          }
-        }
-      });
-    };
-    checkLostTemple(1);
   };
 
   const AutoTempleList = configGenerator('autoTempleList', [], {
@@ -904,6 +863,8 @@
       }
     });
   };
+
+  const ItemsSetting = configGenerator('ItemsSetting', {});
 
   let lastEven = false;
   const renderBalanceLog = (item, even) => {
@@ -1696,20 +1657,26 @@
     const templeId = itemsSetting.chaosCube || '';
     const monoId = itemsSetting.guidepost ? itemsSetting.guidepost.monoId : '';
     const toMonoId = itemsSetting.guidepost ? itemsSetting.guidepost.toMonoId : '';
+    const attackId = itemsSetting.starbreak ? itemsSetting.starbreak.attackId : '';
+    const toAttackId = itemsSetting.starbreak ? itemsSetting.starbreak.toAttackId : '';
     const dialog = `<table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
-    <tr><td title="消耗圣殿10点固定资产，获取随机角色10-100股随机数量">混沌魔方</td>
-    <td>炮塔：<input id="chaosCube" type="number" style="width:60px" value="${templeId}"></td><td></td>
-    <td><input class="inputBtn" value="发射" id="submit_chaosCube" type="submit"></td></tr>
+    <tr><td title="消耗圣殿10点固定资产，获取随机角色20-200股随机数量">混沌魔方</td>
+      <td>炮塔：<input id="chaosCube" type="number" style="width:60px" value="${templeId}"></td><td></td>
+      <td><input class="inputBtn" value="发射" id="submit_chaosCube" type="submit"></td></tr>
     <tr><td title="消耗圣殿100点固定资产，获取指定股票10-100股随机数量，目标人物的等级要小于或等于发动攻击圣殿的人物等级">虚空道标</td>
-    <td>炮塔：<input id="monoId" type="number" style="width:60px" value="${monoId}"></td>
-    <td>目标：<input id="toMonoId" type="number" style="width:60px" value="${toMonoId}"></td>
-    <td><input class="inputBtn" value="发射" id="submit_guidepost" type="submit"></td></tr>
-    <tr><td title="用一个角色的活股或固定资产，给另一个角色的圣殿消耗进行补充，目标人物的等级要小于或等于发动攻击圣殿的人物等级">星光碎片</td>
-    <td>能源：<input id="supplyId" type="number" style="width:60px"></td>
-    <td>目标：<input id="toSupplyId" type="number" style="width:60px"></td></tr>
-    <td></td><td>类型：<select id="isTemple" style="width:60px"><option value="false">活股</option><option value="true" selected="selected">塔股</option></select></td>
-    <td>数量：<input id="amount" type="number" style="width:60px" value="100"></td>
-    <td><input class="inputBtn" value="充能" id="submit_stardust" type="submit"></td></tr>
+      <td>炮塔：<input id="monoId" type="number" style="width:60px" value="${monoId}"></td>
+      <td>目标：<input id="toMonoId" type="number" style="width:60px" value="${toMonoId}"></td>
+      <td><input class="inputBtn" value="发射" id="submit_guidepost" type="submit"></td></tr>
+    <tr><td title="消耗圣殿100点固定资产，获取指定角色星之力造成一定数量随机伤害，伤害随机范围与二者人物等级差有关">闪光结晶</td>
+      <td>炮塔：<input id="attackId" type="number" style="width:60px" value="${attackId}"></td>
+      <td>目标：<input id="toAttackId" type="number" style="width:60px" value="${toAttackId}"></td>
+      <td><input class="inputBtn" value="发射" id="submit_starbreak" type="submit"></td></tr>
+    <tr><td title="用一个角色的活股或固定资产，给另一个角色的圣殿消耗进行补充，补充数量与二者人物等级差有关">星光碎片</td>
+      <td>能源：<input id="supplyId" type="number" style="width:60px"></td>
+      <td>目标：<input id="toSupplyId" type="number" style="width:60px"></td></tr>
+      <td></td><td>类型：<input id="isCirculating" type="checkbox" style="margin: 0 5px;" title="当前版本小圣杯已不支持圣殿股进行充能，勾选以确认使用活股充能">活股</input></td>
+      <td>数量：<input id="amount" type="number" style="width:60px" value="100"></td>
+      <td><input class="inputBtn" value="充能" id="submit_stardust" type="submit" title="当前版本小圣杯已不支持圣殿股进行充能，勾选活股类型以确认使用活股充能"></td></tr>
     </tbody></table>`;
     showDialog(dialog);
     $('#submit_chaosCube').on('click', () => {
@@ -1759,12 +1726,36 @@
         } else alert(d.Message);
       });
     });
+    $('#submit_starbreak').on('click', () => {
+      const attackId = parseInt($('#attackId').val());
+      const toAttackId = parseInt($('#toAttackId').val());
+      ItemsSetting.set({ ...ItemsSetting.get(), starbreak: { attackId, toAttackId } });
+      if (attackId === 0 || toAttackId === 0) return
+      postData(`magic/starbreak/${attackId}/${toAttackId}`, null).then((d) => {
+        closeDialog();
+        console.log(d);
+        if (d.State === 0) {
+          alert(d.Value);
+          $('#eden_tpc_list ul').html('');
+          $('#eden_tpc_list ul').append('<li class="line_odd item_list" style="text-align: center;">[闪光结晶]</li>');
+          const Amount = d.Value.match(/造成([0-9]+)点伤害/)[1];
+          postData('chara/list', [attackId, toAttackId]).then((d) => {
+            d.Value[1].Sacrifices = Amount;
+            loadCharacterList(d.Value, 2, 2, null, 'chara', false);
+          });
+        } else alert(d.Message);
+      });
+    });
     $('#submit_stardust').on('click', () => {
       const supplyId = $('#supplyId').val();
       const toSupplyId = $('#toSupplyId').val();
-      const isTemple = $('#isTemple').val();
+      const isTemple = !$('#isCirculating').is(':checked');
       const amount = $('#amount').val();
       if (supplyId === 0 || toSupplyId === 0 || amount === 0) return
+      if (isTemple) {
+        alert('当前版本小圣杯已不支持圣殿股进行充能，请在[类型]中勾选[活股]以确认使用活股充能');
+        return
+      }
       postData(`magic/stardust/${supplyId}/${toSupplyId}/${amount}/${isTemple}`, null).then((d) => {
         closeDialog();
         console.log(d);
@@ -1914,13 +1905,6 @@
       <td><input class="inputBtn setting-btn-submit" value="保存" type="submit"></td>
     </tr>
   `;
-    const autofillItem = (level, charaid) => `
-    <tr class="setting-collapse-item ${$('#autofill_collapse').hasClass('setting-collapse-close') ? 'hide-row' : ''}">
-      <td title="等级">等级 lv<input class="item_set_level chara-level" type="number" min="0" step="1" value="${level}"></td>
-      <td><input class="item_set_source chara-id" type="number" min="0" step="1" value="${charaid}" title="能源角色ID">
-        <span class="cancel-autofill-item" title="删除该等级充能设定" style="margin-left: 1em; cursor: pointer;">删除</span></td>
-    </tr>
-  `;
     const dialog = `
     <div class="setting-tab-titlebar">
       <div data-settingid="setting-tab-feat" class="setting-tab-title open">功能</div>
@@ -1966,12 +1950,6 @@
             <td><input id="item_set_guidepost" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           <tr><td>虚空道标 - 目标角色ID</td>
             <td><input id="item_set_guidepost_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
-          <tr><td title="根据设置自动使用星光碎片为受损的圣殿进行充能">自动补塔</td>
-            <td><select id="item_set_autofill"><option value="on">开</option><option value="off" selected="selected">关</option></td></tr>
-          <tr id="autofill_collapse" class="setting-collapse setting-collapse-close"><td title="设置各等级自动充能的能源角色" colspan="2">自动补塔详细设置</td></tr>
-          <tr class="setting-collapse-item hide-row"><td title="自动补塔的最低受损股数">自动补塔最低数量</td>
-            <td><input id="item_set_autofillmin" type="number" min="0" step="10" value="100"></td></tr>
-          <tr id="add_autofill_item" class="hide-row"><td style="text-align: center; cursor: pointer;" colspan="2">添加补塔等级</td></tr>
           ${settingRowBtn}
         </tbody></table>
       </div>
@@ -2001,14 +1979,6 @@
       $('#item_set_guidepost').val(itemSetting.guidepost.monoId || 0);
       $('#item_set_guidepost_to').val(itemSetting.guidepost.toMonoId || 0);
     }
-    $('#item_set_autofill').val(itemSetting.autoFill === true ? 'on' : 'off');
-    $('#item_set_autofillmin').val(itemSetting.autoFillMin || 100);
-    if (itemSetting.stardust) {
-      const prePos = $('#add_autofill_item');
-      Object.keys(itemSetting.stardust).forEach(i => {
-        prePos.before(autofillItem(i, itemSetting.stardust[i]));
-      });
-    }
     $('#item_set_lotus').on('change', (e) => {
       const el = e.target;
       if (parseInt(el.value) > 3000) {
@@ -2019,38 +1989,6 @@
         el.style.fontWeight = '';
       }
     });
-    const getAutofill = () => {
-      const items = $('#setting-tab-magic tr.setting-collapse-item').toArray()
-        .map(el => ({ level: $(el).find('input.item_set_level').val(), charaId: parseInt($(el).find('input.item_set_source').val()) }))
-        .filter(item => parseInt(item.level) > 0 && item.charaId > 0);
-      const stardust = {};
-      items.forEach(item => { stardust[item.level.toString()] = item.charaId; });
-      return stardust
-    };
-    $('#autofill_collapse').on('click', () => {
-      const self = $('#autofill_collapse');
-      if (self.hasClass('setting-collapse-close')) {
-        self.removeClass('setting-collapse-close');
-        $('tr.setting-collapse-item').removeClass('hide-row');
-        $('#add_autofill_item').removeClass('hide-row');
-      } else {
-        self.addClass('setting-collapse-close');
-        $('tr.setting-collapse-item').addClass('hide-row');
-        $('#add_autofill_item').addClass('hide-row');
-      }
-    });
-    $('#add_autofill_item').on('click', () => {
-      $('#setting-tab-magic tr.setting-collapse-item input.item_set_source[value=0]').closest('tr').remove();
-      const levels = $('#setting-tab-magic tr.setting-collapse-item input.item_set_level').toArray().map(el => el.value);
-      for (let i = 1; i <= levels.length; i++) {
-        if (!levels.includes(i.toString())) {
-          $('#add_autofill_item').before(autofillItem(i, 0));
-          return
-        }
-      }
-      $('#add_autofill_item').before(autofillItem(levels.length + 1, 0));
-    });
-    $('#setting-tab-magic').on('click', '.cancel-autofill-item', (e) => $(e.currentTarget).closest('tr').remove());
     $('.setting-btn-submit').on('click', () => {
       settings.hide_grail = $('#set_hide_grail').val();
       settings.hide_link = $('#set_hide_link').val();
@@ -2064,14 +2002,11 @@
       Settings.set(settings);
       ItemsSetting.set({
         lotusland: parseInt($('#item_set_lotus').val()),
-        autoFill: $('#item_set_autofill').val() === 'on',
-        autoFillMin: parseInt($('#item_set_autofillmin').val()),
         chaosCube: parseInt($('#item_set_chaos').val()),
         guidepost: {
           monoId: parseInt($('#item_set_guidepost').val()),
           toMonoId: parseInt($('#item_set_guidepost_to').val())
-        },
-        stardust: getAutofill()
+        }
       });
       $('#submit_setting').val('已保存');
       setTimeout(() => { closeDialog(); }, 500);
@@ -2848,36 +2783,14 @@
     const price = chara.Price.toFixed(2);
     $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span>评估价：${price}</span>`);
   };
-  const showStarForce = (chara) => {
-    const charaId = chara.CharacterId || chara.Id;
-    const starRank = chara.Rank;
-    const starForces = chara.StarForces;
-    const starMultiplier = starRank > 500 ? 0 : (starRank - 1) * (0.5 - 3) / (500 - 1) + 3;
-    $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="星之力信息，临时显示，仅供参考，具体内容等待官方更新">[星之力：${starForces} | 排名：${starRank}<small> (x${formatNumber(starMultiplier, 2)})</small>]</span>`);
-  };
   const showTempleRate = (chara) => {
     const charaId = chara.CharacterId || chara.Id;
-    const rate = chara.Rate;
-    const level = chara.Level;
     getData(`chara/temple/${chara.Id}`).then((d) => {
       const templeAll = { 1: 0, 2: 0, 3: 0 };
       for (let i = 0; i < d.Value.length; i++) {
         templeAll[d.Value[i].Level]++;
       }
-      const templeRate = rate * (level + 1) * 0.3;
-      $(`#grailBox.chara${charaId} .assets_box .bold .sub`).attr('title', '活股股息:' + formatNumber(rate, 2));
       $(`#grailBox.chara${charaId} .assets_box .bold .sub`).before(`<span class="sub"> (${templeAll[3]} + ${templeAll[2]} + ${templeAll[1]})</span>`);
-      if ($(`#grailBox.chara${charaId} #expandButton`).length) {
-        $(`#grailBox.chara${charaId} #expandButton`).before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate, 2)}"> (${formatNumber(templeRate, 2)})</span>`);
-      } else {
-        launchObserver({
-          parentNode: document.querySelector(`#grailBox.chara${charaId}`),
-          selector: `#grailBox.chara${charaId} #expandButton`,
-          successCallback: () => {
-            $(`#grailBox.chara${charaId} #expandButton`).before(`<span class="sub" title="圣殿股息:${formatNumber(templeRate, 2)}"> (${formatNumber(templeRate, 2)})</span>`);
-          }
-        });
-      }
     });
   };
   const setBuildTemple = (chara) => {
@@ -2995,7 +2908,6 @@
         showAuctionHistory(chara);
         showTradeHistory(chara);
         showPrice(chara);
-        showStarForce(chara);
         showTempleRate(chara);
         setBuildTemple(chara);
         fixAuctions(chara);
@@ -3046,7 +2958,6 @@
     });
   };
 
-  setInterval(autoFillTemple, 60 * 60 * 1000);
   setInterval(autoBuildTemple, 60 * 60 * 1000);
   setInterval(autoFillICO, 30 * 1000);
   setInterval(autoJoinFollowIco, 60 * 60 * 1000);
