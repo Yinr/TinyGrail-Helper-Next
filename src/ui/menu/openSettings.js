@@ -57,6 +57,10 @@ export const openSettings = () => { // 设置
             <td><input id="item_set_guidepost" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           <tr><td>虚空道标 - 目标角色ID</td>
             <td><input id="item_set_guidepost_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td>闪光结晶 - 炮塔角色ID</td>
+            <td><input id="item_set_starbreak" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
+          <tr><td>闪光结晶 - 目标角色ID</td>
+            <td><input id="item_set_starbreak_to" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           ${settingRowBtn}
         </tbody></table>
       </div>
@@ -90,6 +94,10 @@ export const openSettings = () => { // 设置
     $('#item_set_guidepost').val(itemSetting.guidepost.monoId || 0)
     $('#item_set_guidepost_to').val(itemSetting.guidepost.toMonoId || 0)
   }
+  if (itemSetting.starbreak) {
+    $('#item_set_starbreak').val(itemSetting.starbreak.attackId || 0)
+    $('#item_set_starbreak_to').val(itemSetting.starbreak.toAttackId || 0)
+  }
 
   // 幻想乡刮刮乐金额过高提示
   $('#item_set_lotus').on('change', (e) => {
@@ -121,6 +129,10 @@ export const openSettings = () => { // 设置
       guidepost: {
         monoId: parseInt($('#item_set_guidepost').val()),
         toMonoId: parseInt($('#item_set_guidepost_to').val())
+      },
+      starbreak: {
+        attackId: parseInt($('#item_set_starbreak').val()),
+        toAttackId: parseInt($('#item_set_starbreak_to').val())
       }
     })
     $('#submit_setting').val('已保存')
