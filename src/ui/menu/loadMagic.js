@@ -23,9 +23,9 @@ export const loadMagic = () => {
     <tr><td title="用一个角色的活股或固定资产，给另一个角色的圣殿消耗进行补充，目标人物的等级要小于或等于发动攻击圣殿的人物等级">星光碎片</td>
     <td>能源：<input id="supplyId" type="number" style="width:60px"></td>
     <td>目标：<input id="toSupplyId" type="number" style="width:60px"></td></tr>
-    <td></td><td>类型：<select id="isTemple" style="width:60px"><option value="false">活股</option><option value="true" selected="selected">塔股</option></select></td>
+    <td></td><td>类型：<input id="isCirculating" type="checkbox" style="margin: 0 5px;" title="当前版本小圣杯已不支持圣殿股进行充能，勾选以确认使用活股充能">活股</input></td>
     <td>数量：<input id="amount" type="number" style="width:60px" value="100"></td>
-    <td><input class="inputBtn" value="充能" id="submit_stardust" type="submit"></td></tr>
+    <td><input class="inputBtn" value="充能" id="submit_stardust" type="submit" title="当前版本小圣杯已不支持圣殿股进行充能，勾选活股类型以确认使用活股充能"></td></tr>
     </tbody></table>`
   showDialog(dialog)
 
@@ -79,9 +79,13 @@ export const loadMagic = () => {
   $('#submit_stardust').on('click', () => {
     const supplyId = $('#supplyId').val()
     const toSupplyId = $('#toSupplyId').val()
-    const isTemple = $('#isTemple').val()
+    const isTemple = !$('#isCirculating').is(':checked')
     const amount = $('#amount').val()
     if (supplyId === 0 || toSupplyId === 0 || amount === 0) return
+    if (isTemple) {
+      alert('当前版本小圣杯已不支持圣殿股进行充能，请在[类型]中勾选[活股]以确认使用活股充能')
+      return
+    }
     postData(`magic/stardust/${supplyId}/${toSupplyId}/${amount}/${isTemple}`, null).then((d) => {
       closeDialog()
       console.log(d)
