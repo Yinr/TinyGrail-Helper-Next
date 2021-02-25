@@ -19,14 +19,16 @@ import { showHideGrailBox } from './ui/user/showHideGrailBox'
 
 import { Settings } from './config/settings'
 
-// 自动建塔
-setInterval(autoBuildTemple, 60 * 60 * 1000)
+if (!location.pathname.startsWith('/rakuen/topic')) {
+  // 自动建塔
+  setInterval(autoBuildTemple, 60 * 60 * 1000)
 
-// ICO 自动补款
-setInterval(autoFillICO, 30 * 1000)
+  // ICO 自动补款
+  setInterval(autoFillICO, 30 * 1000)
 
-// 关注角色 ICO 自动凑人头
-setInterval(autoJoinFollowIco, 60 * 60 * 1000)
+  // 关注角色 ICO 自动凑人头
+  setInterval(autoJoinFollowIco, 60 * 60 * 1000)
+}
 
 const listenToGrailBox = (parentNode = document.body, listenIco = true) => {
   // charater trade info
