@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.31
+// @version     3.1.32
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -2984,9 +2984,11 @@
     });
   };
 
-  setInterval(autoBuildTemple, 60 * 60 * 1000);
-  setInterval(autoFillICO, 30 * 1000);
-  setInterval(autoJoinFollowIco, 60 * 60 * 1000);
+  if (!location.pathname.startsWith('/rakuen/topic')) {
+    setInterval(autoBuildTemple, 60 * 60 * 1000);
+    setInterval(autoFillICO, 30 * 1000);
+    setInterval(autoJoinFollowIco, 60 * 60 * 1000);
+  }
   const listenToGrailBox = (parentNode = document.body, listenIco = true) => {
     launchObserver({
       parentNode: parentNode,
