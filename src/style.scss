@@ -94,6 +94,13 @@ img.cover {
   display: none !important;
 }
 
+#valhalla li.initial_item.chara .valhalla-sacrifices {
+  margin-top: 2px;
+  text-align: center;
+  line-height: 0;
+  white-space: nowrap;
+}
+
 // 列表项目
 .item-info-tag {
   display: inline-block;

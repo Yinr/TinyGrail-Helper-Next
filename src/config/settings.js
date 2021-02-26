@@ -10,7 +10,8 @@ const Settings = configGenerator('settings', {
   auction_num: 'one',
   merge_order: 'off',
   get_bonus: 'on',
-  gallery: 'off'
+  gallery: 'off',
+  valhalla_sacrifices: 'on'
 })
 
 export { Settings }

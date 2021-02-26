@@ -84,21 +84,23 @@ if (location.pathname.startsWith('/rakuen/home')) {
   listenToGrailBox(document.body)
 
   // 英灵殿个人持股显示
-  launchObserver({
-    parentNode: document.body,
-    selector: '#valhalla',
-    successCallback: () => {
-      launchObserver({
-        parentNode: document.getElementById('valhalla'),
-        selector: '#valhalla li.initial_item.chara',
-        successCallback: (mutationList) => {
-          const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), [])
-          showValhallaPersonal(itemList)
-        },
-        stopWhenSuccess: false
-      })
-    }
-  })
+  if (Settings.get().valhalla_sacrifices === 'on') {
+    launchObserver({
+      parentNode: document.body,
+      selector: '#valhalla',
+      successCallback: () => {
+        launchObserver({
+          parentNode: document.getElementById('valhalla'),
+          selector: '#valhalla li.initial_item.chara',
+          successCallback: (mutationList) => {
+            const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), [])
+            showValhallaPersonal(itemList)
+          },
+          stopWhenSuccess: false
+        })
+      }
+    })
+  }
 
   // 修改拍卖按钮
   launchObserver({

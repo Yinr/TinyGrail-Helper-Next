@@ -46,6 +46,8 @@ export const openSettings = () => { // 设置
             <td><select id="set_hide_board"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>将自己圣殿或连接排到第一个显示</td>
             <td><select id="set_pre_temple"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
+          <tr><td>英灵殿个人持股显示</td>
+            <td><select id="set_valhalla_sacrifices"><option value="on" selected="selected">是</option><option value="off">否</option></select></td></tr>
           ${settingRowBtn}
         </tbody></table>
       </div>
@@ -82,6 +84,7 @@ export const openSettings = () => { // 设置
   $('#set_hide_temple').val(settings.hide_temple)
   $('#set_hide_board').val(settings.hide_board)
   $('#set_pre_temple').val(settings.pre_temple)
+  $('#set_valhalla_sacrifices').val(settings.valhalla_sacrifices || 'on')
   $('#set_auction_num').val(settings.auction_num)
   $('#set_merge_order').val(settings.merge_order)
   $('#set_get_bonus').val(settings.get_bonus)
@@ -118,6 +121,7 @@ export const openSettings = () => { // 设置
     settings.hide_temple = $('#set_hide_temple').val()
     settings.hide_board = $('#set_hide_board').val()
     settings.pre_temple = $('#set_pre_temple').val()
+    settings.valhalla_sacrifices = $('#set_valhalla_sacrifices').val()
     settings.auction_num = $('#set_auction_num').val()
     settings.merge_order = $('#set_merge_order').val()
     settings.get_bonus = $('#set_get_bonus').val()
