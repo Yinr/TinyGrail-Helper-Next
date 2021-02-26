@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.33
+// @version     3.1.34
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -221,6 +221,23 @@
     })
   };
 
+  const getSacrifices = async (charaId, user, userType = 'UserId') => {
+    let Sacrifices = 0;
+    let Assets = 0;
+    const templeInfo = await getData(`chara/temple/${charaId}`);
+    let temple = templeInfo.Value.find(i => i[userType] === user);
+    if (temple === undefined) {
+      const linkInfo = await getData(`chara/links/${charaId}`);
+      temple = linkInfo.Value.find(i => i[userType] === user);
+    }
+    if (temple !== undefined) {
+      Sacrifices = temple.Sacrifices || 0;
+      Assets = temple.Assets || 0;
+    }
+    const Damage = Math.max(Sacrifices - Assets, 0);
+    return { Sacrifices, Assets, Damage }
+  };
+
   const AutoTempleList = configGenerator('autoTempleList', [], {
     postGet: value => value.map(item => ({
       ...item,
@@ -253,13 +270,13 @@
         }
       });
     };
-    const postBid = (chara, price, amount, Amount, Sacrifices) => {
+    const postBid = (chara, price, amount, Amount, Needed) => {
       postData(`chara/bid/${chara.charaId}/${price}/${amount}`, null).then((d) => {
         if (d.Message) console.log(`#${chara.charaId} ${chara.name} ${d.Message}`);
         else {
           console.log(`买入成交 #${chara.charaId} ${chara.name} ${price}*${amount}`);
-          if ((Amount + Sacrifices + amount) >= chara.target) {
-            buildTemple(chara, chara.target - Sacrifices);
+          if ((Amount + amount) >= Needed) {
+            buildTemple(chara, Needed);
           }
         }
       });
@@ -290,26 +307,27 @@
     for (let i = 0; i < charas.length; i++) {
       const chara = charas[i];
       console.log(`自动建塔 check #${chara.charaId} ${chara.name}`);
-      await getData(`chara/user/${chara.charaId}`).then((d) => {
-        const myAsks = d.Value.Asks;
-        const Amount = d.Value.Amount;
-        const Sacrifices = d.Value.Sacrifices;
-        if (Sacrifices >= chara.target) {
-          removeBuildTemple(chara.charaId);
-        } else if ((Amount + Sacrifices) >= chara.target) {
-          buildTemple(chara, chara.target - Sacrifices);
-        } else {
-          getData(`chara/depth/${chara.charaId}`).then((d) => {
-            let Asks = d.Value.Asks;
-            Asks = remove_myAsks(Asks, myAsks);
-            const AskPrice = Asks[0] ? Asks[0].Price : 0;
-            if (AskPrice && AskPrice <= chara.bidPrice) {
-              const [price, amount] = getAskin(Asks, chara.bidPrice);
-              postBid(chara, price, Math.min(amount, chara.target - Amount - Sacrifices), Amount, Sacrifices);
-            }
-          });
-        }
-      });
+      const charaInfo = await getData(`chara/user/${chara.charaId}`);
+      const myAsks = charaInfo.Value.Asks;
+      const Amount = charaInfo.Value.Amount;
+      const userId = charaInfo.Value.Id;
+      const { Assets, Damage } = await getSacrifices(chara.charaId, userId);
+      const Needed = chara.target - Assets - Math.floor(Damage / 2);
+      if (Needed <= 0) {
+        removeBuildTemple(chara.charaId);
+      } else if (Amount >= Needed) {
+        buildTemple(chara, Needed);
+      } else {
+        getData(`chara/depth/${chara.charaId}`).then((d) => {
+          let Asks = d.Value.Asks;
+          Asks = remove_myAsks(Asks, myAsks);
+          const AskPrice = Asks[0] ? Asks[0].Price : 0;
+          if (AskPrice && AskPrice <= chara.bidPrice) {
+            const [price, amount] = getAskin(Asks, chara.bidPrice);
+            postBid(chara, price, Math.min(amount, Needed), Amount, Needed);
+          }
+        });
+      }
     }
   };
 
@@ -874,23 +892,8 @@
       const charaInfo = await getData(`chara/user/${id}`);
       const amount = charaInfo.Value.Amount;
       const userId = charaInfo.Value.Id;
-      let sacrifices = 0;
-      let assets = 0;
-      const templeInfo = await getData(`chara/temple/${id}`);
-      const temple = templeInfo.Value.find(i => i.UserId === userId);
-      if (temple === undefined) {
-        const linkInfo = await getData(`chara/links/${id}`);
-        const link = linkInfo.Value.find(i => i.UserId === userId) || {};
-        if (link !== undefined) {
-          sacrifices = link.Sacrifices || 0;
-          assets = link.Assets || 0;
-        }
-      } else {
-        sacrifices = temple.Sacrifices || 0;
-        assets = temple.Assets || 0;
-      }
-      const damage = Math.max(sacrifices - assets, 0);
-      chara.find('a.avatar[data-id] > img').after(`<div style="text-align: center; line-height: 1em;" title="持股数 | 献祭值${damage ? ' (损耗值)' : ''}"><small>${amount} | ${sacrifices}${damage ? `(${damage})` : ''}</small></div>`);
+      const { Sacrifices, Damage } = await getSacrifices(id, userId);
+      chara.find('a.avatar[data-id] > img').after(`<div style="text-align: center; line-height: 1em;" title="持股数 | 献祭值${Damage ? ' (损耗值)' : ''}"><small>${amount} | ${Sacrifices}${Damage ? `(${Damage})` : ''}</small></div>`);
     }
   };
 
