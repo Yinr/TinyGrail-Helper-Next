@@ -1,6 +1,7 @@
 import { getData, postData } from '../utils/api'
-
 import { removeEmpty, formatAskPrice } from '../utils/formatter'
+
+import { getSacrifices } from './getSacrifices'
 
 import { AutoTempleList } from '../config/autoTempleList'
 
@@ -28,13 +29,13 @@ const autoBuildTemple = async (charas = undefined) => {
       }
     })
   }
-  const postBid = (chara, price, amount, Amount, Sacrifices) => {
+  const postBid = (chara, price, amount, Amount, Needed) => {
     postData(`chara/bid/${chara.charaId}/${price}/${amount}`, null).then((d) => {
       if (d.Message) console.log(`#${chara.charaId} ${chara.name} ${d.Message}`)
       else {
         console.log(`买入成交 #${chara.charaId} ${chara.name} ${price}*${amount}`)
-        if ((Amount + Sacrifices + amount) >= chara.target) { // 持股达到数量，建塔
-          buildTemple(chara, chara.target - Sacrifices)
+        if ((Amount + amount) >= Needed) { // 持股达到数量，建塔
+          buildTemple(chara, Needed)
         }
       }
     })
@@ -67,27 +68,27 @@ const autoBuildTemple = async (charas = undefined) => {
   for (let i = 0; i < charas.length; i++) {
     const chara = charas[i]
     console.log(`自动建塔 check #${chara.charaId} ${chara.name}`)
-    await getData(`chara/user/${chara.charaId}`).then((d) => {
-      const myAsks = d.Value.Asks
-      const Amount = d.Value.Amount
-      const Sacrifices = d.Value.Sacrifices
-      if (Sacrifices >= chara.target) {
-        removeBuildTemple(chara.charaId)
-      } else if ((Amount + Sacrifices) >= chara.target) { // 持股达到数量，建塔
-        buildTemple(chara, chara.target - Sacrifices)
-      } else {
-        getData(`chara/depth/${chara.charaId}`).then((d) => {
-          let Asks = d.Value.Asks
-          Asks = remove_myAsks(Asks, myAsks)
-          // console.log(Asks);
-          const AskPrice = Asks[0] ? Asks[0].Price : 0
-          if (AskPrice && AskPrice <= chara.bidPrice) { // 最低卖单低于买入上限，买入
-            const [price, amount] = getAskin(Asks, chara.bidPrice)
-            postBid(chara, price, Math.min(amount, chara.target - Amount - Sacrifices), Amount, Sacrifices)
-          }
-        })
-      }
-    })
+    const charaInfo = await getData(`chara/user/${chara.charaId}`)
+    const myAsks = charaInfo.Value.Asks
+    const Amount = charaInfo.Value.Amount
+    const userId = charaInfo.Value.Id
+    const { Assets, Damage } = await getSacrifices(chara.charaId, userId)
+    const Needed = chara.target - Assets - Math.floor(Damage / 2)
+    if (Needed <= 0) {
+      removeBuildTemple(chara.charaId)
+    } else if (Amount >= Needed) { // 持股达到数量，建塔
+      buildTemple(chara, Needed)
+    } else {
+      getData(`chara/depth/${chara.charaId}`).then((d) => {
+        let Asks = d.Value.Asks
+        Asks = remove_myAsks(Asks, myAsks)
+        const AskPrice = Asks[0] ? Asks[0].Price : 0
+        if (AskPrice && AskPrice <= chara.bidPrice) { // 最低卖单低于买入上限，买入
+          const [price, amount] = getAskin(Asks, chara.bidPrice)
+          postBid(chara, price, Math.min(amount, Needed), Amount, Needed)
+        }
+      })
+    }
   }
 }
 
