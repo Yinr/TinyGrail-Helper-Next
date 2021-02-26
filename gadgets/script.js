@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.34
+// @version     3.1.35
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -777,7 +777,8 @@
     auction_num: 'one',
     merge_order: 'off',
     get_bonus: 'on',
-    gallery: 'off'
+    gallery: 'off',
+    valhalla_sacrifices: 'on'
   });
 
   const openAuctionDialog = (chara, auction) => {
@@ -890,7 +891,7 @@
       const amount = charaInfo.Value.Amount;
       const userId = charaInfo.Value.Id;
       const { Sacrifices, Damage } = await getSacrifices(id, userId);
-      chara.find('a.avatar[data-id] > img').after(`<div style="text-align: center; line-height: 1em;" title="持股数 | 献祭值${Damage ? ' (损耗值)' : ''}"><small>${amount} | ${Sacrifices}${Damage ? `(${Damage})` : ''}</small></div>`);
+      chara.find('a.avatar[data-id] > img').after(`<div class="valhalla-sacrifices" title="持股数 | 献祭值${Damage ? ' (损耗值)' : ''}"><small>${amount} | ${Sacrifices}${Damage ? `(${Damage})` : ''}</small></div>`);
     }
   };
 
@@ -1969,6 +1970,8 @@
             <td><select id="set_hide_board"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>将自己圣殿或连接排到第一个显示</td>
             <td><select id="set_pre_temple"><option value="on" selected="selected">是</option><option value="off">否</option></td></tr>
+          <tr><td>英灵殿个人持股显示</td>
+            <td><select id="set_valhalla_sacrifices"><option value="on" selected="selected">是</option><option value="off">否</option></select></td></tr>
           ${settingRowBtn}
         </tbody></table>
       </div>
@@ -2003,6 +2006,7 @@
     $('#set_hide_temple').val(settings.hide_temple);
     $('#set_hide_board').val(settings.hide_board);
     $('#set_pre_temple').val(settings.pre_temple);
+    $('#set_valhalla_sacrifices').val(settings.valhalla_sacrifices || 'on');
     $('#set_auction_num').val(settings.auction_num);
     $('#set_merge_order').val(settings.merge_order);
     $('#set_get_bonus').val(settings.get_bonus);
@@ -2033,6 +2037,7 @@
       settings.hide_temple = $('#set_hide_temple').val();
       settings.hide_board = $('#set_hide_board').val();
       settings.pre_temple = $('#set_pre_temple').val();
+      settings.valhalla_sacrifices = $('#set_valhalla_sacrifices').val();
       settings.auction_num = $('#set_auction_num').val();
       settings.merge_order = $('#set_merge_order').val();
       settings.get_bonus = $('#set_get_bonus').val();
@@ -3050,21 +3055,23 @@
       stopWhenSuccess: false
     });
     listenToGrailBox(document.body);
-    launchObserver({
-      parentNode: document.body,
-      selector: '#valhalla',
-      successCallback: () => {
-        launchObserver({
-          parentNode: document.getElementById('valhalla'),
-          selector: '#valhalla li.initial_item.chara',
-          successCallback: (mutationList) => {
-            const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), []);
-            showValhallaPersonal(itemList);
-          },
-          stopWhenSuccess: false
-        });
-      }
-    });
+    if (Settings.get().valhalla_sacrifices === 'on') {
+      launchObserver({
+        parentNode: document.body,
+        selector: '#valhalla',
+        successCallback: () => {
+          launchObserver({
+            parentNode: document.getElementById('valhalla'),
+            selector: '#valhalla li.initial_item.chara',
+            successCallback: (mutationList) => {
+              const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), []);
+              showValhallaPersonal(itemList);
+            },
+            stopWhenSuccess: false
+          });
+        }
+      });
+    }
     launchObserver({
       parentNode: document.body,
       selector: '.grail_index .auction_button',

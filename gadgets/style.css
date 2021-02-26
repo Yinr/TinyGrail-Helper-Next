@@ -66,6 +66,12 @@ img.cover {
 .hide_grail {
   display: none !important; }
 
+#valhalla li.initial_item.chara .valhalla-sacrifices {
+  margin-top: 2px;
+  text-align: center;
+  line-height: 0;
+  white-space: nowrap; }
+
 .item-info-tag {
   display: inline-block;
   padding: 0 4px;
