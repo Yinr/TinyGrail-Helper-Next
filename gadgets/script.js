@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.35
+// @version     3.1.36
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -162,6 +162,12 @@
     }
     return me
   };
+  const getDayOfWeek = () => {
+    let asiaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' });
+    asiaTime = new Date(asiaTime);
+    return asiaTime.getDay()
+  };
+  const isDayOfWeek = (day) => getDayOfWeek() === (day % 7);
   const normalizeAvatar = (avatar) => {
     if (!avatar) return '//lain.bgm.tv/pic/user/l/icon.jpg'
     if (avatar.startsWith('https://tinygrail.oss-cn-hangzhou.aliyuncs.com/')) { return avatar + '!w120' }
@@ -218,15 +224,11 @@
     })
   };
 
-  const getSacrifices = async (charaId, user, userType = 'UserId') => {
+  const getSacrifices = async (charaId, username) => {
     let Sacrifices = 0;
     let Assets = 0;
-    const templeInfo = await getData(`chara/temple/${charaId}`);
-    let temple = templeInfo.Value.find(i => i[userType] === user);
-    if (temple === undefined) {
-      const linkInfo = await getData(`chara/links/${charaId}`);
-      temple = linkInfo.Value.find(i => i[userType] === user);
-    }
+    const templeInfo = await getData(`chara/user/temple/${username || getMe()}/1/100?keyword=${charaId}`);
+    const temple = templeInfo.Value.Items.find(i => i.CharacterId === charaId);
     if (temple !== undefined) {
       Sacrifices = temple.Sacrifices || 0;
       Assets = temple.Assets || 0;
@@ -307,8 +309,7 @@
       const charaInfo = await getData(`chara/user/${chara.charaId}`);
       const myAsks = charaInfo.Value.Asks;
       const Amount = charaInfo.Value.Amount;
-      const userId = charaInfo.Value.Id;
-      const { Assets, Damage } = await getSacrifices(chara.charaId, userId);
+      const { Assets, Damage } = await getSacrifices(chara.charaId);
       const Needed = chara.target - Assets - Math.floor(Damage / 2);
       if (Needed <= 0) {
         removeBuildTemple(chara.charaId);
@@ -651,15 +652,14 @@
     }
   };
 
-  const getWeeklyShareBonus = (callback) => {
+  const getWeeklyShareBonus = () => {
     if (!confirm('已经周六了，赶紧领取股息吧？')) return
-    getData('event/share/bonus');
+    getData('event/share/bonus').then((d) => {
+      if (d.State === 0) { alert(d.Value); } else { alert(d.Message); }
+    });
   };
   const getShareBonus = () => {
-    let asiaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' });
-    asiaTime = new Date(asiaTime);
-    const Day = asiaTime.getDay();
-    if (Day === 6) {
+    if (isDayOfWeek(6)) {
       getData('event/share/bonus/check').then((d) => {
         if (d.State === 0) {
           getWeeklyShareBonus();
@@ -883,16 +883,37 @@
     });
   };
 
-  const showValhallaPersonal = async (itemList) => {
+  const showValhallaItems = async (itemList) => {
     for (let i = 0; i < itemList.length; i++) {
       const chara = $(itemList[i]);
       const id = chara.find('a.avatar[data-id]').data('id');
       const charaInfo = await getData(`chara/user/${id}`);
       const amount = charaInfo.Value.Amount;
-      const userId = charaInfo.Value.Id;
-      const { Sacrifices, Damage } = await getSacrifices(id, userId);
-      chara.find('a.avatar[data-id] > img').after(`<div class="valhalla-sacrifices" title="持股数 | 献祭值${Damage ? ' (损耗值)' : ''}"><small>${amount} | ${Sacrifices}${Damage ? `(${Damage})` : ''}</small></div>`);
+      const { Sacrifices, Damage } = await getSacrifices(id);
+      const title = `持股数 | 献祭值${Damage ? ' (损耗值)' : ''}，点击刷新`;
+      const text = `${amount} | ${Sacrifices}${Damage ? `(${Damage})` : ''}`;
+      const info = chara.find('.valhalla-sacrifices');
+      if (info.length === 0) {
+        chara.find('a.avatar[data-id] > img').after(`<div class="valhalla-sacrifices" title="${title}"><small>${text}</small></div>`);
+      } else {
+        info.attr('title', title).find('small').text(text);
+      }
     }
+  };
+  const showValhallaPersonal = () => {
+    launchObserver({
+      parentNode: document.getElementById('valhalla'),
+      selector: '#valhalla li.initial_item.chara',
+      successCallback: (mutationList) => {
+        const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList && j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), []);
+        showValhallaItems(itemList);
+      },
+      stopWhenSuccess: false
+    });
+    $('#valhalla').on('click', '.valhalla-sacrifices', (e) => {
+      showValhallaItems($(e.currentTarget).closest('li.initial_item.chara'));
+      e.stopPropagation();
+    });
   };
 
   const ItemsSetting = configGenerator('ItemsSetting', {});
@@ -3060,15 +3081,7 @@
         parentNode: document.body,
         selector: '#valhalla',
         successCallback: () => {
-          launchObserver({
-            parentNode: document.getElementById('valhalla'),
-            selector: '#valhalla li.initial_item.chara',
-            successCallback: (mutationList) => {
-              const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), []);
-              showValhallaPersonal(itemList);
-            },
-            stopWhenSuccess: false
-          });
+          showValhallaPersonal();
         }
       });
     }
