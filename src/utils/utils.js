@@ -25,6 +25,14 @@ const getMe = () => {
   return me
 }
 
+const getDayOfWeek = () => {
+  let asiaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' })
+  asiaTime = new Date(asiaTime)
+  return asiaTime.getDay()
+}
+
+const isDayOfWeek = (day) => getDayOfWeek() === (day % 7)
+
 const normalizeAvatar = (avatar) => {
   if (!avatar) return '//lain.bgm.tv/pic/user/l/icon.jpg'
 
@@ -55,4 +63,4 @@ const launchObserver = ({
   observer.observe(parentNode, config)
 }
 
-export { getMe, launchObserver, normalizeAvatar }
+export { getMe, launchObserver, isDayOfWeek, normalizeAvatar }
