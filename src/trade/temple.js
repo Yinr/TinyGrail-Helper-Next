@@ -71,8 +71,7 @@ const autoBuildTemple = async (charas = undefined) => {
     const charaInfo = await getData(`chara/user/${chara.charaId}`)
     const myAsks = charaInfo.Value.Asks
     const Amount = charaInfo.Value.Amount
-    const userId = charaInfo.Value.Id
-    const { Assets, Damage } = await getSacrifices(chara.charaId, userId)
+    const { Assets, Damage } = await getSacrifices(chara.charaId)
     const Needed = chara.target - Assets - Math.floor(Damage / 2)
     if (Needed <= 0) {
       removeBuildTemple(chara.charaId)

@@ -89,15 +89,7 @@ if (location.pathname.startsWith('/rakuen/home')) {
       parentNode: document.body,
       selector: '#valhalla',
       successCallback: () => {
-        launchObserver({
-          parentNode: document.getElementById('valhalla'),
-          selector: '#valhalla li.initial_item.chara',
-          successCallback: (mutationList) => {
-            const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), [])
-            showValhallaPersonal(itemList)
-          },
-          stopWhenSuccess: false
-        })
+        showValhallaPersonal()
       }
     })
   }
