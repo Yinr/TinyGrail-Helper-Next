@@ -3,6 +3,17 @@ import { launchObserver } from '../../utils/utils'
 
 import { getSacrifices } from '../../trade/getSacrifices'
 
+const addValhallaElement = (charaElement, amount, sacrifices, damage) => {
+  const title = `持股数 | 献祭值${damage ? ' (损耗值)' : ''}，点击刷新`
+  const text = `${amount} | ${sacrifices}${damage ? `(${damage})` : ''}`
+  const info = charaElement.find('.valhalla-sacrifices')
+  if (info.length === 0) {
+    charaElement.find('a.avatar[data-id] > img').after(`<div class="valhalla-sacrifices" title="${title}"><small>${text}</small></div>`)
+  } else {
+    info.attr('title', title).find('small').text(text)
+  }
+}
+
 const showValhallaItems = async (itemList) => {
   for (let i = 0; i < itemList.length; i++) {
     const chara = $(itemList[i])
@@ -11,14 +22,7 @@ const showValhallaItems = async (itemList) => {
     const amount = charaInfo.Value.Amount
 
     const { Sacrifices, Damage } = await getSacrifices(id)
-    const title = `持股数 | 献祭值${Damage ? ' (损耗值)' : ''}，点击刷新`
-    const text = `${amount} | ${Sacrifices}${Damage ? `(${Damage})` : ''}`
-    const info = chara.find('.valhalla-sacrifices')
-    if (info.length === 0) {
-      chara.find('a.avatar[data-id] > img').after(`<div class="valhalla-sacrifices" title="${title}"><small>${text}</small></div>`)
-    } else {
-      info.attr('title', title).find('small').text(text)
-    }
+    addValhallaElement(chara, amount, Sacrifices, Damage)
   }
 }
 
@@ -27,7 +31,7 @@ export const showValhallaPersonal = () => {
     parentNode: document.getElementById('valhalla'),
     selector: '#valhalla li.initial_item.chara',
     successCallback: (mutationList) => {
-      const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList && j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), [])
+      const itemList = mutationList.itemFilter(i => i.classList && i.classList.contains('initial_item'))
       showValhallaItems(itemList)
     },
     stopWhenSuccess: false

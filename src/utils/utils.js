@@ -57,6 +57,10 @@ const launchObserver = ({
       return
     }
     if (stopWhenSuccess) observer.disconnect()
+
+    // 提供筛选变动节点并返回符合条件的元素数组的功能
+    mutationList.itemFilter = (fn, type = 'addedNodes') => mutationList.map(i => Array.from(i[type]).filter(fn)).reduce((arr, val) => arr.concat(val), [])
+
     if (successCallback) successCallback(mutationList)
   }
   const observer = new MutationObserver(observeFunc)
