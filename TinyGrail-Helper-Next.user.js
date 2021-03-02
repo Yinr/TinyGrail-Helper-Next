@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name        TinyGrail Helper Next
-// @description 为小圣杯增加一些小功能, 讨论/反馈：https://bgm.tv/group/topic/353368
+// @description 为小圣杯增加一些小功能, 讨论/反馈：https://bgm.tv/group/topic/358167
 // @namespace   https://gitee.com/Yinr/TinyGrail-Helper-Next
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.36
+// @version     3.1.37
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -17,23 +17,24 @@
   var css_248z = "@charset \"UTF-8\";\nul.timelineTabs li a {\n  margin: 2px 0 0 0;\n  padding: 5px 10px 5px 10px; }\n\nimg.cover {\n  background-color: transparent; }\n\n.assets .my_temple.item .card {\n  box-shadow: 3px 3px 5px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets .my_temple.item .name a {\n  font-weight: bold;\n  color: #0084b4; }\n\n.assets_box .item {\n  margin: 5px 5px 5px 0;\n  width: 90px; }\n  .assets_box .item .card {\n    width: 90px;\n    height: 120px; }\n\n#lastTemples .assets .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.item .card {\n  width: 105px;\n  height: 140px; }\n\n#grailBox .my_auction, #TB_window .my_auction {\n  color: #ffa7cc;\n  margin-right: 5px; }\n\n#grailBox .user_auction, #TB_window .user_auction {\n  color: #a7e3ff;\n  margin-right: 5px; }\n\n#grailBox .trade_box button {\n  min-width: 50px;\n  padding: 0 9px; }\n\n#grailBox .hide_grail_block_title:after {\n  font-size: 12px;\n  content: ' (点击显示)'; }\n\n#grailBox .hide_grail_block {\n  display: none !important; }\n\n.link.swapped .swapPos {\n  text-decoration: underline; }\n\n.link .swapPos {\n  margin-left: 0.5em;\n  cursor: pointer; }\n\n#grail li.title.hide_grail_title h2:after {\n  font-size: 12px;\n  content: '(点击显示)'; }\n\n#grail .temple_list .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.hide_grail {\n  display: none !important; }\n\n#valhalla li.initial_item.chara .valhalla-sacrifices {\n  margin-top: 2px;\n  text-align: center;\n  line-height: 0;\n  white-space: nowrap; }\n\n.item-info-tag {\n  display: inline-block;\n  padding: 0 4px;\n  margin-left: 2px;\n  vertical-align: top;\n  font-size: 50%;\n  font-weight: bold;\n  text-shadow: 1px 1px 1px #666;\n  border: none;\n  border-radius: 4px;\n  background: linear-gradient(#4f93cf, #369cf8); }\n\n.item-info-tags {\n  display: inline-block; }\n  .item-info-tags .item-info-tag {\n    display: inline-block;\n    padding: 0;\n    width: 10px;\n    height: 10px;\n    background-size: contain;\n    margin-left: 2px; }\n  .item-info-tags .item-info-chara-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AYht+mSlUqInYQcchQnSyIijhqFYpQIdQKrTqYXPoHTRqSFBdHwbXg4M9i1cHFWVcHV0EQ/AFxcnRSdJESv0sKLWK847iH97735e47QKiXmWZ1jAOabpupRFzMZFfF0CsEdKOfJmRmGXOSlITv+LpHgO93MZ7lX/fn6FVzFgMCIvEsM0ybeIN4etM2OO8TR1hRVonPicdMuiDxI9cVj984F1wWeGbETKfmiSPEYqGNlTZmRVMjniKOqppO+ULGY5XzFmetXGXNe/IXhnP6yjLXaQ0jgUUsQYIIBVWUUIaNGO06KRZSdB738Q+5folcCrlKYORYQAUaZNcP/ge/e2vlJye8pHAc6HxxnI8RILQLNGqO833sOI0TIPgMXOktf6UOzHySXmtp0SOgbxu4uG5pyh5wuQMMPhmyKbtSkJaQzwPvZ/RNWWDgFuhZ8/rWPMfpA5CmXiVvgINDYLRA2es+7+5q79u/Nc3+/QDatXJqsNTf9AAAAAlwSFlzAAALEwAACxMBAJqcGAAAA6JJREFUOMuVlEtslVUQx39zvsftfVBuKxYKLa1ijEohsECjLgo23ZgQJcEQZcfOhS58ING4MEogMdEYWbIwxkghFoPBR4xIiQ8IiZi2vCEEilCsfdy+73e+7zvj4lYsz4RJJpOTc+Z3MnPO/OEutnerob8T7NCPRH/vo38vdHxg7paCf7fNxuoiJh02U30/fYWLRVLWr26Ym8LIHXPueF3owYL5wyRB8WWvrrDOq699Pg2KrySFEUKPewO2LIaTX/jYSRrJrdoRFKsIqzOQf+rjaJzm01/6tCy+B2DHlgzppEcqNe/XrmyDyKLWUruiFRc0bY0nPDq2hLcFigC7NgsPLTIYPETAGAspT9+/ctOvNUuaZp2G0oXLDPyxc40aupQQdYoTJU0dT77mkAOf+BQTcPh4pjxPlbUivFS9ZENrw4rHAohBZoAKIj5Xei/EpbOf/66O3SLscza4Kr4yrQ45sp1GP9+0rdi4qi2TKyzIVM8hO7dImDWos5UaZFZNqoj4JJEwNTpKNDZONDkxONrf3RUNn3nLT5XnlrW+sNFDUBSMAGXUVkrEcCPQgWqCAQqFkEKuFtKaeQsfeWJ99/5tR8z0OJ3HD+6OsdOQxIiziLPgLIJFdMa5Kf53LokxXpbjh/bHE9cGdxkRv3+s/1rr2d7DibgIZmAwy+XGtWJBLbgIMcL5U+fS0rmDbRJy1SuVMjz+cPLX0OUrJyImN9TV14NJES+9HsXMuKSgKaIpQohEWU4fPcClY10vGl+/b99ehfmmd5okBZS9fX+eenVoqA8hBrGIZ8GLER/wEkQjxI6io/3oxcMM9X7Exd6e19XpnkQNUP6/3Xs2QRyRe3R18cLSB5vmkwOqAiScQszJygOnlap1CpiEM31msPuQPmB8ndj42U3iUI4hKRshHTOUuyEAyYIEIBnAA0nATYPMgE2AF0+JBDm9VW3iCGKrYTYreQXEA/FBqkByFaBGYFJwAahANks+cVqlMeO3zHISgXOay/jk0OuDgRgwecFUCyasgFBQhUygoRPm2PJt9NBGIEbygVR+hC/wz7DQ8wvlb3fydVwiWfumrFu+jMLCghLHIBFIlup45HZAC2JMlIQ+o0HsfvuB8vlOt2NpM2/X15JKLazpFvl0h767qF02r26XrMtmTDxlp5Mona0fFfvwGahvafDDGu/ZnvcujTk4VreGMQRChbKr9NQoDPxMXmHF8nea77Ml+93AiavJG10Vzr/VrK4oLFhtxgAAAABJRU5ErkJggg=='); }\n  .item-info-tags .item-info-auc-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9TxQ8qInYo4pChOlkQFXHUKhShQqgVWnUwufQLmjQkKS6OgmvBwY/FqoOLs64OroIg+AHi5Oik6CIl/i8ptIjx4Lgf7+497t4BQr3MNKtjHNB020wl4mImuyp2vUJADwYQQVBmljEnSUn4jq97BPh6F+NZ/uf+HH1qzmJAQCSeZYZpE28QT2/aBud94jAryirxOfGYSRckfuS64vEb54LLAs8Mm+nUPHGYWCy0sdLGrGhqxFPEUVXTKV/IeKxy3uKslauseU/+wlBOX1nmOs1hJLCIJUgQoaCKEsqwEaNVJ8VCivbjPv4h1y+RSyFXCYwcC6hAg+z6wf/gd7dWfnLCSwrFgc4Xx/kYAbp2gUbNcb6PHadxAgSfgSu95a/UgZlP0mstLXoE9G8DF9ctTdkDLneAyJMhm7IrBWkK+TzwfkbflAUGb4HeNa+35j5OH4A0dZW8AQ4OgdECZa/7vLu7vbd/zzT7+wHzpXJ0393cywAAAAlwSFlzAAALEwAACxMBAJqcGAAAA8hJREFUOMuVU1tsVUUUXXvO3HN6+6KRqi3WUK0SFaJSEU2joqSY0ICFSqjcJjYpKlVDQq2StIgGX/URK/5gIogmhBSNfpj4Cj4/MDEGtRgNaqkx9ia1cNt777nnMefMOTN+tPIo3Ag7mZ+VvdesNXsNoUi1b1qGR7auR21FLdl+vpuIGpVWr2utf1lav7HYGPhswEwaCP0YD/W3IBIC43Z6G2PGDgKY1vp2qeIlAByeYIikOouQzQaaNyzCgeHHMT41DqH8x7zYedaReVaQebhRwTUZj35Mv4ObmhacUyHNBj6e6ENJrhoZMd5DZAye1pm+vPzKb0zDSksl+5SO0XRF9/9b/vPYGDifqGdkvHgK1X/Nn3P1twqqQ8Q+KRW7I97oc5+PvIyNLS/h75HJ4pYrrWq4oeNk/Uk7608i609mq0trv+bM6PAil7zIhVDimTqrdgs0sPP9R5Gs5MUJL7q0HCIOMq50VuaDXH9Vydx+y0ikfOlBnDoUROI1L3J7CyqHvYe2FH9DwyRs/eROxJGCwUzce107G80e2weo1Dl2oGIV37+qYd27o1MjhivdgFB0Vxo/jL2NMArBGb/syInvnwSo+/QBrbU7r7x+3yVlNc1aq+MKWHOWZWYQ1nfdgcMTuxHpGAbja4iMnxfObfzUDQsf2YENO7BhC1skedl7ZWZppxPaV7nSafKl03KGQiJAa+Cr0VcBzWAy6wEGegMEDo3xKTG1eHjiu11Kq7aa8ro98yrr1gG6amY8YjCWnqFw5YYl+Oz3ASxv6IXWerNU4W6hBBex0KEOnw4iZyJdGOs0jZKBCqt8rS2yVbbIwRZ534+8zlCFP51UuG1XOxY1NqBiThKMjKcIbDsBXANgRL0aatBkJfg1cwRE2APQzIfW4MRTJpUMWQlzOjabnl+B62+bj5rai1mkwgGpgh2B8rlQHqQK3rxrwepBRgbart0OO5hCQeQ+yPkZJ+dnCoUg3xXGwZDiEh2LB0Ftm29GV/8KxFkDvvQHiVjPfzcDbMiqYimRjXDfDa8AAPo+vBuUjElBXzMdZPoNwtAv3HNweqnLUwtROCFYxsvs9WO/x4tcuNKBF3lfhsp/+J/McXCLwSw1AAADrQcRSqkBHAVwNJTyJBkA0M5DqSTniSECa9XQMymkPwi4hYHlum99C8QIWmmcT3Gp5Y2hlK3Q03kmIM2Jt1g8mSNGYJygovMjAwAeRMFwrOMvoNEMgs1Aaw3GRzUZeGLZ/gsiAwAexZEfxmGrJvUggYYTzDqcSBD6Vu1HHFwYGQD8C6Dv40ZNwMKjAAAAAElFTkSuQmCC'); }\n  .item-info-tags .item-info-ico-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9Ta0UqIlYQcchQnSyIijhqFYpQodQKrTqYXPoFTRqSFBdHwbXg4Mdi1cHFWVcHV0EQ/ABxcnRSdJES/5cUWsR4cNyPd/ced+8AoV5mqtkxDqiaZaTiMTGTXRWDrxDQhwAG0CkxU59LJhPwHF/38PH1LsqzvM/9OXqUnMkAn0g8y3TDIt4gnt60dM77xGFWlBTic+Ixgy5I/Mh12eU3zgWHBZ4ZNtKpeeIwsVhoY7mNWdFQiaeII4qqUb6QcVnhvMVZLVdZ8578haGctrLMdZrDiGMRS0hChIwqSijDQpRWjRQTKdqPefiHHH+SXDK5SmDkWEAFKiTHD/4Hv7s185MTblIoBgRebPtjBAjuAo2abX8f23bjBPA/A1day1+pAzOfpNdaWuQI6N0GLq5bmrwHXO4Ag0+6ZEiO5Kcp5PPA+xl9UxbovwW619zemvs4fQDS1FXiBjg4BEYLlL3u8e6u9t7+PdPs7wfpq3JwocxM2QAAAS9QTFRFblUA////gbxEERIkQn0tAAAA2trbP3osg75EgbxFQn0sPXgrW6IkhMBFP3orf7tBDg8ifbo8RoEuebRAerk2TogxAAAaVpA0c64+ZqE5WpU1bKY8O3kjAAAXd7cvUYsxSoUwYZw3AAATdLM5LWsZaasw5PDZutme9frwMXQSdbFAlJSaAAAdiImQ0eW+8vjsjcJXsdWR1ObDqNCDwt6qTIM6v9C5iquA0d7M4urggKR0l7WOvM62RoEkyOCytN2Jhr9O3evNHx8tKSo4QUFMbW52e3uCTExWXFxknctylsZksNOSWItHZJNWJ3AAobyZc51nU58D2uTXmsSAdq9QUJUhIWMKwOKcrdeApcKVga1kaJpMd6Ngx+eoU5kimMdrqquu6+vrw8XIoqOoNDVBlpiZAgAAAAF0Uk5TAEDm2GYAAAAJcEhZcwAACxMAAAsTAQCanBgAAAFHSURBVCjP1ZI/a8MwEMWD0NIsAosg3WlwhCkELRYUNQnOoDVGJSZjOyT9/l+iJ1tN+i/dOvQGg/Xs9353utnsr6v/XTbgvL/9MzqDaPWNT6JlVNJYtObOn755GzaVqVNaopH9JxsrGaJgzIbddlOBBkRw8XSJZppzQ4/zsTvuuCSfDKMv0QKVYJav23MKvEQZOcm6vCNPw2M7cCBKisI4yQBylOGpXYdtxzVTHEluijl1RLhMVOu23YQ6+yCTYArbXjYu4yI/pLkayShaq9KeVNY0TSMJt1JaFBJZFznieCChjv00O5mjwU2yRzbCap6655cH7TTB2MbBdWyLTMPDYTisgspJ4h7ew2noitO92LR5XQ2VFBpqtC7ur1c29m556OZ1btN/WBE/sREALqyJ/dftsSJLtBHR73/aJoWgb++Tj/3sv9UbToMt591g/JcAAAAASUVORK5CYII='); }\n  .item-info-tags .item-info-temple-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9TpSJVByuIKGSoThakijhqFYpQIdQKrTqYXPoFTRqSFBdHwbXg4Mdi1cHFWVcHV0EQ/ABxcnRSdJES/9cUWsR4cNyPd/ced+8AoVZimtUxAWi6bSbjMTGdWRUDrxDQiwGMICozy5iTpAQ8x9c9fHy9i/As73N/jh41azHAJxLPMsO0iTeIpzdtg/M+cYgVZJX4nHjcpAsSP3JdcfmNc77BAs8MmankPHGIWMy3sdLGrGBqxFPEYVXTKV9Iu6xy3uKslSqseU/+wmBWX1nmOs1hxLGIJUgQoaCCIkqwEaFVJ8VCkvZjHv6hhl8il0KuIhg5FlCGBrnhB/+D391aucmomxSMAZ0vjvMxCgR2gXrVcb6PHad+AvifgSu95S/XgJlP0qstLXwE9G0DF9ctTdkDLneAwSdDNuWG5Kcp5HLA+xl9UwbovwW619zemvs4fQBS1FXiBjg4BMbylL3u8e6u9t7+PdPs7weLtXKxP2nsHAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAexJREFUOMul1LtPVEEUBvDfXHZdKhOJVLoFQQvJ+oihMBoT/wIrxMeGh4rG1tLCiJWddjZYyBKEEAtiZ2diTDRWKmhjYaSEwtgI4TEWzIUbXGKALznJmXPOfPnmzJwJXr/lyyfev6O1QsjsCDGyuMiZcxw/qcWp03z8QGsrIdgxQqBcZu4HpZLgcp1KBduQ1QfhQlq9Mf58O6ksLQn6bjRXNnCLleUuPMLFFH2Fe0rlr0ZHmh4/k2XrhEWrD1atLDcwWyCT/Fkryw31weo/+7JMMDC0WX5toB0PMITKf7q3hGd46MXo/EZLs+u3rV3pg2Hcxf4dXstvPMFwmGjIxEipDG27IJP2tCmXhRDSkUPgaj/040gq/IwTyf+Zjni0Se47GiYasiyTbTR0cizdvfvJDhT8SlLSLBdNjm28lK1jMZ2UzGEEMyk+lUyKjaSaJUy35M8uKChcD3YnNVUxHkItkZxNBrWUq6ba7tV8YgSllvwdxmiV9sJInS8oP5zUNMu1F2ZFaTVG4lo+epUtJDkObmlNZ8Gv5FMbY1TKpSbsK/TtT8GfL/QPfhX8fRv7A8HNO+uL3nre/LjT/wa9psYhVwh6cMnu0COEl+uEm1hI47cbLGzKffyUbzP2jIiumkxHJ8dqeyfsqtHR6S+Wb3sPk3BhEAAAAABJRU5ErkJggg=='); }\n\n#TB_overlay {\n  z-index: 102; }\n\n#TB_window[data-name] {\n  z-index: 102;\n  padding: 7px;\n  box-shadow: 0px 0px 4px 1px #56bce0; }\n\n#TB_window.temple .container {\n  text-align: center; }\n  #TB_window.temple .container .line {\n    text-align: left; }\n\n#TB_window .action .text_button {\n  margin: 0 8px 0 0;\n  padding: 0;\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -webkit-fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  min-width: -webkit-fit-content;\n  min-width: -moz-fit-content;\n  min-width: fit-content; }\n\n#TB_window .desc .text_button {\n  cursor: pointer; }\n\n#TB_window .setting-tab-titlebar {\n  display: flex;\n  margin-top: 8px;\n  border-bottom: solid 2px;\n  padding: 0 8px; }\n  #TB_window .setting-tab-titlebar .setting-tab-title {\n    cursor: pointer;\n    padding: 2px 8px;\n    opacity: 0.8;\n    border: solid 1px;\n      border-bottom: none;\n      border-radius: 5px 5px 0 0; }\n    #TB_window .setting-tab-titlebar .setting-tab-title.open {\n      font-weight: bold;\n      opacity: 1;\n      border-width: 2px; }\n\n#TB_window .setting-tab table {\n  width: 98%;\n  text-align: center;\n  border-spacing: 0; }\n  #TB_window .setting-tab table input[type=number] {\n    width: 7em; }\n    #TB_window .setting-tab table input[type=number].chara-id {\n      width: 5em; }\n    #TB_window .setting-tab table input[type=number].chara-level {\n      width: 4em; }\n  #TB_window .setting-tab table tr {\n    border-top: dotted 1px; }\n    #TB_window .setting-tab table tr.hide-row {\n      display: none; }\n    #TB_window .setting-tab table tr td {\n      text-align: left;\n      vertical-align: middle;\n      padding: 5px; }\n      #TB_window .setting-tab table tr td:first-child {\n        width: 60%; }\n    #TB_window .setting-tab table tr.setting-collapse {\n      cursor: pointer; }\n      #TB_window .setting-tab table tr.setting-collapse td:before {\n        content: \"▾ \"; }\n      #TB_window .setting-tab table tr.setting-collapse.setting-collapse-close td:before {\n        content: \"▸ \"; }\n    #TB_window .setting-tab table tr.setting-collapse-item td:first-child {\n      padding-left: 1.2em; }\n  #TB_window .setting-tab table .setting-row-btn td {\n    vertical-align: baseline; }\n  #TB_window .setting-tab table .txtBtn {\n    font-size: smaller;\n    text-decoration: underline;\n    cursor: pointer; }\n\nhtml[data-theme='dark'] #grailBox .title {\n  background-color: transparent; }\n\nhtml[data-theme='dark'] .assets .my_temple.item .card {\n  box-shadow: 0px 0px 15px #FFEB3B;\n  border: 1px solid #FFC107; }\n";
   GM_addStyle(css_248z);
 
-  const configGenerator = (name, defaultValue, config = {
-    postGet: (value) => value,
-    preSet: (value) => value
-  }) => {
+  const configGenerator = (name, defaultValue, config = {}) => {
     const storageName = `TinyGrail_${name}`;
+    const { postGet, preSet, storage } = {
+      storage: localStorage,
+      ...config
+    };
     return {
       name,
       storageName,
       getRaw () {
-        return localStorage.getItem(storageName)
+        return storage.getItem(storageName)
       },
       get () {
         let value = null;
         try {
           value = JSON.parse(this.getRaw());
-          if (config.postGet) {
-            value = config.postGet(value);
+          if (postGet) {
+            value = postGet(value);
           }
         } catch (err) {
           console.error(`Fail to get config of ${storageName}`, { valueString: this.getRaw(), value, err });
@@ -42,16 +43,16 @@
       },
       setRaw (valueString, raiseError = false) {
         try {
-          localStorage.setItem(storageName, valueString);
+          storage.setItem(storageName, valueString);
         } catch (err) {
           console.error(`Fail to set config of ${storageName}`, { valueString, err });
           if (raiseError) throw err
         }
       },
       set (value) {
-        if (config.preSet) {
+        if (preSet) {
           try {
-            value = config.preSet(value);
+            value = preSet(value);
           } catch (err) {
             console.warn(`Fail to preparse config of ${storageName}`, { value, err });
           }
@@ -192,6 +193,7 @@
         return
       }
       if (stopWhenSuccess) observer.disconnect();
+      mutationList.itemFilter = (fn, type = 'addedNodes') => mutationList.map(i => Array.from(i[type]).filter(fn)).reduce((arr, val) => arr.concat(val), []);
       if (successCallback) successCallback(mutationList);
     };
     const observer = new MutationObserver(observeFunc);
@@ -886,29 +888,56 @@
     });
   };
 
+  const PersistentCache = configGenerator('PersistentCache', {});
+
+  const addValhallaElement = (charaElement, amount, sacrifices, damage) => {
+    const title = `持股数 | 献祭值${damage ? ' (损耗值)' : ''}，点击刷新`;
+    const text = `${amount} | ${sacrifices}${damage ? `(${damage})` : ''}`;
+    charaElement = $(charaElement);
+    const info = charaElement.find('.valhalla-sacrifices');
+    if (info.length === 0) {
+      charaElement.find('a.avatar[data-id] > img').after(`<div class="valhalla-sacrifices" title="${title}"><small>${text}</small></div>`);
+    } else {
+      info.attr('title', title).find('small').text(text);
+    }
+  };
   const showValhallaItems = async (itemList) => {
-    for (let i = 0; i < itemList.length; i++) {
+    const sacrificesCache = PersistentCache.get().sacrifices || {};
+    const freshItem = [];
+    const time = (new Date()).valueOf();
+    const cacheEnd = time - 24 * 60 * 60 * 1000;
+    itemList.forEach(i => {
+      const charaId = i.querySelector('a.avatar[data-id]').dataset.id;
+      if (charaId in sacrificesCache) {
+        const sacrifices = sacrificesCache[charaId];
+        addValhallaElement(i, sacrifices.amount, sacrifices.sacrifices, sacrifices.damage);
+        if ((new Date(sacrifices.time)) < cacheEnd) {
+          delete sacrifices[charaId];
+          freshItem.push(i);
+        }
+      } else { freshItem.push(i); }
+    });
+    for (const [key, value] of Object.entries(sacrificesCache)) {
+      if ((new Date(value.time)) < cacheEnd) delete sacrificesCache[key];
+    }
+    PersistentCache.set({ ...PersistentCache.get(), sacrifices: sacrificesCache });
+    for (let i = 0; i < freshItem.length; i++) {
       const chara = $(itemList[i]);
       const id = chara.find('a.avatar[data-id]').data('id');
       const charaInfo = await getData(`chara/user/${id}`);
       const amount = charaInfo.Value.Amount;
       const { Sacrifices, Damage } = await getSacrifices(id);
-      const title = `持股数 | 献祭值${Damage ? ' (损耗值)' : ''}，点击刷新`;
-      const text = `${amount} | ${Sacrifices}${Damage ? `(${Damage})` : ''}`;
-      const info = chara.find('.valhalla-sacrifices');
-      if (info.length === 0) {
-        chara.find('a.avatar[data-id] > img').after(`<div class="valhalla-sacrifices" title="${title}"><small>${text}</small></div>`);
-      } else {
-        info.attr('title', title).find('small').text(text);
-      }
+      addValhallaElement(chara, amount, Sacrifices, Damage);
+      sacrificesCache[id.toString()] = { amount: amount, sacrifices: Sacrifices, damage: Damage, time: time };
     }
+    PersistentCache.set({ ...PersistentCache.get(), sacrifices: sacrificesCache });
   };
   const showValhallaPersonal = () => {
     launchObserver({
       parentNode: document.getElementById('valhalla'),
       selector: '#valhalla li.initial_item.chara',
       successCallback: (mutationList) => {
-        const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList && j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), []);
+        const itemList = mutationList.itemFilter(i => i.classList && i.classList.contains('initial_item'));
         showValhallaItems(itemList);
       },
       stopWhenSuccess: false
@@ -918,8 +947,6 @@
       e.stopPropagation();
     });
   };
-
-  const ItemsSetting = configGenerator('ItemsSetting', {});
 
   let lastEven = false;
   const renderBalanceLog = (item, even) => {
@@ -1055,36 +1082,32 @@
   };
   const fillCosts = (id, lv, cost) => {
     closeDialog();
-    let itemsSetting = ItemsSetting.get();
-    const supplyId = itemsSetting.stardust ? itemsSetting.stardust[lv] : '';
     const dialog = `<div class="title" title="用一个角色的活股或固定资产，给另一个角色的圣殿消耗进行补充，目标人物的等级要小于或等于发动攻击圣殿的人物等级">星光碎片</div>
-                  <div class="desc" style="display:none"></div>
+                  <div class="desc">当前版本可以通过资产重组进行补塔（1:2 补充损耗），如需资产重组在角色页面进行，同时可使用自动建塔保证重组数量<br>星光碎片只能使用活股充能，请勾选活股以确认</div>
                   <table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
-                  <tr><td>能源：<input id="supplyId" type="number" style="width:60px" value="${supplyId}"></td>
-                  <td>目标：<input id="toSupplyId" type="number" style="width:60px" value="${id}"></td></tr>
-                  <td>类型：<select id="isTemple" style="width:60px"><option value="false">活股</option><option value="true" selected="selected">塔股</option></select></td>
+                  <tr><td>能源：<input id="supplyId" type="number" style="width:60px" value=""></td>
+                  <td>目标：<input id="toSupplyId" type="number" style="width:60px" value="${id}" disabled></td></tr>
+                  <td>类型：<input id="isCirculating" type="checkbox" style="margin: 0 5px;" title="当前版本小圣杯已不支持圣殿股进行充能，勾选以确认使用活股充能">活股</input></td>
                   <td>数量：<input id="amount" type="number" style="width:60px" value="${cost}"></td></tr>
                   <tr><td><input class="inputBtn" value="充能" id="submit_stardust" type="submit"></td></tr>
                   </tbody></table>`;
     showDialog(dialog);
-    if (!supplyId) {
-      $('#TB_window .desc').text('当前等级的能源角色id未设定，补充过一次之后会记住此等级的能源角色id');
-      $('#TB_window .desc').show();
-    }
     $('#submit_stardust').on('click', () => {
       const supplyId = parseInt($('#supplyId').val());
       const toSupplyId = parseInt($('#toSupplyId').val());
-      const isTemple = $('#isTemple').val();
+      const isTemple = !$('#isCirculating').is(':checked');
       const amount = parseInt($('#amount').val());
+      if (isTemple) {
+        alert('当前版本小圣杯已不支持圣殿股进行充能，请在[类型]中勾选[活股]以确认使用活股充能');
+        return
+      }
       if (supplyId) {
-        itemsSetting = ItemsSetting.get();
-        if (!itemsSetting.stardust) itemsSetting.stardust = {};
-        itemsSetting.stardust[lv] = supplyId;
-        ItemsSetting.set(itemsSetting);
         postData(`magic/stardust/${supplyId}/${toSupplyId}/${amount}/${isTemple}`, null).then((d) => {
           closeDialog();
-          if (d.State === 0) alert(d.Value);
-          else alert(d.Message);
+          if (d.State === 0) {
+            alert(d.Value);
+            $(`.fill_costs[data-id=${id}]`).remove();
+          } else alert(d.Message);
         });
       } else alert('角色id不能为空');
     });
@@ -1118,13 +1141,13 @@
       const lv = $(e.target).data('lv');
       const cost = $(e.target).data('cost');
       fillCosts(id, lv, cost);
-      $(e.target).remove();
+      e.stopPropagation();
     });
     $('.fill_auction').off('click');
     $('.fill_auction').on('click', (e) => {
       e.stopPropagation();
       const id = $(e.target).data('id');
-      const isAucDay = (new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }))).getDay() === 6;
+      const isAucDay = isDayOfWeek(6);
       getData(`chara/user/${id}/tinygrail/false`).then(d => {
         const aucInfo = {
           basePrice: d.Value.Price,
@@ -1579,6 +1602,8 @@
       });
     });
   };
+
+  const ItemsSetting = configGenerator('ItemsSetting', {});
 
   const loadScratch = () => {
     $('#eden_tpc_list ul').html('');

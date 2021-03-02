@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name        TinyGrail Helper Next
-// @description 为小圣杯增加一些小功能, 讨论/反馈：https://bgm.tv/group/topic/353368
+// @description 为小圣杯增加一些小功能, 讨论/反馈：https://bgm.tv/group/topic/358167
 // @namespace   https://gitee.com/Yinr/TinyGrail-Helper-Next
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.36
+// @version     3.1.37
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -14,23 +14,24 @@
 (function () {
   'use strict';
 
-  const configGenerator = (name, defaultValue, config = {
-    postGet: (value) => value,
-    preSet: (value) => value
-  }) => {
+  const configGenerator = (name, defaultValue, config = {}) => {
     const storageName = `TinyGrail_${name}`;
+    const { postGet, preSet, storage } = {
+      storage: localStorage,
+      ...config
+    };
     return {
       name,
       storageName,
       getRaw () {
-        return localStorage.getItem(storageName)
+        return storage.getItem(storageName)
       },
       get () {
         let value = null;
         try {
           value = JSON.parse(this.getRaw());
-          if (config.postGet) {
-            value = config.postGet(value);
+          if (postGet) {
+            value = postGet(value);
           }
         } catch (err) {
           console.error(`Fail to get config of ${storageName}`, { valueString: this.getRaw(), value, err });
@@ -39,16 +40,16 @@
       },
       setRaw (valueString, raiseError = false) {
         try {
-          localStorage.setItem(storageName, valueString);
+          storage.setItem(storageName, valueString);
         } catch (err) {
           console.error(`Fail to set config of ${storageName}`, { valueString, err });
           if (raiseError) throw err
         }
       },
       set (value) {
-        if (config.preSet) {
+        if (preSet) {
           try {
-            value = config.preSet(value);
+            value = preSet(value);
           } catch (err) {
             console.warn(`Fail to preparse config of ${storageName}`, { value, err });
           }
@@ -189,6 +190,7 @@
         return
       }
       if (stopWhenSuccess) observer.disconnect();
+      mutationList.itemFilter = (fn, type = 'addedNodes') => mutationList.map(i => Array.from(i[type]).filter(fn)).reduce((arr, val) => arr.concat(val), []);
       if (successCallback) successCallback(mutationList);
     };
     const observer = new MutationObserver(observeFunc);
@@ -883,29 +885,56 @@
     });
   };
 
+  const PersistentCache = configGenerator('PersistentCache', {});
+
+  const addValhallaElement = (charaElement, amount, sacrifices, damage) => {
+    const title = `持股数 | 献祭值${damage ? ' (损耗值)' : ''}，点击刷新`;
+    const text = `${amount} | ${sacrifices}${damage ? `(${damage})` : ''}`;
+    charaElement = $(charaElement);
+    const info = charaElement.find('.valhalla-sacrifices');
+    if (info.length === 0) {
+      charaElement.find('a.avatar[data-id] > img').after(`<div class="valhalla-sacrifices" title="${title}"><small>${text}</small></div>`);
+    } else {
+      info.attr('title', title).find('small').text(text);
+    }
+  };
   const showValhallaItems = async (itemList) => {
-    for (let i = 0; i < itemList.length; i++) {
+    const sacrificesCache = PersistentCache.get().sacrifices || {};
+    const freshItem = [];
+    const time = (new Date()).valueOf();
+    const cacheEnd = time - 24 * 60 * 60 * 1000;
+    itemList.forEach(i => {
+      const charaId = i.querySelector('a.avatar[data-id]').dataset.id;
+      if (charaId in sacrificesCache) {
+        const sacrifices = sacrificesCache[charaId];
+        addValhallaElement(i, sacrifices.amount, sacrifices.sacrifices, sacrifices.damage);
+        if ((new Date(sacrifices.time)) < cacheEnd) {
+          delete sacrifices[charaId];
+          freshItem.push(i);
+        }
+      } else { freshItem.push(i); }
+    });
+    for (const [key, value] of Object.entries(sacrificesCache)) {
+      if ((new Date(value.time)) < cacheEnd) delete sacrificesCache[key];
+    }
+    PersistentCache.set({ ...PersistentCache.get(), sacrifices: sacrificesCache });
+    for (let i = 0; i < freshItem.length; i++) {
       const chara = $(itemList[i]);
       const id = chara.find('a.avatar[data-id]').data('id');
       const charaInfo = await getData(`chara/user/${id}`);
       const amount = charaInfo.Value.Amount;
       const { Sacrifices, Damage } = await getSacrifices(id);
-      const title = `持股数 | 献祭值${Damage ? ' (损耗值)' : ''}，点击刷新`;
-      const text = `${amount} | ${Sacrifices}${Damage ? `(${Damage})` : ''}`;
-      const info = chara.find('.valhalla-sacrifices');
-      if (info.length === 0) {
-        chara.find('a.avatar[data-id] > img').after(`<div class="valhalla-sacrifices" title="${title}"><small>${text}</small></div>`);
-      } else {
-        info.attr('title', title).find('small').text(text);
-      }
+      addValhallaElement(chara, amount, Sacrifices, Damage);
+      sacrificesCache[id.toString()] = { amount: amount, sacrifices: Sacrifices, damage: Damage, time: time };
     }
+    PersistentCache.set({ ...PersistentCache.get(), sacrifices: sacrificesCache });
   };
   const showValhallaPersonal = () => {
     launchObserver({
       parentNode: document.getElementById('valhalla'),
       selector: '#valhalla li.initial_item.chara',
       successCallback: (mutationList) => {
-        const itemList = mutationList.map(i => Array.from(i.addedNodes).filter(j => j.classList && j.classList.contains('initial_item'))).reduce((acc, val) => acc.concat(val), []);
+        const itemList = mutationList.itemFilter(i => i.classList && i.classList.contains('initial_item'));
         showValhallaItems(itemList);
       },
       stopWhenSuccess: false
@@ -915,8 +944,6 @@
       e.stopPropagation();
     });
   };
-
-  const ItemsSetting = configGenerator('ItemsSetting', {});
 
   let lastEven = false;
   const renderBalanceLog = (item, even) => {
@@ -1052,36 +1079,32 @@
   };
   const fillCosts = (id, lv, cost) => {
     closeDialog();
-    let itemsSetting = ItemsSetting.get();
-    const supplyId = itemsSetting.stardust ? itemsSetting.stardust[lv] : '';
     const dialog = `<div class="title" title="用一个角色的活股或固定资产，给另一个角色的圣殿消耗进行补充，目标人物的等级要小于或等于发动攻击圣殿的人物等级">星光碎片</div>
-                  <div class="desc" style="display:none"></div>
+                  <div class="desc">当前版本可以通过资产重组进行补塔（1:2 补充损耗），如需资产重组在角色页面进行，同时可使用自动建塔保证重组数量<br>星光碎片只能使用活股充能，请勾选活股以确认</div>
                   <table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
-                  <tr><td>能源：<input id="supplyId" type="number" style="width:60px" value="${supplyId}"></td>
-                  <td>目标：<input id="toSupplyId" type="number" style="width:60px" value="${id}"></td></tr>
-                  <td>类型：<select id="isTemple" style="width:60px"><option value="false">活股</option><option value="true" selected="selected">塔股</option></select></td>
+                  <tr><td>能源：<input id="supplyId" type="number" style="width:60px" value=""></td>
+                  <td>目标：<input id="toSupplyId" type="number" style="width:60px" value="${id}" disabled></td></tr>
+                  <td>类型：<input id="isCirculating" type="checkbox" style="margin: 0 5px;" title="当前版本小圣杯已不支持圣殿股进行充能，勾选以确认使用活股充能">活股</input></td>
                   <td>数量：<input id="amount" type="number" style="width:60px" value="${cost}"></td></tr>
                   <tr><td><input class="inputBtn" value="充能" id="submit_stardust" type="submit"></td></tr>
                   </tbody></table>`;
     showDialog(dialog);
-    if (!supplyId) {
-      $('#TB_window .desc').text('当前等级的能源角色id未设定，补充过一次之后会记住此等级的能源角色id');
-      $('#TB_window .desc').show();
-    }
     $('#submit_stardust').on('click', () => {
       const supplyId = parseInt($('#supplyId').val());
       const toSupplyId = parseInt($('#toSupplyId').val());
-      const isTemple = $('#isTemple').val();
+      const isTemple = !$('#isCirculating').is(':checked');
       const amount = parseInt($('#amount').val());
+      if (isTemple) {
+        alert('当前版本小圣杯已不支持圣殿股进行充能，请在[类型]中勾选[活股]以确认使用活股充能');
+        return
+      }
       if (supplyId) {
-        itemsSetting = ItemsSetting.get();
-        if (!itemsSetting.stardust) itemsSetting.stardust = {};
-        itemsSetting.stardust[lv] = supplyId;
-        ItemsSetting.set(itemsSetting);
         postData(`magic/stardust/${supplyId}/${toSupplyId}/${amount}/${isTemple}`, null).then((d) => {
           closeDialog();
-          if (d.State === 0) alert(d.Value);
-          else alert(d.Message);
+          if (d.State === 0) {
+            alert(d.Value);
+            $(`.fill_costs[data-id=${id}]`).remove();
+          } else alert(d.Message);
         });
       } else alert('角色id不能为空');
     });
@@ -1115,13 +1138,13 @@
       const lv = $(e.target).data('lv');
       const cost = $(e.target).data('cost');
       fillCosts(id, lv, cost);
-      $(e.target).remove();
+      e.stopPropagation();
     });
     $('.fill_auction').off('click');
     $('.fill_auction').on('click', (e) => {
       e.stopPropagation();
       const id = $(e.target).data('id');
-      const isAucDay = (new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }))).getDay() === 6;
+      const isAucDay = isDayOfWeek(6);
       getData(`chara/user/${id}/tinygrail/false`).then(d => {
         const aucInfo = {
           basePrice: d.Value.Price,
@@ -1576,6 +1599,8 @@
       });
     });
   };
+
+  const ItemsSetting = configGenerator('ItemsSetting', {});
 
   const loadScratch = () => {
     $('#eden_tpc_list ul').html('');
