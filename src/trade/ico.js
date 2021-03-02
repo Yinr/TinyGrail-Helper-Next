@@ -1,6 +1,6 @@
 import { getData, postData } from '../utils/api'
 import { removeEmpty } from '../utils/formatter'
-import { showDialog, closeDialog } from '../utils/dialog'
+import { showDialog } from '../utils/dialog'
 
 import { FollowList } from '../config/followList'
 import { FillICOList } from '../config/fillICOList'
@@ -173,7 +173,7 @@ const openICODialog = (chara) => {
                     <button id="cancelfillICOButton">取消补款</button>
                   </div></div>
                   <div class="loading" style="display:none"></div>`
-  showDialog(dialog)
+  const { closeDialog } = showDialog(dialog)
 
   $('#fillMinButton').on('click', (e) => {
     if ($('#fillMinButton').hasClass('on')) {

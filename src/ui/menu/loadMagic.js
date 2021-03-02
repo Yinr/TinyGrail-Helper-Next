@@ -1,5 +1,5 @@
 import { postData } from '../../utils/api'
-import { showDialog, closeDialog } from '../../utils/dialog'
+import { showDialog } from '../../utils/dialog'
 
 import { loadCharacterList } from './loadCharacterList'
 import { loadScratch } from './loadScratch'
@@ -7,7 +7,6 @@ import { loadScratch } from './loadScratch'
 import { ItemsSetting } from '../../config/itemsSetting'
 
 export const loadMagic = () => {
-  closeDialog()
   const itemsSetting = ItemsSetting.get()
   const templeId = itemsSetting.chaosCube || ''
   const monoId = itemsSetting.guidepost ? itemsSetting.guidepost.monoId : ''
@@ -33,7 +32,7 @@ export const loadMagic = () => {
       <td>数量：<input id="amount" type="number" style="width:60px" value="100"></td>
       <td><input class="inputBtn" value="充能" id="submit_stardust" type="submit" title="当前版本小圣杯已不支持圣殿股进行充能，勾选活股类型以确认使用活股充能"></td></tr>
     </tbody></table>`
-  showDialog(dialog)
+  const { closeDialog } = showDialog(dialog, { closeBefore: true })
 
   $('#submit_chaosCube').on('click', () => {
     const templeId = parseInt($('#chaosCube').val())

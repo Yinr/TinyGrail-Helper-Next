@@ -1,5 +1,5 @@
 import { getData, postData } from '../../utils/api'
-import { showDialog, closeDialog } from '../../utils/dialog'
+import { showDialog } from '../../utils/dialog'
 import { formatMoney } from '../../utils/formatter'
 
 import { loadCharacterList } from './loadCharacterList'
@@ -37,13 +37,12 @@ export const loadMyICO = (page) => {
                 } catch (e) { console.log(`获取全部 ${d.Value.TotalItems} 个 ICO 列表出错`, e) }
               }
               const list_text = d.Value.Items.map(i => `https://bgm.tv/character/${i.CharacterId} ${i.Name}`).join('\n')
-              closeDialog()
               const dialog = `<div class="bibeBox" style="padding:10px">
               <label>我的 ICO 列表（若复制按钮无效，请手动复制）</label>
               <textarea rows="10" class="quick" name="myICO"></textarea>
               <input class="inputBtn" value="复制" id="copy_list" type="submit" style="padding: 3px 5px;">
               </div>`
-              showDialog(dialog)
+              showDialog(dialog, { closeBefore: true })
 
               $('.bibeBox textarea').val(list_text)
               $('#copy_list').on('click', () => {

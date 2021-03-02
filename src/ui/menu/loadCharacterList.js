@@ -1,7 +1,7 @@
 import { getData, postData } from '../../utils/api'
 import { formatNumber, formatTime } from '../../utils/formatter'
 import { normalizeAvatar, isDayOfWeek } from '../../utils/utils'
-import { showDialog, closeDialog } from '../../utils/dialog'
+import { showDialog } from '../../utils/dialog'
 
 import { calculateICO, autoBeginICO, openICODialog } from '../../trade/ico'
 import { loadUserAuctions } from '../../trade/auction'
@@ -158,7 +158,6 @@ const listItemClicked = function () {
 }
 
 const fillCosts = (id, lv, cost) => {
-  closeDialog()
   const dialog = `<div class="title" title="用一个角色的活股或固定资产，给另一个角色的圣殿消耗进行补充，目标人物的等级要小于或等于发动攻击圣殿的人物等级">星光碎片</div>
                   <div class="desc">当前版本可以通过资产重组进行补塔（1:2 补充损耗），如需资产重组在角色页面进行，同时可使用自动建塔保证重组数量<br>星光碎片只能使用活股充能，请勾选活股以确认</div>
                   <table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
@@ -168,7 +167,7 @@ const fillCosts = (id, lv, cost) => {
                   <td>数量：<input id="amount" type="number" style="width:60px" value="${cost}"></td></tr>
                   <tr><td><input class="inputBtn" value="充能" id="submit_stardust" type="submit"></td></tr>
                   </tbody></table>`
-  showDialog(dialog)
+  const { closeDialog } = showDialog(dialog, { closeBefore: true })
 
   $('#submit_stardust').on('click', () => {
     const supplyId = parseInt($('#supplyId').val())

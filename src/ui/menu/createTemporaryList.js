@@ -1,5 +1,5 @@
 import { postData } from '../../utils/api'
-import { showDialog, closeDialog } from '../../utils/dialog'
+import { showDialog } from '../../utils/dialog'
 
 import { loadFollowChara } from './loadFollowChara'
 import { loadFollowAuction } from './loadFollowAuction'
@@ -35,7 +35,6 @@ const loadTemperaryList = (page) => {
 
 export const createTemporaryList = (page) => {
   charasList = []
-  closeDialog()
   const dialog = `<div class="bibeBox" style="padding:10px">
     <label>在超展开左边创建角色列表 请输入角色url或id，如 https://bgm.tv/character/29282 或 29282，一行一个</label>
     <textarea rows="10" class="quick" name="urls"></textarea>
@@ -49,7 +48,7 @@ export const createTemporaryList = (page) => {
     <input class="inputBtn" value="启动 ICO" id="begin_ico" type="submit" style="padding: 3px 5px;">
     </div>
     </div>`
-  showDialog(dialog)
+  const { closeDialog } = showDialog(dialog, { closeBefore: true })
   $('#submit_list').on('click', () => {
     getCharasList()
     loadTemperaryList(1)

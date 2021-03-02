@@ -1,7 +1,7 @@
 import { getData, postData } from '../../utils/api'
 import { launchObserver, getMe } from '../../utils/utils'
 import { formatDate, formatNumber } from '../../utils/formatter'
-import { showDialog, closeDialog } from '../../utils/dialog'
+import { showDialog } from '../../utils/dialog'
 
 import { openAuctionDialog } from './openAuctionDialog'
 import { openBuildDialog } from './openBuildDialog'
@@ -273,7 +273,7 @@ const openHistoryDialog = (chara, page) => {
                   <a id="lastweek" class="p" style="display:none; float: right;margin-bottom: 5px;margin-right: 50px;">前一周</a>
                   </div>
                   <div class="loading"></div>`
-  showDialog(dialog)
+  const { closeDialog } = showDialog(dialog)
 
   const charaInitPrice = CharaInitPrice.get()
   const week_ms = 7 * 24 * 3600 * 1000

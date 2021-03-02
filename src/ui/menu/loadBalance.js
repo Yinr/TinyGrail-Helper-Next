@@ -1,10 +1,9 @@
 import { getData } from '../../utils/api'
-import { showDialog, closeDialog } from '../../utils/dialog'
+import { showDialog } from '../../utils/dialog'
 
 import { loadCharacterList } from './loadCharacterList'
 
 export const loadBalance = () => {
-  closeDialog()
   const dialog = `<table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
     <tr><td>类型：<select id="balanceType" style="width:100px">
     <option value="0" selected="selected">全部</option>
@@ -31,7 +30,7 @@ export const loadBalance = () => {
     <td>每页<input id="amount" type="number" style="width:50px" value="1000">条</td>
     <td><input class="inputBtn" value="查询" id="submit_search" type="submit"></td></tr>
     </tbody></table>`
-  showDialog(dialog)
+  const { closeDialog } = showDialog(dialog, { closeBefore: true })
 
   $('#submit_search').on('click', () => {
     const Type = parseInt($('#balanceType').val())

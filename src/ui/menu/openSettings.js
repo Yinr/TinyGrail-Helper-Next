@@ -1,11 +1,10 @@
-import { showDialog, closeDialog } from '../../utils/dialog'
+import { showDialog } from '../../utils/dialog'
 
 import { Settings } from '../../config/settings'
 import { ItemsSetting } from '../../config/itemsSetting'
 import { exportConfig, importConfig } from '../../config/export'
 
 export const openSettings = () => { // 设置
-  closeDialog()
   const settingRowBtn = `
     <tr class="setting-row-btn">
       <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
@@ -68,7 +67,7 @@ export const openSettings = () => { // 设置
       </div>
     </div>
   `
-  showDialog(dialog)
+  const { closeDialog } = showDialog(dialog, { closeBefore: true })
 
   $('.setting-tab-title').on('click', e => {
     $('.setting-tab').hide()
@@ -154,8 +153,7 @@ export const openSettings = () => { // 设置
       <input class="inputBtn" value="导入" id="import_setting" type="submit" style="padding: 3px 5px;">
       <input class="inputBtn" value="复制" id="copy_setting" type="submit" style="padding: 3px 5px;">
       </div>`
-    closeDialog()
-    showDialog(dialog)
+    showDialog(dialog, { closeBefore: true })
 
     const configValue = exportConfig()
     $('.bibeBox textarea').val(configValue)

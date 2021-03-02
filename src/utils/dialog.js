@@ -8,17 +8,32 @@ const closeDialog = (name = 'main') => {
   }
 }
 
-const showDialog = (innerHTML, name = 'main', maxWidth = '', minWidth = '') => {
+const showDialog = (innerHTML, config = {}) => {
+  const { name, maxWidth, minWidth, canClose, closeBefore } = {
+    name: 'main',
+    maxWidth: '640px',
+    minWidth: '400px',
+    canClose: true,
+    closeBefore: false,
+    ...config
+  }
   const dialog = `
     <div id="TB_overlay" data-name="${name}" class="TB_overlayBG TB_overlayActive"></div>
-    <div id="TB_window" data-name="${name}" class="dialog" style="display:block;max-width:${maxWidth || '640px'};min-width:${minWidth || '400px'};">
+    <div id="TB_window" data-name="${name}" class="dialog" style="display:block;max-width:${maxWidth};min-width:${minWidth};">
     ${innerHTML}
-    <a id="TB_closeWindowButton" data-name="${name}" title="Close">X关闭</a>
+    <a id="TB_closeWindowButton" data-name="${name}" title="Close" ${canClose ? '' : 'style="display: none;"'}>X关闭</a>
     </div>
   `
+  if (closeBefore) closeDialog(name)
   $('body').append(dialog)
-  $(`#TB_closeWindowButton[data-name=${name}]`).on('click', () => closeDialog(name))
-  $(`#TB_overlay[data-name=${name}]`).on('click', () => closeDialog(name))
+  if (canClose) {
+    $(`#TB_closeWindowButton[data-name=${name}]`).on('click', () => closeDialog(name))
+    $(`#TB_overlay[data-name=${name}]`).on('click', () => closeDialog(name))
+  }
+  return {
+    element: $(`#TB_window[data-name=${name}]`),
+    closeDialog: () => { closeDialog(name) }
+  }
 }
 
 export { showDialog, closeDialog }

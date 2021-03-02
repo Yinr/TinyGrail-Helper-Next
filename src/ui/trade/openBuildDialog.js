@@ -1,4 +1,4 @@
-import { showDialog, closeDialog } from '../../utils/dialog'
+import { showDialog } from '../../utils/dialog'
 
 import { autoBuildTemple } from '../../trade/temple'
 
@@ -27,7 +27,7 @@ export const openBuildDialog = (chara) => {
                   <input class="bidPrice" type="number" style="width:100px" title="卖出下限" min="0" value="${bidPrice}">
                   <button id="startBuildButton" class="active">自动建塔</button><button id="cancelBuildButton">取消建塔</button></div></div>
                   <div class="loading" style="display:none"></div>`
-  showDialog(dialog)
+  const { closeDialog } = showDialog(dialog)
 
   $('#cancelBuildButton').on('click', function () {
     const autoTempleList = AutoTempleList.get()
