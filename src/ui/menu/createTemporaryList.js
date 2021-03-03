@@ -62,11 +62,11 @@ export const createTemporaryList = () => {
         </label>
         <label class="batch-tab-trade dialog-tab-content" style="display: none;">
           按照以下格式录入数据后进行批量操作<small>(鼠标移入下方元素显示示例)</small><br>
-          -<span title="批量设置自动建塔, 格式如下\n29282, 520.00, 12500\n29282, 10, 500">批量自动建塔</span>：<br>
+          -<span title="批量设置自动建塔, 格式如下\n29282, 520.00, 12500\n29282, 10, 500\n29282（不加价格与目标，默认 10 cc 建 500 塔）">批量自动建塔</span>：<br>
             &nbsp;${batchElement.id} ${batchElement.splitor}
             ${batchElement.float('价格', '自动建塔买入时最低价格', '10\n520.00')} ${batchElement.splitor}
             ${batchElement.int('目标献祭值', '目标建塔数量', '500\n2500')}<br>
-          -<span title="批量设置自动补款, 格式如下\n29282, 11, L, 0\n29282, 11, H, 1">批量自动补款</span>：<br>
+          -<span title="批量设置自动补款, 格式如下\n29282, 11, L, 0\n29282, 11, H, 1\n29282, 11（默认最低补款且不立即补款）\n29282（默认目标等级 lv1）">批量自动补款</span>：<br>
             &nbsp;${batchElement.id} ${batchElement.splitor}
             ${batchElement.int('目标等级', '自动补款目标等级', '0（取消自动补款）\n1\n2')} ${batchElement.splitor}
             ${batchElement.basic('补款类型', '自动补款类型（详见自动补款界面）', 'L：按不爆注的最低等级补款\nH：按能达到的最高等级补款')} ${batchElement.splitor}
