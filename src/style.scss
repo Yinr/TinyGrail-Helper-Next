@@ -170,13 +170,13 @@ img.cover {
       cursor: pointer;
     }
 
-    .setting-tab-titlebar {
+    .setting-tab-titlebar, .dialog-tab-titlebar {
       display: flex;
       margin-top: 8px;
       border-bottom: solid 2px;
       padding: 0 8px;
 
-      .setting-tab-title {
+      .setting-tab-title, .dialog-tab-title {
         cursor: pointer;
         padding: 2px 8px;
         opacity: 0.8;
@@ -190,6 +190,15 @@ img.cover {
           opacity: 1;
           border-width: 2px;
         }
+      }
+    }
+
+    .batch-tab-content {
+      .batch-element {
+        padding: 0 2px;
+      }
+      [title] {
+        border-bottom: dotted thin;
       }
     }
 
