@@ -220,9 +220,7 @@ const loadCharacterList = (list, page, total, more, type, showCancel) => {
 
   $('.fill_costs').off('click')
   $('.fill_costs').on('click', (e) => {
-    const id = $(e.target).data('id')
-    const lv = $(e.target).data('lv')
-    const cost = $(e.target).data('cost')
+    const { id, lv, cost } = $(e.target).data()
     fillCosts(id, lv, cost)
     e.stopPropagation()
   })
@@ -322,17 +320,27 @@ const updateNonCharacter = chara => {
   } else {
     $item.find('.row .reload_chara').hide()
   }
+  if (chara.bad) {
+    $item.find('.begin_ico').hide()
+    $item.find('.title.avatar.l').text((i, value) => value + ' (虚空角色，请谨慎操作)')
+  }
 }
 
 const getNonCharacter = id => {
   getData(`/rakuen/topic/crt/${id}`).then(bgmPage => {
-    const bgmInfo = bgmPage.match(/class="avatar"><img\s+src="([^"]+)"\s+class="avatar\s+ll"><\/a>\s+<a href=".*"\s+target="_parent">.*<\/a><\/span><br\s*\/>(.+)<\/h1>/)
+    let bgmInfo = bgmPage.match(/class="avatar"><img\s+src="([^"]+)"\s+class="avatar\s+ll"><\/a>\s+<a href=".*"\s+target="_parent">.*<\/a><\/span><br\s*\/>(.+)<\/h1>/)
+    let bad = false
+    if (bgmInfo === null) {
+      bgmInfo = bgmPage.match(/<a href="([^"]+)" class="cover thickbox" alt="([^"]+)" title="/)
+      bad = true
+    }
     updateNonCharacter({
       Id: id,
       CharacterId: id,
       Icon: bgmInfo[1],
       Name: bgmInfo[2],
-      NotExist: true
+      NotExist: true,
+      bad
     })
   }).catch(e => {
     console.log(`未开启 ICO 角色 #${id} 信息加载失败`, e)
