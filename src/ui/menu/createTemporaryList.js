@@ -209,7 +209,7 @@ export const createTemporaryList = () => {
     // 格式：id level type now
     $('#trade_auto_fill_ico').attr('value', '正在批量设置自动补款...').closest('.bibeBox').find('.inputBtn').attr('disabled', true)
     const items = $('.bibeBox textarea').val().split('\n')
-    const regAutoICO = new RegExp(`${regElement.id}(?:${regElement.splitor}${regElement.int}${regElement.splitor}([lhLH])${regElement.splitor}${regElement.boolean})?`, 'i')
+    const regAutoICO = new RegExp(`${regElement.id}(?:${regElement.splitor}${regElement.int}(?:${regElement.splitor}([lhLH])${regElement.splitor}${regElement.boolean})?)?`, 'i')
     const tradeAutoICOList = []
     for (let i = 0; i < items.length; i++) {
       try {
