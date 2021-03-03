@@ -174,7 +174,7 @@ export const createTemporaryList = () => {
     // 格式：id price count
     $('#trade_auto_temple').attr('value', '正在批量设置自动建塔...').closest('.bibeBox').find('.inputBtn').attr('disabled', true)
     const items = $('.bibeBox textarea').val().split('\n')
-    const regAutoTemple = new RegExp(`${regElement.id}${regElement.splitor}${regElement.float}${regElement.splitor}${regElement.int}`, 'i')
+    const regAutoTemple = new RegExp(`${regElement.id}(?:${regElement.splitor}${regElement.float}${regElement.splitor}${regElement.int})?`, 'i')
     const tradeAutoTempleList = []
     for (let i = 0; i < items.length; i++) {
       try {
@@ -183,8 +183,8 @@ export const createTemporaryList = () => {
         tradeAutoTempleList.push({
           charaId: parseInt(charaId),
           name: '',
-          target: parseInt(target),
-          bidPrice: parseFloat(price)
+          target: target === undefined ? 500 : parseInt(target),
+          bidPrice: price === undefined ? 10 : parseFloat(price)
         })
       } catch (e) {
         console.debug(`批量建塔第 ${i + 1} 行解析出错: ${items[i]}`)
@@ -209,7 +209,7 @@ export const createTemporaryList = () => {
     // 格式：id level type now
     $('#trade_auto_fill_ico').attr('value', '正在批量设置自动补款...').closest('.bibeBox').find('.inputBtn').attr('disabled', true)
     const items = $('.bibeBox textarea').val().split('\n')
-    const regAutoICO = new RegExp(`${regElement.id}${regElement.splitor}${regElement.int}${regElement.splitor}([lhLH])${regElement.splitor}${regElement.boolean}`, 'i')
+    const regAutoICO = new RegExp(`${regElement.id}(?:${regElement.splitor}${regElement.int}${regElement.splitor}([lhLH])${regElement.splitor}${regElement.boolean})?`, 'i')
     const tradeAutoICOList = []
     for (let i = 0; i < items.length; i++) {
       try {
@@ -219,10 +219,10 @@ export const createTemporaryList = () => {
           Id: undefined,
           charaId: parseInt(charaId),
           name: '',
-          target: parseInt(target),
-          fillMin: type.toLowerCase() !== 'h',
+          target: target === undefined ? 1 : parseInt(target),
+          fillMin: type === undefined ? true : type.toLowerCase() !== 'h',
           end: undefined,
-          now: /[1yt]/i.test(now)
+          now: now === undefined ? false : /[1yt]/i.test(now)
         })
       } catch (e) {
         console.debug(`批量补款第 ${i + 1} 行解析出错: ${items[i]}`)
