@@ -17,7 +17,7 @@ const FillICOList = configGenerator('fillicoList', [], {
     charaId: parseInt(item.charaId),
     target: parseInt(item.target),
     end: item.end
-  }))
+  })).sort((a, b) => a.end - b.end)
 })
 
 export { FillICOList }
