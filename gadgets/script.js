@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.37
+// @version     3.2.0
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -248,13 +248,20 @@
     }))
   });
 
+  const addBuildTemple = (info) => {
+    const autoTempleList = AutoTempleList.get();
+    const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === info.charaId);
+    if (index >= 0) {
+      autoTempleList.splice(index, 1);
+    }
+    autoTempleList.unshift(info);
+    AutoTempleList.set(autoTempleList);
+  };
   const removeBuildTemple = (charaId) => {
     const autoTempleList = AutoTempleList.get();
-    for (let i = 0; i < autoTempleList.length; i++) {
-      if (parseInt(autoTempleList[i].charaId) === parseInt(charaId)) {
-        autoTempleList.splice(i, 1);
-        break
-      }
+    const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId);
+    if (index >= 0) {
+      autoTempleList.splice(index, 1);
     }
     $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]');
     AutoTempleList.set(autoTempleList);
@@ -340,17 +347,32 @@
       $(`#TB_window[data-name=${name}]`).remove();
     }
   };
-  const showDialog = (innerHTML, name = 'main', maxWidth = '', minWidth = '') => {
+  const showDialog = (innerHTML, config = {}) => {
+    const { name, maxWidth, minWidth, canClose, closeBefore } = {
+      name: 'main',
+      maxWidth: '640px',
+      minWidth: '400px',
+      canClose: true,
+      closeBefore: false,
+      ...config
+    };
     const dialog = `
     <div id="TB_overlay" data-name="${name}" class="TB_overlayBG TB_overlayActive"></div>
-    <div id="TB_window" data-name="${name}" class="dialog" style="display:block;max-width:${maxWidth || '640px'};min-width:${minWidth || '400px'};">
+    <div id="TB_window" data-name="${name}" class="dialog" style="display:block;max-width:${maxWidth};min-width:${minWidth};">
     ${innerHTML}
-    <a id="TB_closeWindowButton" data-name="${name}" title="Close">X关闭</a>
+    <a id="TB_closeWindowButton" data-name="${name}" title="Close" ${canClose ? '' : 'style="display: none;"'}>X关闭</a>
     </div>
   `;
+    if (closeBefore) closeDialog(name);
     $('body').append(dialog);
-    $(`#TB_closeWindowButton[data-name=${name}]`).on('click', () => closeDialog(name));
-    $(`#TB_overlay[data-name=${name}]`).on('click', () => closeDialog(name));
+    if (canClose) {
+      $(`#TB_closeWindowButton[data-name=${name}]`).on('click', () => closeDialog(name));
+      $(`#TB_overlay[data-name=${name}]`).on('click', () => closeDialog(name));
+    }
+    return {
+      element: $(`#TB_window[data-name=${name}]`),
+      closeDialog: () => { closeDialog(name); }
+    }
   };
 
   const FillICOList = configGenerator('fillicoList', [], {
@@ -364,6 +386,15 @@
   });
 
   const ICOStandardList = [];
+  const addFillICO = (info) => {
+    const fillICOList = FillICOList.get();
+    const index = fillICOList.findIndex(item => parseInt(item.Id) === info.Id);
+    if (index >= 0) {
+      fillICOList.splice(index, 1);
+    }
+    if (info.target > 0) fillICOList.push(info);
+    FillICOList.set(fillICOList);
+  };
   const calculateICO = (ico, targetLevel, fillMin, joined, balance) => {
     const heads = ico.Users + (targetLevel === undefined || joined ? 0 : 1);
     const headLevel = Math.max(Math.floor((heads - 10) / 5), 0);
@@ -494,9 +525,11 @@
   const openICODialog = (chara) => {
     const fillICOList = FillICOList.get();
     let target = 1;
+    let fillMin = true;
     const item = fillICOList.find(item => parseInt(item.Id) === chara.Id);
     if (item) {
       target = item.target;
+      fillMin = item.fillMin;
     }
     const dialog = `<div class="title">自动补款 - #${chara.CharacterId} 「${chara.Name}」 lv${target}</div>
                   <div class="desc">
@@ -514,7 +547,7 @@
                     <button id="cancelfillICOButton">取消补款</button>
                   </div></div>
                   <div class="loading" style="display:none"></div>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog);
     $('#fillMinButton').on('click', (e) => {
       if ($('#fillMinButton').hasClass('on')) {
         $('#fillMinButton').removeClass('on');
@@ -528,6 +561,7 @@
         $('#fillMinInfo').html('根据参与者人数、已筹集资金、个人资金余额，<br/>补款至不爆注的<b>最低等级</b>。');
       }
     }).trigger('click');
+    if (fillMin === false) $('#fillMinButton').trigger('click');
     $('#cancelfillICOButton').on('click', function () {
       const fillICOList = FillICOList.get();
       const index = fillICOList.findIndex(item => parseInt(item.Id) === chara.Id);
@@ -553,12 +587,7 @@
       info.target = target;
       info.fillMin = $('#fillMinButton').hasClass('on');
       info.end = chara.End;
-      const fillICOList = FillICOList.get();
-      const index = fillICOList.findIndex(item => parseInt(item.Id) === chara.Id);
-      if (index >= 0) {
-        fillICOList[index] = info;
-      } else fillICOList.push(info);
-      FillICOList.set(fillICOList);
+      addFillICO(info);
       alert(`启动自动补款#${chara.Id} ${chara.Name}`);
       $(`#grailBox.chara${chara.CharacterId} #followICOButton`).text('[自动补款中]');
       closeDialog();
@@ -1078,7 +1107,6 @@
     }
   };
   const fillCosts = (id, lv, cost) => {
-    closeDialog();
     const dialog = `<div class="title" title="用一个角色的活股或固定资产，给另一个角色的圣殿消耗进行补充，目标人物的等级要小于或等于发动攻击圣殿的人物等级">星光碎片</div>
                   <div class="desc">当前版本可以通过资产重组进行补塔（1:2 补充损耗），如需资产重组在角色页面进行，同时可使用自动建塔保证重组数量<br>星光碎片只能使用活股充能，请勾选活股以确认</div>
                   <table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
@@ -1088,7 +1116,7 @@
                   <td>数量：<input id="amount" type="number" style="width:60px" value="${cost}"></td></tr>
                   <tr><td><input class="inputBtn" value="充能" id="submit_stardust" type="submit"></td></tr>
                   </tbody></table>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
     $('#submit_stardust').on('click', () => {
       const supplyId = parseInt($('#supplyId').val());
       const toSupplyId = parseInt($('#toSupplyId').val());
@@ -1134,9 +1162,7 @@
     });
     $('.fill_costs').off('click');
     $('.fill_costs').on('click', (e) => {
-      const id = $(e.target).data('id');
-      const lv = $(e.target).data('lv');
-      const cost = $(e.target).data('cost');
+      const { id, lv, cost } = $(e.target).data();
       fillCosts(id, lv, cost);
       e.stopPropagation();
     });
@@ -1225,16 +1251,26 @@
     } else {
       $item.find('.row .reload_chara').hide();
     }
+    if (chara.bad) {
+      $item.find('.begin_ico').hide();
+      $item.find('.title.avatar.l').text((i, value) => value + ' (虚空角色，请谨慎操作)');
+    }
   };
   const getNonCharacter = id => {
     getData(`/rakuen/topic/crt/${id}`).then(bgmPage => {
-      const bgmInfo = bgmPage.match(/class="avatar"><img\s+src="([^"]+)"\s+class="avatar\s+ll"><\/a>\s+<a href=".*"\s+target="_parent">.*<\/a><\/span><br\s*\/>(.+)<\/h1>/);
+      let bgmInfo = bgmPage.match(/class="avatar"><img\s+src="([^"]+)"\s+class="avatar\s+ll"><\/a>\s+<a href=".*"\s+target="_parent">.*<\/a><\/span><br\s*\/>(.+)<\/h1>/);
+      let bad = false;
+      if (bgmInfo === null) {
+        bgmInfo = bgmPage.match(/<a href="([^"]+)" class="cover thickbox" alt="([^"]+)" title="/);
+        bad = true;
+      }
       updateNonCharacter({
         Id: id,
         CharacterId: id,
         Icon: bgmInfo[1],
         Name: bgmInfo[2],
-        NotExist: true
+        NotExist: true,
+        bad
       });
     }).catch(e => {
       console.log(`未开启 ICO 角色 #${id} 信息加载失败`, e);
@@ -1326,13 +1362,12 @@
                   } catch (e) { console.log(`获取全部 ${d.Value.TotalItems} 个 ICO 列表出错`, e); }
                 }
                 const list_text = d.Value.Items.map(i => `https://bgm.tv/character/${i.CharacterId} ${i.Name}`).join('\n');
-                closeDialog();
                 const dialog = `<div class="bibeBox" style="padding:10px">
               <label>我的 ICO 列表（若复制按钮无效，请手动复制）</label>
               <textarea rows="10" class="quick" name="myICO"></textarea>
               <input class="inputBtn" value="复制" id="copy_list" type="submit" style="padding: 3px 5px;">
               </div>`;
-                showDialog(dialog);
+                showDialog(dialog, { closeBefore: true });
                 $('.bibeBox textarea').val(list_text);
                 $('#copy_list').on('click', () => {
                   $('.bibeBox label').children().remove();
@@ -1382,7 +1417,6 @@
   };
 
   const loadBalance = () => {
-    closeDialog();
     const dialog = `<table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
     <tr><td>类型：<select id="balanceType" style="width:100px">
     <option value="0" selected="selected">全部</option>
@@ -1409,7 +1443,7 @@
     <td>每页<input id="amount" type="number" style="width:50px" value="1000">条</td>
     <td><input class="inputBtn" value="查询" id="submit_search" type="submit"></td></tr>
     </tbody></table>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
     $('#submit_search').on('click', () => {
       const Type = parseInt($('#balanceType').val());
       const page = parseInt($('#page').val());
@@ -1463,7 +1497,7 @@
     const ids = charas.slice(start, start + 50);
     const totalPages = Math.ceil(charas.length / 50);
     generateCharacterList(ids).then(list => {
-      loadCharacterList(list, page, totalPages, loadAutoBuild, 'autofillico', false);
+      loadCharacterList(list, page, totalPages, loadAutoFillICO, 'autofillico', false);
     });
   };
 
@@ -1514,23 +1548,66 @@
       loadCharacterList(list, page, totalPages, loadTemperaryList, 'chara', false);
     });
   };
-  const createTemporaryList = (page) => {
+  const createTemporaryList = () => {
     charasList = [];
-    closeDialog();
-    const dialog = `<div class="bibeBox" style="padding:10px">
-    <label>在超展开左边创建角色列表 请输入角色url或id，如 https://bgm.tv/character/29282 或 29282，一行一个</label>
-    <textarea rows="10" class="quick" name="urls"></textarea>
-    <input class="inputBtn" value="创建列表" id="submit_list" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="关注角色" id="add_follow" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="关注竞拍" id="add_auction" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="显示一键操作▼" id="one_key_actions" type="submit" style="padding: 3px 5px;">
-    <div id="one_keys" style="display: none;">
-    <input class="inputBtn" value="参与竞拍" id="join_auction" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="参与 ICO" id="join_ico" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="启动 ICO" id="begin_ico" type="submit" style="padding: 3px 5px;">
+    const batchElement = {
+      basic: (text, desc, example) => `<span class="batch-element" title="${desc}, 例如：\n${example}">${text}</span>`,
+      int: (text, desc, example = '1\n20') => batchElement.basic(text, desc, example),
+      float: (text, desc, example = '1\n0.1\n3.14') => batchElement.basic(text, desc, example),
+      boolean: (text, desc, example = '1（是）\nY（是）\n0（否）\nN（否）') => batchElement.basic(text, desc, example)
+    };
+    batchElement.splitor = batchElement.basic(',', '分隔符', ',（逗号）\n （空格）\n\t（制表符）');
+    batchElement.id = batchElement.basic('ID', '角色 ID 或网址', '29282\nhttps://bgm.tv/character/29282');
+    const dialog = `
+    <div class="batch-tab-titlebar dialog-tab-titlebar">
+      <div data-tabid="batch-tab-temp" class="batch-tab-title dialog-tab-title open">临时列表</div>
+      <div data-tabid="batch-tab-onekey" class="batch-tab-title dialog-tab-title">一键操作</div>
+      <div data-tabid="batch-tab-trade" class="batch-tab-title dialog-tab-title">批量交易</div>
     </div>
+    <div class="batch-tab-content">
+      <div class="bibeBox" style="padding:10px">
+        <label class="batch-tab-temp dialog-tab-content">
+          在超展开左边创建角色列表 请输入角色url或id，如 https://bgm.tv/character/29282 或 29282，一行一个
+        </label>
+        <label class="batch-tab-onekey dialog-tab-content" style="display: none;">
+          一键参与凑人头或开启ICO 请输入角色url或id，如 https://bgm.tv/character/29282 或 29282，一行一个
+        </label>
+        <label class="batch-tab-trade dialog-tab-content" style="display: none;">
+          按照以下格式录入数据后进行批量操作<small>(鼠标移入下方元素显示示例)</small><br>
+          -<span title="批量设置自动建塔, 格式如下\n29282, 520.00, 12500\n29282, 10, 500">批量自动建塔</span>：<br>
+            &nbsp;${batchElement.id} ${batchElement.splitor}
+            ${batchElement.float('价格', '自动建塔买入时最低价格', '10\n520.00')} ${batchElement.splitor}
+            ${batchElement.int('目标献祭值', '目标建塔数量', '500\n2500')}<br>
+          -<span title="批量设置自动补款, 格式如下\n29282, 11, L, 0\n29282, 11, H, 1">批量自动补款</span>：<br>
+            &nbsp;${batchElement.id} ${batchElement.splitor}
+            ${batchElement.int('目标等级', '自动补款目标等级', '0（取消自动补款）\n1\n2')} ${batchElement.splitor}
+            ${batchElement.basic('补款类型', '自动补款类型（详见自动补款界面）', 'L：按不爆注的最低等级补款\nH：按能达到的最高等级补款')} ${batchElement.splitor}
+            ${batchElement.boolean('立即补款', '是否立即补款')}
+        </label>
+        <textarea rows="10" class="quick" name="urls"></textarea>
+        <div class="batch-tab-temp dialog-tab-content">
+          <input class="inputBtn" value="创建列表" id="submit_list" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="关注角色" id="add_follow" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="关注竞拍" id="add_auction" type="submit" style="padding: 3px 5px;">
+        </div>
+        <div class="batch-tab-onekey dialog-tab-content" style="display: none;">
+          <input class="inputBtn" value="参与竞拍" id="join_auction" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="参与 ICO" id="join_ico" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="启动 ICO" id="begin_ico" type="submit" style="padding: 3px 5px;">
+        </div>
+        <div class="batch-tab-trade dialog-tab-content" style="display: none;">
+          <input class="inputBtn" value="批量建塔" id="trade_auto_temple" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="批量补款" id="trade_auto_fill_ico" type="submit" style="padding: 3px 5px;">
+        </div>
+      </div>
     </div>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
+    $('.dialog-tab-title').on('click', e => {
+      $('.dialog-tab-content').hide();
+      $(`.dialog-tab-content.${e.target.dataset.tabid}`).show();
+      $('.dialog-tab-title').removeClass('open');
+      $(e.target).addClass('open');
+    });
     $('#submit_list').on('click', () => {
       getCharasList();
       loadTemperaryList(1);
@@ -1568,13 +1645,6 @@
       loadFollowAuction(1);
       closeDialog();
     });
-    $('#one_key_actions').on('click', () => {
-      if ($('#one_keys').toggle().is(':visible')) {
-        $('#one_key_actions').attr('value', '隐藏一键操作▲');
-      } else {
-        $('#one_key_actions').attr('value', '显示一键操作▼');
-      }
-    });
     $('#join_auction').on('click', () => {
       getCharasList();
       $('#eden_tpc_list ul').html('');
@@ -1596,6 +1666,95 @@
       autoBeginICO(charasList).then(() => {
         loadTemperaryList(1);
         closeDialog();
+      });
+    });
+    const regElement = {
+      int: '(\\d+)',
+      float: '(\\d+(?:\\.\\d+)?)',
+      boolean: '([01ynYNtTfF])',
+      splitor: '[, \\t，|]+',
+      id: '(?:character\\/|crt\\/|#)?(\\d+)'
+    };
+    $('#trade_auto_temple').on('click', () => {
+      $('#trade_auto_temple').attr('value', '正在批量设置自动建塔...').closest('.bibeBox').find('.inputBtn').attr('disabled', true);
+      const items = $('.bibeBox textarea').val().split('\n');
+      const regAutoTemple = new RegExp(`${regElement.id}${regElement.splitor}${regElement.float}${regElement.splitor}${regElement.int}`, 'i');
+      const tradeAutoTempleList = [];
+      for (let i = 0; i < items.length; i++) {
+        try {
+          const [, charaId, price, target] = items[i].match(regAutoTemple);
+          charasList.push(parseInt(charaId));
+          tradeAutoTempleList.push({
+            charaId: parseInt(charaId),
+            name: '',
+            target: parseInt(target),
+            bidPrice: parseFloat(price)
+          });
+        } catch (e) {
+          console.debug(`批量建塔第 ${i + 1} 行解析出错: ${items[i]}`);
+        }
+      }
+      postData('chara/list', charasList).then((d) => {
+        const list = tradeAutoTempleList.map(item => {
+          const chara = d.Value.find(i => i.CharacterId === item.charaId);
+          if (chara !== undefined) {
+            item.name = chara.Name;
+          }
+          addBuildTemple(item);
+          return item
+        });
+        console.log('批量建塔', list);
+        autoBuildTemple(list);
+        loadTemperaryList(1);
+        closeDialog();
+      });
+    });
+    $('#trade_auto_fill_ico').on('click', () => {
+      $('#trade_auto_fill_ico').attr('value', '正在批量设置自动补款...').closest('.bibeBox').find('.inputBtn').attr('disabled', true);
+      const items = $('.bibeBox textarea').val().split('\n');
+      const regAutoICO = new RegExp(`${regElement.id}${regElement.splitor}${regElement.int}${regElement.splitor}([lhLH])${regElement.splitor}${regElement.boolean}`, 'i');
+      const tradeAutoICOList = [];
+      for (let i = 0; i < items.length; i++) {
+        try {
+          const [, charaId, target, type, now] = items[i].match(regAutoICO);
+          charasList.push(parseInt(charaId));
+          tradeAutoICOList.push({
+            Id: undefined,
+            charaId: parseInt(charaId),
+            name: '',
+            target: parseInt(target),
+            fillMin: type.toLowerCase() !== 'h',
+            end: undefined,
+            now: /[1yt]/i.test(now)
+          });
+        } catch (e) {
+          console.debug(`批量补款第 ${i + 1} 行解析出错: ${items[i]}`);
+        }
+      }
+      console.log('批量补款', tradeAutoICOList);
+      postData('chara/list', charasList).then((d) => {
+        const charas = d.Value.filter(i => i.Current === undefined);
+        const list = [];
+        tradeAutoICOList.filter(i => charas.some(c => c.CharacterId === i.charaId)).forEach(item => {
+          const chara = charas.find(i => i.CharacterId === item.charaId);
+          if (chara !== undefined) {
+            item.Id = chara.Id;
+            item.name = chara.Name;
+            item.end = chara.End;
+          }
+          if (item.target > 0 && item.now) {
+            list.push(item);
+          } else {
+            delete item.now;
+            addFillICO(item);
+          }
+        });
+        closeDialog();
+        if (list.length > 0) {
+          console.log('立即批量补款', list);
+          fullfillICO(list);
+        }
+        loadTemperaryList(1);
       });
     });
   };
@@ -1729,7 +1888,6 @@
   };
 
   const loadMagic = () => {
-    closeDialog();
     const itemsSetting = ItemsSetting.get();
     const templeId = itemsSetting.chaosCube || '';
     const monoId = itemsSetting.guidepost ? itemsSetting.guidepost.monoId : '';
@@ -1755,7 +1913,7 @@
       <td>数量：<input id="amount" type="number" style="width:60px" value="100"></td>
       <td><input class="inputBtn" value="充能" id="submit_stardust" type="submit" title="当前版本小圣杯已不支持圣殿股进行充能，勾选活股类型以确认使用活股充能"></td></tr>
     </tbody></table>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
     $('#submit_chaosCube').on('click', () => {
       const templeId = parseInt($('#chaosCube').val());
       ItemsSetting.set({ ...ItemsSetting.get(), chaosCube: templeId });
@@ -1975,7 +2133,6 @@
   };
 
   const openSettings = () => {
-    closeDialog();
     const settingRowBtn = `
     <tr class="setting-row-btn">
       <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
@@ -2038,7 +2195,7 @@
       </div>
     </div>
   `;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
     $('.setting-tab-title').on('click', e => {
       $('.setting-tab').hide();
       $(`#${e.target.dataset.settingid}`).show();
@@ -2114,8 +2271,7 @@
       <input class="inputBtn" value="导入" id="import_setting" type="submit" style="padding: 3px 5px;">
       <input class="inputBtn" value="复制" id="copy_setting" type="submit" style="padding: 3px 5px;">
       </div>`;
-      closeDialog();
-      showDialog(dialog);
+      showDialog(dialog, { closeBefore: true });
       const configValue = exportConfig();
       $('.bibeBox textarea').val(configValue);
       $('#copy_setting').on('click', () => {
@@ -2329,6 +2485,59 @@
     bindShowAuctionTotal();
   };
 
+  const openBuildDialog = (chara) => {
+    const autoTempleList = AutoTempleList.get();
+    const charaId = chara.CharacterId || chara.Id;
+    let target = 500; let bidPrice = 10;
+    const temple = autoTempleList.find(temple => parseInt(temple.charaId) === charaId);
+    if (temple !== undefined) {
+      target = parseInt(temple.target);
+      bidPrice = parseFloat(temple.bidPrice);
+    }
+    const dialog = `<div class="title" title="目标数量 / 买入价格">
+                  自动建塔 - #${charaId} 「${chara.Name}」 ${target} / ₵${bidPrice}</div>
+                  <div class="desc"><p>当已献祭股数+持有股数达到目标数量时将自动建塔</p>
+                  输入 目标数量 / 买入价格(不超过此价格的卖单将自动买入)</div>
+                  <div class="desc action"><p>便捷设定圣殿等级：
+                    <span data-lv="1" class="text_button setToLv">[一级]</span>
+                    <span data-lv="2" class="text_button setToLv">[二级]</span>
+                    <span data-lv="3" class="text_button setToLv">[三级]</span></p></div>
+                  <div class="label"><div class="trade build">
+                  <input class="target" type="number" style="width:150px" title="目标数量" min="0" step="1" value="${target}">
+                  <input class="bidPrice" type="number" style="width:100px" title="卖出下限" min="0" value="${bidPrice}">
+                  <button id="startBuildButton" class="active">自动建塔</button><button id="cancelBuildButton">取消建塔</button></div></div>
+                  <div class="loading" style="display:none"></div>`;
+    const { closeDialog } = showDialog(dialog);
+    $('#cancelBuildButton').on('click', function () {
+      const autoTempleList = AutoTempleList.get();
+      const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId);
+      if (index >= 0) {
+        autoTempleList.splice(index, 1);
+        AutoTempleList.set(autoTempleList);
+        alert(`取消自动建塔${chara.Name}`);
+      }
+      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]');
+      closeDialog();
+    });
+    $('#startBuildButton').on('click', function () {
+      const info = {
+        charaId: parseInt(charaId),
+        name: chara.Name,
+        target: parseInt($('.trade.build .target').val()),
+        bidPrice: parseFloat($('.trade.build .bidPrice').val())
+      };
+      addBuildTemple(info);
+      alert(`启动自动建塔#${info.charaId} ${info.name}`);
+      closeDialog();
+      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔中]');
+      autoBuildTemple([info]);
+    });
+    $('.action .setToLv').on('click', e => {
+      const level = $(e.target).data('lv');
+      $('.trade.build .target').val(Math.pow(5, level - 1) * 500);
+    });
+  };
+
   const markFollow = () => {
     const followInfoTagsClass = 'item-info-tags';
     const followInfoTag = `<small class="${followInfoTagsClass}"></small>`;
@@ -2354,77 +2563,30 @@
       const templeInfo = AutoTempleList.get().find(e => parseInt(e.charaId) === id);
       if (templeInfo) {
         followInfo += followTemple;
-        if (templeInfo.bidPrice && templeInfo.target) {
-          followInfo += `<small title="自动建塔价 × 数量">(${templeInfo.bidPrice} * ${templeInfo.target})</small>`;
+        if (templeInfo.bidPrice !== undefined && templeInfo.target !== undefined) {
+          followInfo += `<small class="item-info-temple-text" title="自动建塔价 × 数量" data-id="${id}" data-name="${templeInfo.name}">(${templeInfo.bidPrice} * ${templeInfo.target})</small>`;
         }
       }
       const fillIcoInfo = FillICOList.get().find(e => parseInt(e.charaId) === id);
       if (fillIcoInfo) {
         followInfo += followIco;
         if (fillIcoInfo.target) {
-          followInfo += `<small title="自动补款目标">(lv${fillIcoInfo.target})</small>`;
+          followInfo += `<small title="自动补款目标" class="item-info-ico-text" data-id="${id}" data-icoid="${fillIcoInfo.Id}" data-name="${fillIcoInfo.Name}" data-end="${fillIcoInfo.End}" data-fillmin="${fillIcoInfo.fillMin}">(lv${fillIcoInfo.target})</small>`;
         }
       }
       followInfoTagEl.html(followInfo);
     });
-  };
-
-  const openBuildDialog = (chara) => {
-    const autoTempleList = AutoTempleList.get();
-    const charaId = chara.CharacterId || chara.Id;
-    let target = 500; let bidPrice = 10;
-    const temple = autoTempleList.find(temple => parseInt(temple.charaId) === charaId);
-    if (temple !== undefined) {
-      target = parseInt(temple.target);
-      bidPrice = parseFloat(temple.bidPrice);
-    }
-    const dialog = `<div class="title" title="目标数量 / 买入价格">
-                  自动建塔 - #${charaId} 「${chara.Name}」 ${target} / ₵${bidPrice}</div>
-                  <div class="desc"><p>当已献祭股数+持有股数达到目标数量时将自动建塔</p>
-                  输入 目标数量 / 买入价格(不超过此价格的卖单将自动买入)</div>
-                  <div class="desc action"><p>便捷设定圣殿等级：
-                    <span data-lv="1" class="text_button setToLv">[一级]</span>
-                    <span data-lv="2" class="text_button setToLv">[二级]</span>
-                    <span data-lv="3" class="text_button setToLv">[三级]</span></p></div>
-                  <div class="label"><div class="trade build">
-                  <input class="target" type="number" style="width:150px" title="目标数量" min="0" step="1" value="${target}">
-                  <input class="bidPrice" type="number" style="width:100px" title="卖出下限" min="0" value="${bidPrice}">
-                  <button id="startBuildButton" class="active">自动建塔</button><button id="cancelBuildButton">取消建塔</button></div></div>
-                  <div class="loading" style="display:none"></div>`;
-    showDialog(dialog);
-    $('#cancelBuildButton').on('click', function () {
-      const autoTempleList = AutoTempleList.get();
-      const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId);
-      if (index >= 0) {
-        autoTempleList.splice(index, 1);
-        AutoTempleList.set(autoTempleList);
-        alert(`取消自动建塔${chara.Name}`);
-      }
-      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]');
-      closeDialog();
+    $('.item_list .item-info-temple-text').off('click').on('click', (e) => {
+      const item = $(e.currentTarget);
+      openBuildDialog({ CharacterId: item.data('id'), Name: item.data('name') });
+      e.stopPropagation();
     });
-    $('#startBuildButton').on('click', function () {
-      const info = {
-        charaId: parseInt(charaId),
-        name: chara.Name,
-        target: parseInt($('.trade.build .target').val()),
-        bidPrice: parseFloat($('.trade.build .bidPrice').val())
-      };
-      const autoTempleList = AutoTempleList.get();
-      const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId);
-      if (index >= 0) {
-        autoTempleList.splice(index, 1);
-        autoTempleList.unshift(info);
-      } else autoTempleList.unshift(info);
-      AutoTempleList.set(autoTempleList);
-      alert(`启动自动建塔#${info.charaId} ${info.name}`);
-      closeDialog();
-      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔中]');
-      autoBuildTemple([info]);
-    });
-    $('.action .setToLv').on('click', e => {
-      const level = $(e.target).data('lv');
-      $('.trade.build .target').val(Math.pow(5, level - 1) * 500);
+    $('.item_list .item-info-ico-text').off('click').on('click', (e) => {
+      const itemData = $(e.currentTarget).data();
+      const fillICOList = FillICOList.get();
+      const item = fillICOList.find(item => item.charaId === parseInt(itemData.id)) || { Id: parseInt(itemData.icoid), charaId: parseInt(itemData.id), name: itemData.name, end: itemData.end };
+      if (item) openICODialog({ Id: item.Id, CharacterId: item.charaId, Name: item.name, End: item.end });
+      e.stopPropagation();
     });
   };
 
@@ -2763,7 +2925,7 @@
                   <a id="lastweek" class="p" style="display:none; float: right;margin-bottom: 5px;margin-right: 50px;">前一周</a>
                   </div>
                   <div class="loading"></div>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog);
     const charaInitPrice = CharaInitPrice.get();
     const week_ms = 7 * 24 * 3600 * 1000;
     const templeWeek = Math.floor((new Date() - new Date('2019/10/05')) / week_ms + 1);

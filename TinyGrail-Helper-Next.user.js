@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.1.37
+// @version     3.2.0
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -14,7 +14,7 @@
 (function () {
   'use strict';
 
-  var css_248z = "@charset \"UTF-8\";\nul.timelineTabs li a {\n  margin: 2px 0 0 0;\n  padding: 5px 10px 5px 10px; }\n\nimg.cover {\n  background-color: transparent; }\n\n.assets .my_temple.item .card {\n  box-shadow: 3px 3px 5px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets .my_temple.item .name a {\n  font-weight: bold;\n  color: #0084b4; }\n\n.assets_box .item {\n  margin: 5px 5px 5px 0;\n  width: 90px; }\n  .assets_box .item .card {\n    width: 90px;\n    height: 120px; }\n\n#lastTemples .assets .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.item .card {\n  width: 105px;\n  height: 140px; }\n\n#grailBox .my_auction, #TB_window .my_auction {\n  color: #ffa7cc;\n  margin-right: 5px; }\n\n#grailBox .user_auction, #TB_window .user_auction {\n  color: #a7e3ff;\n  margin-right: 5px; }\n\n#grailBox .trade_box button {\n  min-width: 50px;\n  padding: 0 9px; }\n\n#grailBox .hide_grail_block_title:after {\n  font-size: 12px;\n  content: ' (点击显示)'; }\n\n#grailBox .hide_grail_block {\n  display: none !important; }\n\n.link.swapped .swapPos {\n  text-decoration: underline; }\n\n.link .swapPos {\n  margin-left: 0.5em;\n  cursor: pointer; }\n\n#grail li.title.hide_grail_title h2:after {\n  font-size: 12px;\n  content: '(点击显示)'; }\n\n#grail .temple_list .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.hide_grail {\n  display: none !important; }\n\n#valhalla li.initial_item.chara .valhalla-sacrifices {\n  margin-top: 2px;\n  text-align: center;\n  line-height: 0;\n  white-space: nowrap; }\n\n.item-info-tag {\n  display: inline-block;\n  padding: 0 4px;\n  margin-left: 2px;\n  vertical-align: top;\n  font-size: 50%;\n  font-weight: bold;\n  text-shadow: 1px 1px 1px #666;\n  border: none;\n  border-radius: 4px;\n  background: linear-gradient(#4f93cf, #369cf8); }\n\n.item-info-tags {\n  display: inline-block; }\n  .item-info-tags .item-info-tag {\n    display: inline-block;\n    padding: 0;\n    width: 10px;\n    height: 10px;\n    background-size: contain;\n    margin-left: 2px; }\n  .item-info-tags .item-info-chara-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AYht+mSlUqInYQcchQnSyIijhqFYpQIdQKrTqYXPoHTRqSFBdHwbXg4M9i1cHFWVcHV0EQ/AFxcnRSdJESv0sKLWK847iH97735e47QKiXmWZ1jAOabpupRFzMZFfF0CsEdKOfJmRmGXOSlITv+LpHgO93MZ7lX/fn6FVzFgMCIvEsM0ybeIN4etM2OO8TR1hRVonPicdMuiDxI9cVj984F1wWeGbETKfmiSPEYqGNlTZmRVMjniKOqppO+ULGY5XzFmetXGXNe/IXhnP6yjLXaQ0jgUUsQYIIBVWUUIaNGO06KRZSdB738Q+5folcCrlKYORYQAUaZNcP/ge/e2vlJye8pHAc6HxxnI8RILQLNGqO833sOI0TIPgMXOktf6UOzHySXmtp0SOgbxu4uG5pyh5wuQMMPhmyKbtSkJaQzwPvZ/RNWWDgFuhZ8/rWPMfpA5CmXiVvgINDYLRA2es+7+5q79u/Nc3+/QDatXJqsNTf9AAAAAlwSFlzAAALEwAACxMBAJqcGAAAA6JJREFUOMuVlEtslVUQx39zvsftfVBuKxYKLa1ijEohsECjLgo23ZgQJcEQZcfOhS58ING4MEogMdEYWbIwxkghFoPBR4xIiQ8IiZi2vCEEilCsfdy+73e+7zvj4lYsz4RJJpOTc+Z3MnPO/OEutnerob8T7NCPRH/vo38vdHxg7paCf7fNxuoiJh02U30/fYWLRVLWr26Ym8LIHXPueF3owYL5wyRB8WWvrrDOq699Pg2KrySFEUKPewO2LIaTX/jYSRrJrdoRFKsIqzOQf+rjaJzm01/6tCy+B2DHlgzppEcqNe/XrmyDyKLWUruiFRc0bY0nPDq2hLcFigC7NgsPLTIYPETAGAspT9+/ctOvNUuaZp2G0oXLDPyxc40aupQQdYoTJU0dT77mkAOf+BQTcPh4pjxPlbUivFS9ZENrw4rHAohBZoAKIj5Xei/EpbOf/66O3SLscza4Kr4yrQ45sp1GP9+0rdi4qi2TKyzIVM8hO7dImDWos5UaZFZNqoj4JJEwNTpKNDZONDkxONrf3RUNn3nLT5XnlrW+sNFDUBSMAGXUVkrEcCPQgWqCAQqFkEKuFtKaeQsfeWJ99/5tR8z0OJ3HD+6OsdOQxIiziLPgLIJFdMa5Kf53LokxXpbjh/bHE9cGdxkRv3+s/1rr2d7DibgIZmAwy+XGtWJBLbgIMcL5U+fS0rmDbRJy1SuVMjz+cPLX0OUrJyImN9TV14NJES+9HsXMuKSgKaIpQohEWU4fPcClY10vGl+/b99ehfmmd5okBZS9fX+eenVoqA8hBrGIZ8GLER/wEkQjxI6io/3oxcMM9X7Exd6e19XpnkQNUP6/3Xs2QRyRe3R18cLSB5vmkwOqAiScQszJygOnlap1CpiEM31msPuQPmB8ndj42U3iUI4hKRshHTOUuyEAyYIEIBnAA0nATYPMgE2AF0+JBDm9VW3iCGKrYTYreQXEA/FBqkByFaBGYFJwAahANks+cVqlMeO3zHISgXOay/jk0OuDgRgwecFUCyasgFBQhUygoRPm2PJt9NBGIEbygVR+hC/wz7DQ8wvlb3fydVwiWfumrFu+jMLCghLHIBFIlup45HZAC2JMlIQ+o0HsfvuB8vlOt2NpM2/X15JKLazpFvl0h767qF02r26XrMtmTDxlp5Mona0fFfvwGahvafDDGu/ZnvcujTk4VreGMQRChbKr9NQoDPxMXmHF8nea77Ml+93AiavJG10Vzr/VrK4oLFhtxgAAAABJRU5ErkJggg=='); }\n  .item-info-tags .item-info-auc-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9TxQ8qInYo4pChOlkQFXHUKhShQqgVWnUwufQLmjQkKS6OgmvBwY/FqoOLs64OroIg+AHi5Oik6CIl/i8ptIjx4Lgf7+497t4BQr3MNKtjHNB020wl4mImuyp2vUJADwYQQVBmljEnSUn4jq97BPh6F+NZ/uf+HH1qzmJAQCSeZYZpE28QT2/aBud94jAryirxOfGYSRckfuS64vEb54LLAs8Mm+nUPHGYWCy0sdLGrGhqxFPEUVXTKV/IeKxy3uKslauseU/+wlBOX1nmOs1hJLCIJUgQoaCKEsqwEaNVJ8VCivbjPv4h1y+RSyFXCYwcC6hAg+z6wf/gd7dWfnLCSwrFgc4Xx/kYAbp2gUbNcb6PHadxAgSfgSu95a/UgZlP0mstLXoE9G8DF9ctTdkDLneAyJMhm7IrBWkK+TzwfkbflAUGb4HeNa+35j5OH4A0dZW8AQ4OgdECZa/7vLu7vbd/zzT7+wHzpXJ0393cywAAAAlwSFlzAAALEwAACxMBAJqcGAAAA8hJREFUOMuVU1tsVUUUXXvO3HN6+6KRqi3WUK0SFaJSEU2joqSY0ICFSqjcJjYpKlVDQq2StIgGX/URK/5gIogmhBSNfpj4Cj4/MDEGtRgNaqkx9ia1cNt777nnMefMOTN+tPIo3Ag7mZ+VvdesNXsNoUi1b1qGR7auR21FLdl+vpuIGpVWr2utf1lav7HYGPhswEwaCP0YD/W3IBIC43Z6G2PGDgKY1vp2qeIlAByeYIikOouQzQaaNyzCgeHHMT41DqH8x7zYedaReVaQebhRwTUZj35Mv4ObmhacUyHNBj6e6ENJrhoZMd5DZAye1pm+vPzKb0zDSksl+5SO0XRF9/9b/vPYGDifqGdkvHgK1X/Nn3P1twqqQ8Q+KRW7I97oc5+PvIyNLS/h75HJ4pYrrWq4oeNk/Uk7608i609mq0trv+bM6PAil7zIhVDimTqrdgs0sPP9R5Gs5MUJL7q0HCIOMq50VuaDXH9Vydx+y0ikfOlBnDoUROI1L3J7CyqHvYe2FH9DwyRs/eROxJGCwUzce107G80e2weo1Dl2oGIV37+qYd27o1MjhivdgFB0Vxo/jL2NMArBGb/syInvnwSo+/QBrbU7r7x+3yVlNc1aq+MKWHOWZWYQ1nfdgcMTuxHpGAbja4iMnxfObfzUDQsf2YENO7BhC1skedl7ZWZppxPaV7nSafKl03KGQiJAa+Cr0VcBzWAy6wEGegMEDo3xKTG1eHjiu11Kq7aa8ro98yrr1gG6amY8YjCWnqFw5YYl+Oz3ASxv6IXWerNU4W6hBBex0KEOnw4iZyJdGOs0jZKBCqt8rS2yVbbIwRZ534+8zlCFP51UuG1XOxY1NqBiThKMjKcIbDsBXANgRL0aatBkJfg1cwRE2APQzIfW4MRTJpUMWQlzOjabnl+B62+bj5rai1mkwgGpgh2B8rlQHqQK3rxrwepBRgbart0OO5hCQeQ+yPkZJ+dnCoUg3xXGwZDiEh2LB0Ftm29GV/8KxFkDvvQHiVjPfzcDbMiqYimRjXDfDa8AAPo+vBuUjElBXzMdZPoNwtAv3HNweqnLUwtROCFYxsvs9WO/x4tcuNKBF3lfhsp/+J/McXCLwSw1AAADrQcRSqkBHAVwNJTyJBkA0M5DqSTniSECa9XQMymkPwi4hYHlum99C8QIWmmcT3Gp5Y2hlK3Q03kmIM2Jt1g8mSNGYJygovMjAwAeRMFwrOMvoNEMgs1Aaw3GRzUZeGLZ/gsiAwAexZEfxmGrJvUggYYTzDqcSBD6Vu1HHFwYGQD8C6Dv40ZNwMKjAAAAAElFTkSuQmCC'); }\n  .item-info-tags .item-info-ico-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9Ta0UqIlYQcchQnSyIijhqFYpQodQKrTqYXPoFTRqSFBdHwbXg4Mdi1cHFWVcHV0EQ/ABxcnRSdJES/5cUWsR4cNyPd/ced+8AoV5mqtkxDqiaZaTiMTGTXRWDrxDQhwAG0CkxU59LJhPwHF/38PH1LsqzvM/9OXqUnMkAn0g8y3TDIt4gnt60dM77xGFWlBTic+Ixgy5I/Mh12eU3zgWHBZ4ZNtKpeeIwsVhoY7mNWdFQiaeII4qqUb6QcVnhvMVZLVdZ8578haGctrLMdZrDiGMRS0hChIwqSijDQpRWjRQTKdqPefiHHH+SXDK5SmDkWEAFKiTHD/4Hv7s185MTblIoBgRebPtjBAjuAo2abX8f23bjBPA/A1day1+pAzOfpNdaWuQI6N0GLq5bmrwHXO4Ag0+6ZEiO5Kcp5PPA+xl9UxbovwW619zemvs4fQDS1FXiBjg4BEYLlL3u8e6u9t7+PdPs7wfpq3JwocxM2QAAAS9QTFRFblUA////gbxEERIkQn0tAAAA2trbP3osg75EgbxFQn0sPXgrW6IkhMBFP3orf7tBDg8ifbo8RoEuebRAerk2TogxAAAaVpA0c64+ZqE5WpU1bKY8O3kjAAAXd7cvUYsxSoUwYZw3AAATdLM5LWsZaasw5PDZutme9frwMXQSdbFAlJSaAAAdiImQ0eW+8vjsjcJXsdWR1ObDqNCDwt6qTIM6v9C5iquA0d7M4urggKR0l7WOvM62RoEkyOCytN2Jhr9O3evNHx8tKSo4QUFMbW52e3uCTExWXFxknctylsZksNOSWItHZJNWJ3AAobyZc51nU58D2uTXmsSAdq9QUJUhIWMKwOKcrdeApcKVga1kaJpMd6Ngx+eoU5kimMdrqquu6+vrw8XIoqOoNDVBlpiZAgAAAAF0Uk5TAEDm2GYAAAAJcEhZcwAACxMAAAsTAQCanBgAAAFHSURBVCjP1ZI/a8MwEMWD0NIsAosg3WlwhCkELRYUNQnOoDVGJSZjOyT9/l+iJ1tN+i/dOvQGg/Xs9353utnsr6v/XTbgvL/9MzqDaPWNT6JlVNJYtObOn755GzaVqVNaopH9JxsrGaJgzIbddlOBBkRw8XSJZppzQ4/zsTvuuCSfDKMv0QKVYJav23MKvEQZOcm6vCNPw2M7cCBKisI4yQBylOGpXYdtxzVTHEluijl1RLhMVOu23YQ6+yCTYArbXjYu4yI/pLkayShaq9KeVNY0TSMJt1JaFBJZFznieCChjv00O5mjwU2yRzbCap6655cH7TTB2MbBdWyLTMPDYTisgspJ4h7ew2noitO92LR5XQ2VFBpqtC7ur1c29m556OZ1btN/WBE/sREALqyJ/dftsSJLtBHR73/aJoWgb++Tj/3sv9UbToMt591g/JcAAAAASUVORK5CYII='); }\n  .item-info-tags .item-info-temple-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9TpSJVByuIKGSoThakijhqFYpQIdQKrTqYXPoFTRqSFBdHwbXg4Mdi1cHFWVcHV0EQ/ABxcnRSdJES/9cUWsR4cNyPd/ced+8AoVZimtUxAWi6bSbjMTGdWRUDrxDQiwGMICozy5iTpAQ8x9c9fHy9i/As73N/jh41azHAJxLPMsO0iTeIpzdtg/M+cYgVZJX4nHjcpAsSP3JdcfmNc77BAs8MmankPHGIWMy3sdLGrGBqxFPEYVXTKV9Iu6xy3uKslSqseU/+wmBWX1nmOs1hxLGIJUgQoaCCIkqwEaFVJ8VCkvZjHv6hhl8il0KuIhg5FlCGBrnhB/+D391aucmomxSMAZ0vjvMxCgR2gXrVcb6PHad+AvifgSu95S/XgJlP0qstLXwE9G0DF9ctTdkDLneAwSdDNuWG5Kcp5HLA+xl9UwbovwW619zemvs4fQBS1FXiBjg4BMbylL3u8e6u9t7+PdPs7weLtXKxP2nsHAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAexJREFUOMul1LtPVEEUBvDfXHZdKhOJVLoFQQvJ+oihMBoT/wIrxMeGh4rG1tLCiJWddjZYyBKEEAtiZ2diTDRWKmhjYaSEwtgI4TEWzIUbXGKALznJmXPOfPnmzJwJXr/lyyfev6O1QsjsCDGyuMiZcxw/qcWp03z8QGsrIdgxQqBcZu4HpZLgcp1KBduQ1QfhQlq9Mf58O6ksLQn6bjRXNnCLleUuPMLFFH2Fe0rlr0ZHmh4/k2XrhEWrD1atLDcwWyCT/Fkryw31weo/+7JMMDC0WX5toB0PMITKf7q3hGd46MXo/EZLs+u3rV3pg2Hcxf4dXstvPMFwmGjIxEipDG27IJP2tCmXhRDSkUPgaj/040gq/IwTyf+Zjni0Se47GiYasiyTbTR0cizdvfvJDhT8SlLSLBdNjm28lK1jMZ2UzGEEMyk+lUyKjaSaJUy35M8uKChcD3YnNVUxHkItkZxNBrWUq6ba7tV8YgSllvwdxmiV9sJInS8oP5zUNMu1F2ZFaTVG4lo+epUtJDkObmlNZ8Gv5FMbY1TKpSbsK/TtT8GfL/QPfhX8fRv7A8HNO+uL3nre/LjT/wa9psYhVwh6cMnu0COEl+uEm1hI47cbLGzKffyUbzP2jIiumkxHJ8dqeyfsqtHR6S+Wb3sPk3BhEAAAAABJRU5ErkJggg=='); }\n\n#TB_overlay {\n  z-index: 102; }\n\n#TB_window[data-name] {\n  z-index: 102;\n  padding: 7px;\n  box-shadow: 0px 0px 4px 1px #56bce0; }\n\n#TB_window.temple .container {\n  text-align: center; }\n  #TB_window.temple .container .line {\n    text-align: left; }\n\n#TB_window .action .text_button {\n  margin: 0 8px 0 0;\n  padding: 0;\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -webkit-fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  min-width: -webkit-fit-content;\n  min-width: -moz-fit-content;\n  min-width: fit-content; }\n\n#TB_window .desc .text_button {\n  cursor: pointer; }\n\n#TB_window .setting-tab-titlebar {\n  display: flex;\n  margin-top: 8px;\n  border-bottom: solid 2px;\n  padding: 0 8px; }\n  #TB_window .setting-tab-titlebar .setting-tab-title {\n    cursor: pointer;\n    padding: 2px 8px;\n    opacity: 0.8;\n    border: solid 1px;\n      border-bottom: none;\n      border-radius: 5px 5px 0 0; }\n    #TB_window .setting-tab-titlebar .setting-tab-title.open {\n      font-weight: bold;\n      opacity: 1;\n      border-width: 2px; }\n\n#TB_window .setting-tab table {\n  width: 98%;\n  text-align: center;\n  border-spacing: 0; }\n  #TB_window .setting-tab table input[type=number] {\n    width: 7em; }\n    #TB_window .setting-tab table input[type=number].chara-id {\n      width: 5em; }\n    #TB_window .setting-tab table input[type=number].chara-level {\n      width: 4em; }\n  #TB_window .setting-tab table tr {\n    border-top: dotted 1px; }\n    #TB_window .setting-tab table tr.hide-row {\n      display: none; }\n    #TB_window .setting-tab table tr td {\n      text-align: left;\n      vertical-align: middle;\n      padding: 5px; }\n      #TB_window .setting-tab table tr td:first-child {\n        width: 60%; }\n    #TB_window .setting-tab table tr.setting-collapse {\n      cursor: pointer; }\n      #TB_window .setting-tab table tr.setting-collapse td:before {\n        content: \"▾ \"; }\n      #TB_window .setting-tab table tr.setting-collapse.setting-collapse-close td:before {\n        content: \"▸ \"; }\n    #TB_window .setting-tab table tr.setting-collapse-item td:first-child {\n      padding-left: 1.2em; }\n  #TB_window .setting-tab table .setting-row-btn td {\n    vertical-align: baseline; }\n  #TB_window .setting-tab table .txtBtn {\n    font-size: smaller;\n    text-decoration: underline;\n    cursor: pointer; }\n\nhtml[data-theme='dark'] #grailBox .title {\n  background-color: transparent; }\n\nhtml[data-theme='dark'] .assets .my_temple.item .card {\n  box-shadow: 0px 0px 15px #FFEB3B;\n  border: 1px solid #FFC107; }\n";
+  var css_248z = "@charset \"UTF-8\";\nul.timelineTabs li a {\n  margin: 2px 0 0 0;\n  padding: 5px 10px 5px 10px; }\n\nimg.cover {\n  background-color: transparent; }\n\n.assets .my_temple.item .card {\n  box-shadow: 3px 3px 5px #FFEB3B;\n  border: 1px solid #FFC107; }\n\n.assets .my_temple.item .name a {\n  font-weight: bold;\n  color: #0084b4; }\n\n.assets_box .item {\n  margin: 5px 5px 5px 0;\n  width: 90px; }\n  .assets_box .item .card {\n    width: 90px;\n    height: 120px; }\n\n#lastTemples .assets .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.item .card {\n  width: 105px;\n  height: 140px; }\n\n#grailBox .my_auction, #TB_window .my_auction {\n  color: #ffa7cc;\n  margin-right: 5px; }\n\n#grailBox .user_auction, #TB_window .user_auction {\n  color: #a7e3ff;\n  margin-right: 5px; }\n\n#grailBox .trade_box button {\n  min-width: 50px;\n  padding: 0 9px; }\n\n#grailBox .hide_grail_block_title:after {\n  font-size: 12px;\n  content: ' (点击显示)'; }\n\n#grailBox .hide_grail_block {\n  display: none !important; }\n\n.link.swapped .swapPos {\n  text-decoration: underline; }\n\n.link .swapPos {\n  margin-left: 0.5em;\n  cursor: pointer; }\n\n#grail li.title.hide_grail_title h2:after {\n  font-size: 12px;\n  content: '(点击显示)'; }\n\n#grail .temple_list .item {\n  margin: 5px 5px 5px 0;\n  width: 107px; }\n\n.hide_grail {\n  display: none !important; }\n\n#valhalla li.initial_item.chara .valhalla-sacrifices {\n  margin-top: 2px;\n  text-align: center;\n  line-height: 0;\n  white-space: nowrap; }\n\n.item-info-tag {\n  display: inline-block;\n  padding: 0 4px;\n  margin-left: 2px;\n  vertical-align: top;\n  font-size: 50%;\n  font-weight: bold;\n  text-shadow: 1px 1px 1px #666;\n  border: none;\n  border-radius: 4px;\n  background: linear-gradient(#4f93cf, #369cf8); }\n\n.item-info-tags {\n  display: inline-block; }\n  .item-info-tags .item-info-tag {\n    display: inline-block;\n    padding: 0;\n    width: 10px;\n    height: 10px;\n    background-size: contain;\n    margin-left: 2px; }\n  .item-info-tags .item-info-chara-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AYht+mSlUqInYQcchQnSyIijhqFYpQIdQKrTqYXPoHTRqSFBdHwbXg4M9i1cHFWVcHV0EQ/AFxcnRSdJESv0sKLWK847iH97735e47QKiXmWZ1jAOabpupRFzMZFfF0CsEdKOfJmRmGXOSlITv+LpHgO93MZ7lX/fn6FVzFgMCIvEsM0ybeIN4etM2OO8TR1hRVonPicdMuiDxI9cVj984F1wWeGbETKfmiSPEYqGNlTZmRVMjniKOqppO+ULGY5XzFmetXGXNe/IXhnP6yjLXaQ0jgUUsQYIIBVWUUIaNGO06KRZSdB738Q+5folcCrlKYORYQAUaZNcP/ge/e2vlJye8pHAc6HxxnI8RILQLNGqO833sOI0TIPgMXOktf6UOzHySXmtp0SOgbxu4uG5pyh5wuQMMPhmyKbtSkJaQzwPvZ/RNWWDgFuhZ8/rWPMfpA5CmXiVvgINDYLRA2es+7+5q79u/Nc3+/QDatXJqsNTf9AAAAAlwSFlzAAALEwAACxMBAJqcGAAAA6JJREFUOMuVlEtslVUQx39zvsftfVBuKxYKLa1ijEohsECjLgo23ZgQJcEQZcfOhS58ING4MEogMdEYWbIwxkghFoPBR4xIiQ8IiZi2vCEEilCsfdy+73e+7zvj4lYsz4RJJpOTc+Z3MnPO/OEutnerob8T7NCPRH/vo38vdHxg7paCf7fNxuoiJh02U30/fYWLRVLWr26Ym8LIHXPueF3owYL5wyRB8WWvrrDOq699Pg2KrySFEUKPewO2LIaTX/jYSRrJrdoRFKsIqzOQf+rjaJzm01/6tCy+B2DHlgzppEcqNe/XrmyDyKLWUruiFRc0bY0nPDq2hLcFigC7NgsPLTIYPETAGAspT9+/ctOvNUuaZp2G0oXLDPyxc40aupQQdYoTJU0dT77mkAOf+BQTcPh4pjxPlbUivFS9ZENrw4rHAohBZoAKIj5Xei/EpbOf/66O3SLscza4Kr4yrQ45sp1GP9+0rdi4qi2TKyzIVM8hO7dImDWos5UaZFZNqoj4JJEwNTpKNDZONDkxONrf3RUNn3nLT5XnlrW+sNFDUBSMAGXUVkrEcCPQgWqCAQqFkEKuFtKaeQsfeWJ99/5tR8z0OJ3HD+6OsdOQxIiziLPgLIJFdMa5Kf53LokxXpbjh/bHE9cGdxkRv3+s/1rr2d7DibgIZmAwy+XGtWJBLbgIMcL5U+fS0rmDbRJy1SuVMjz+cPLX0OUrJyImN9TV14NJES+9HsXMuKSgKaIpQohEWU4fPcClY10vGl+/b99ehfmmd5okBZS9fX+eenVoqA8hBrGIZ8GLER/wEkQjxI6io/3oxcMM9X7Exd6e19XpnkQNUP6/3Xs2QRyRe3R18cLSB5vmkwOqAiScQszJygOnlap1CpiEM31msPuQPmB8ndj42U3iUI4hKRshHTOUuyEAyYIEIBnAA0nATYPMgE2AF0+JBDm9VW3iCGKrYTYreQXEA/FBqkByFaBGYFJwAahANks+cVqlMeO3zHISgXOay/jk0OuDgRgwecFUCyasgFBQhUygoRPm2PJt9NBGIEbygVR+hC/wz7DQ8wvlb3fydVwiWfumrFu+jMLCghLHIBFIlup45HZAC2JMlIQ+o0HsfvuB8vlOt2NpM2/X15JKLazpFvl0h767qF02r26XrMtmTDxlp5Mona0fFfvwGahvafDDGu/ZnvcujTk4VreGMQRChbKr9NQoDPxMXmHF8nea77Ml+93AiavJG10Vzr/VrK4oLFhtxgAAAABJRU5ErkJggg=='); }\n  .item-info-tags .item-info-auc-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9TxQ8qInYo4pChOlkQFXHUKhShQqgVWnUwufQLmjQkKS6OgmvBwY/FqoOLs64OroIg+AHi5Oik6CIl/i8ptIjx4Lgf7+497t4BQr3MNKtjHNB020wl4mImuyp2vUJADwYQQVBmljEnSUn4jq97BPh6F+NZ/uf+HH1qzmJAQCSeZYZpE28QT2/aBud94jAryirxOfGYSRckfuS64vEb54LLAs8Mm+nUPHGYWCy0sdLGrGhqxFPEUVXTKV/IeKxy3uKslauseU/+wlBOX1nmOs1hJLCIJUgQoaCKEsqwEaNVJ8VCivbjPv4h1y+RSyFXCYwcC6hAg+z6wf/gd7dWfnLCSwrFgc4Xx/kYAbp2gUbNcb6PHadxAgSfgSu95a/UgZlP0mstLXoE9G8DF9ctTdkDLneAyJMhm7IrBWkK+TzwfkbflAUGb4HeNa+35j5OH4A0dZW8AQ4OgdECZa/7vLu7vbd/zzT7+wHzpXJ0393cywAAAAlwSFlzAAALEwAACxMBAJqcGAAAA8hJREFUOMuVU1tsVUUUXXvO3HN6+6KRqi3WUK0SFaJSEU2joqSY0ICFSqjcJjYpKlVDQq2StIgGX/URK/5gIogmhBSNfpj4Cj4/MDEGtRgNaqkx9ia1cNt777nnMefMOTN+tPIo3Ag7mZ+VvdesNXsNoUi1b1qGR7auR21FLdl+vpuIGpVWr2utf1lav7HYGPhswEwaCP0YD/W3IBIC43Z6G2PGDgKY1vp2qeIlAByeYIikOouQzQaaNyzCgeHHMT41DqH8x7zYedaReVaQebhRwTUZj35Mv4ObmhacUyHNBj6e6ENJrhoZMd5DZAye1pm+vPzKb0zDSksl+5SO0XRF9/9b/vPYGDifqGdkvHgK1X/Nn3P1twqqQ8Q+KRW7I97oc5+PvIyNLS/h75HJ4pYrrWq4oeNk/Uk7608i609mq0trv+bM6PAil7zIhVDimTqrdgs0sPP9R5Gs5MUJL7q0HCIOMq50VuaDXH9Vydx+y0ikfOlBnDoUROI1L3J7CyqHvYe2FH9DwyRs/eROxJGCwUzce107G80e2weo1Dl2oGIV37+qYd27o1MjhivdgFB0Vxo/jL2NMArBGb/syInvnwSo+/QBrbU7r7x+3yVlNc1aq+MKWHOWZWYQ1nfdgcMTuxHpGAbja4iMnxfObfzUDQsf2YENO7BhC1skedl7ZWZppxPaV7nSafKl03KGQiJAa+Cr0VcBzWAy6wEGegMEDo3xKTG1eHjiu11Kq7aa8ro98yrr1gG6amY8YjCWnqFw5YYl+Oz3ASxv6IXWerNU4W6hBBex0KEOnw4iZyJdGOs0jZKBCqt8rS2yVbbIwRZ534+8zlCFP51UuG1XOxY1NqBiThKMjKcIbDsBXANgRL0aatBkJfg1cwRE2APQzIfW4MRTJpUMWQlzOjabnl+B62+bj5rai1mkwgGpgh2B8rlQHqQK3rxrwepBRgbart0OO5hCQeQ+yPkZJ+dnCoUg3xXGwZDiEh2LB0Ftm29GV/8KxFkDvvQHiVjPfzcDbMiqYimRjXDfDa8AAPo+vBuUjElBXzMdZPoNwtAv3HNweqnLUwtROCFYxsvs9WO/x4tcuNKBF3lfhsp/+J/McXCLwSw1AAADrQcRSqkBHAVwNJTyJBkA0M5DqSTniSECa9XQMymkPwi4hYHlum99C8QIWmmcT3Gp5Y2hlK3Q03kmIM2Jt1g8mSNGYJygovMjAwAeRMFwrOMvoNEMgs1Aaw3GRzUZeGLZ/gsiAwAexZEfxmGrJvUggYYTzDqcSBD6Vu1HHFwYGQD8C6Dv40ZNwMKjAAAAAElFTkSuQmCC'); }\n  .item-info-tags .item-info-ico-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9Ta0UqIlYQcchQnSyIijhqFYpQodQKrTqYXPoFTRqSFBdHwbXg4Mdi1cHFWVcHV0EQ/ABxcnRSdJES/5cUWsR4cNyPd/ced+8AoV5mqtkxDqiaZaTiMTGTXRWDrxDQhwAG0CkxU59LJhPwHF/38PH1LsqzvM/9OXqUnMkAn0g8y3TDIt4gnt60dM77xGFWlBTic+Ixgy5I/Mh12eU3zgWHBZ4ZNtKpeeIwsVhoY7mNWdFQiaeII4qqUb6QcVnhvMVZLVdZ8578haGctrLMdZrDiGMRS0hChIwqSijDQpRWjRQTKdqPefiHHH+SXDK5SmDkWEAFKiTHD/4Hv7s185MTblIoBgRebPtjBAjuAo2abX8f23bjBPA/A1day1+pAzOfpNdaWuQI6N0GLq5bmrwHXO4Ag0+6ZEiO5Kcp5PPA+xl9UxbovwW619zemvs4fQDS1FXiBjg4BEYLlL3u8e6u9t7+PdPs7wfpq3JwocxM2QAAAS9QTFRFblUA////gbxEERIkQn0tAAAA2trbP3osg75EgbxFQn0sPXgrW6IkhMBFP3orf7tBDg8ifbo8RoEuebRAerk2TogxAAAaVpA0c64+ZqE5WpU1bKY8O3kjAAAXd7cvUYsxSoUwYZw3AAATdLM5LWsZaasw5PDZutme9frwMXQSdbFAlJSaAAAdiImQ0eW+8vjsjcJXsdWR1ObDqNCDwt6qTIM6v9C5iquA0d7M4urggKR0l7WOvM62RoEkyOCytN2Jhr9O3evNHx8tKSo4QUFMbW52e3uCTExWXFxknctylsZksNOSWItHZJNWJ3AAobyZc51nU58D2uTXmsSAdq9QUJUhIWMKwOKcrdeApcKVga1kaJpMd6Ngx+eoU5kimMdrqquu6+vrw8XIoqOoNDVBlpiZAgAAAAF0Uk5TAEDm2GYAAAAJcEhZcwAACxMAAAsTAQCanBgAAAFHSURBVCjP1ZI/a8MwEMWD0NIsAosg3WlwhCkELRYUNQnOoDVGJSZjOyT9/l+iJ1tN+i/dOvQGg/Xs9353utnsr6v/XTbgvL/9MzqDaPWNT6JlVNJYtObOn755GzaVqVNaopH9JxsrGaJgzIbddlOBBkRw8XSJZppzQ4/zsTvuuCSfDKMv0QKVYJav23MKvEQZOcm6vCNPw2M7cCBKisI4yQBylOGpXYdtxzVTHEluijl1RLhMVOu23YQ6+yCTYArbXjYu4yI/pLkayShaq9KeVNY0TSMJt1JaFBJZFznieCChjv00O5mjwU2yRzbCap6655cH7TTB2MbBdWyLTMPDYTisgspJ4h7ew2noitO92LR5XQ2VFBpqtC7ur1c29m556OZ1btN/WBE/sREALqyJ/dftsSJLtBHR73/aJoWgb++Tj/3sv9UbToMt591g/JcAAAAASUVORK5CYII='); }\n  .item-info-tags .item-info-temple-icon {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABhGlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw0AcxV9TpSJVByuIKGSoThakijhqFYpQIdQKrTqYXPoFTRqSFBdHwbXg4Mdi1cHFWVcHV0EQ/ABxcnRSdJES/9cUWsR4cNyPd/ced+8AoVZimtUxAWi6bSbjMTGdWRUDrxDQiwGMICozy5iTpAQ8x9c9fHy9i/As73N/jh41azHAJxLPMsO0iTeIpzdtg/M+cYgVZJX4nHjcpAsSP3JdcfmNc77BAs8MmankPHGIWMy3sdLGrGBqxFPEYVXTKV9Iu6xy3uKslSqseU/+wmBWX1nmOs1hxLGIJUgQoaCCIkqwEaFVJ8VCkvZjHv6hhl8il0KuIhg5FlCGBrnhB/+D391aucmomxSMAZ0vjvMxCgR2gXrVcb6PHad+AvifgSu95S/XgJlP0qstLXwE9G0DF9ctTdkDLneAwSdDNuWG5Kcp5HLA+xl9UwbovwW619zemvs4fQBS1FXiBjg4BMbylL3u8e6u9t7+PdPs7weLtXKxP2nsHAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAexJREFUOMul1LtPVEEUBvDfXHZdKhOJVLoFQQvJ+oihMBoT/wIrxMeGh4rG1tLCiJWddjZYyBKEEAtiZ2diTDRWKmhjYaSEwtgI4TEWzIUbXGKALznJmXPOfPnmzJwJXr/lyyfev6O1QsjsCDGyuMiZcxw/qcWp03z8QGsrIdgxQqBcZu4HpZLgcp1KBduQ1QfhQlq9Mf58O6ksLQn6bjRXNnCLleUuPMLFFH2Fe0rlr0ZHmh4/k2XrhEWrD1atLDcwWyCT/Fkryw31weo/+7JMMDC0WX5toB0PMITKf7q3hGd46MXo/EZLs+u3rV3pg2Hcxf4dXstvPMFwmGjIxEipDG27IJP2tCmXhRDSkUPgaj/040gq/IwTyf+Zjni0Se47GiYasiyTbTR0cizdvfvJDhT8SlLSLBdNjm28lK1jMZ2UzGEEMyk+lUyKjaSaJUy35M8uKChcD3YnNVUxHkItkZxNBrWUq6ba7tV8YgSllvwdxmiV9sJInS8oP5zUNMu1F2ZFaTVG4lo+epUtJDkObmlNZ8Gv5FMbY1TKpSbsK/TtT8GfL/QPfhX8fRv7A8HNO+uL3nre/LjT/wa9psYhVwh6cMnu0COEl+uEm1hI47cbLGzKffyUbzP2jIiumkxHJ8dqeyfsqtHR6S+Wb3sPk3BhEAAAAABJRU5ErkJggg=='); }\n\n#TB_overlay {\n  z-index: 102; }\n\n#TB_window[data-name] {\n  z-index: 102;\n  padding: 7px;\n  box-shadow: 0px 0px 4px 1px #56bce0; }\n\n#TB_window.temple .container {\n  text-align: center; }\n  #TB_window.temple .container .line {\n    text-align: left; }\n\n#TB_window .action .text_button {\n  margin: 0 8px 0 0;\n  padding: 0;\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -webkit-fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  min-width: -webkit-fit-content;\n  min-width: -moz-fit-content;\n  min-width: fit-content; }\n\n#TB_window .desc .text_button {\n  cursor: pointer; }\n\n#TB_window .setting-tab-titlebar, #TB_window .dialog-tab-titlebar {\n  display: flex;\n  margin-top: 8px;\n  border-bottom: solid 2px;\n  padding: 0 8px; }\n  #TB_window .setting-tab-titlebar .setting-tab-title, #TB_window .setting-tab-titlebar .dialog-tab-title, #TB_window .dialog-tab-titlebar .setting-tab-title, #TB_window .dialog-tab-titlebar .dialog-tab-title {\n    cursor: pointer;\n    padding: 2px 8px;\n    opacity: 0.8;\n    border: solid 1px;\n      border-bottom: none;\n      border-radius: 5px 5px 0 0; }\n    #TB_window .setting-tab-titlebar .setting-tab-title.open, #TB_window .setting-tab-titlebar .dialog-tab-title.open, #TB_window .dialog-tab-titlebar .setting-tab-title.open, #TB_window .dialog-tab-titlebar .dialog-tab-title.open {\n      font-weight: bold;\n      opacity: 1;\n      border-width: 2px; }\n\n#TB_window .batch-tab-content .batch-element {\n  padding: 0 2px; }\n\n#TB_window .batch-tab-content [title] {\n  border-bottom: dotted thin; }\n\n#TB_window .setting-tab table {\n  width: 98%;\n  text-align: center;\n  border-spacing: 0; }\n  #TB_window .setting-tab table input[type=number] {\n    width: 7em; }\n    #TB_window .setting-tab table input[type=number].chara-id {\n      width: 5em; }\n    #TB_window .setting-tab table input[type=number].chara-level {\n      width: 4em; }\n  #TB_window .setting-tab table tr {\n    border-top: dotted 1px; }\n    #TB_window .setting-tab table tr.hide-row {\n      display: none; }\n    #TB_window .setting-tab table tr td {\n      text-align: left;\n      vertical-align: middle;\n      padding: 5px; }\n      #TB_window .setting-tab table tr td:first-child {\n        width: 60%; }\n    #TB_window .setting-tab table tr.setting-collapse {\n      cursor: pointer; }\n      #TB_window .setting-tab table tr.setting-collapse td:before {\n        content: \"▾ \"; }\n      #TB_window .setting-tab table tr.setting-collapse.setting-collapse-close td:before {\n        content: \"▸ \"; }\n    #TB_window .setting-tab table tr.setting-collapse-item td:first-child {\n      padding-left: 1.2em; }\n  #TB_window .setting-tab table .setting-row-btn td {\n    vertical-align: baseline; }\n  #TB_window .setting-tab table .txtBtn {\n    font-size: smaller;\n    text-decoration: underline;\n    cursor: pointer; }\n\nhtml[data-theme='dark'] #grailBox .title {\n  background-color: transparent; }\n\nhtml[data-theme='dark'] .assets .my_temple.item .card {\n  box-shadow: 0px 0px 15px #FFEB3B;\n  border: 1px solid #FFC107; }\n";
   GM_addStyle(css_248z);
 
   const configGenerator = (name, defaultValue, config = {}) => {
@@ -251,13 +251,20 @@
     }))
   });
 
+  const addBuildTemple = (info) => {
+    const autoTempleList = AutoTempleList.get();
+    const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === info.charaId);
+    if (index >= 0) {
+      autoTempleList.splice(index, 1);
+    }
+    autoTempleList.unshift(info);
+    AutoTempleList.set(autoTempleList);
+  };
   const removeBuildTemple = (charaId) => {
     const autoTempleList = AutoTempleList.get();
-    for (let i = 0; i < autoTempleList.length; i++) {
-      if (parseInt(autoTempleList[i].charaId) === parseInt(charaId)) {
-        autoTempleList.splice(i, 1);
-        break
-      }
+    const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId);
+    if (index >= 0) {
+      autoTempleList.splice(index, 1);
     }
     $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]');
     AutoTempleList.set(autoTempleList);
@@ -343,17 +350,32 @@
       $(`#TB_window[data-name=${name}]`).remove();
     }
   };
-  const showDialog = (innerHTML, name = 'main', maxWidth = '', minWidth = '') => {
+  const showDialog = (innerHTML, config = {}) => {
+    const { name, maxWidth, minWidth, canClose, closeBefore } = {
+      name: 'main',
+      maxWidth: '640px',
+      minWidth: '400px',
+      canClose: true,
+      closeBefore: false,
+      ...config
+    };
     const dialog = `
     <div id="TB_overlay" data-name="${name}" class="TB_overlayBG TB_overlayActive"></div>
-    <div id="TB_window" data-name="${name}" class="dialog" style="display:block;max-width:${maxWidth || '640px'};min-width:${minWidth || '400px'};">
+    <div id="TB_window" data-name="${name}" class="dialog" style="display:block;max-width:${maxWidth};min-width:${minWidth};">
     ${innerHTML}
-    <a id="TB_closeWindowButton" data-name="${name}" title="Close">X关闭</a>
+    <a id="TB_closeWindowButton" data-name="${name}" title="Close" ${canClose ? '' : 'style="display: none;"'}>X关闭</a>
     </div>
   `;
+    if (closeBefore) closeDialog(name);
     $('body').append(dialog);
-    $(`#TB_closeWindowButton[data-name=${name}]`).on('click', () => closeDialog(name));
-    $(`#TB_overlay[data-name=${name}]`).on('click', () => closeDialog(name));
+    if (canClose) {
+      $(`#TB_closeWindowButton[data-name=${name}]`).on('click', () => closeDialog(name));
+      $(`#TB_overlay[data-name=${name}]`).on('click', () => closeDialog(name));
+    }
+    return {
+      element: $(`#TB_window[data-name=${name}]`),
+      closeDialog: () => { closeDialog(name); }
+    }
   };
 
   const FillICOList = configGenerator('fillicoList', [], {
@@ -367,6 +389,15 @@
   });
 
   const ICOStandardList = [];
+  const addFillICO = (info) => {
+    const fillICOList = FillICOList.get();
+    const index = fillICOList.findIndex(item => parseInt(item.Id) === info.Id);
+    if (index >= 0) {
+      fillICOList.splice(index, 1);
+    }
+    if (info.target > 0) fillICOList.push(info);
+    FillICOList.set(fillICOList);
+  };
   const calculateICO = (ico, targetLevel, fillMin, joined, balance) => {
     const heads = ico.Users + (targetLevel === undefined || joined ? 0 : 1);
     const headLevel = Math.max(Math.floor((heads - 10) / 5), 0);
@@ -497,9 +528,11 @@
   const openICODialog = (chara) => {
     const fillICOList = FillICOList.get();
     let target = 1;
+    let fillMin = true;
     const item = fillICOList.find(item => parseInt(item.Id) === chara.Id);
     if (item) {
       target = item.target;
+      fillMin = item.fillMin;
     }
     const dialog = `<div class="title">自动补款 - #${chara.CharacterId} 「${chara.Name}」 lv${target}</div>
                   <div class="desc">
@@ -517,7 +550,7 @@
                     <button id="cancelfillICOButton">取消补款</button>
                   </div></div>
                   <div class="loading" style="display:none"></div>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog);
     $('#fillMinButton').on('click', (e) => {
       if ($('#fillMinButton').hasClass('on')) {
         $('#fillMinButton').removeClass('on');
@@ -531,6 +564,7 @@
         $('#fillMinInfo').html('根据参与者人数、已筹集资金、个人资金余额，<br/>补款至不爆注的<b>最低等级</b>。');
       }
     }).trigger('click');
+    if (fillMin === false) $('#fillMinButton').trigger('click');
     $('#cancelfillICOButton').on('click', function () {
       const fillICOList = FillICOList.get();
       const index = fillICOList.findIndex(item => parseInt(item.Id) === chara.Id);
@@ -556,12 +590,7 @@
       info.target = target;
       info.fillMin = $('#fillMinButton').hasClass('on');
       info.end = chara.End;
-      const fillICOList = FillICOList.get();
-      const index = fillICOList.findIndex(item => parseInt(item.Id) === chara.Id);
-      if (index >= 0) {
-        fillICOList[index] = info;
-      } else fillICOList.push(info);
-      FillICOList.set(fillICOList);
+      addFillICO(info);
       alert(`启动自动补款#${chara.Id} ${chara.Name}`);
       $(`#grailBox.chara${chara.CharacterId} #followICOButton`).text('[自动补款中]');
       closeDialog();
@@ -1081,7 +1110,6 @@
     }
   };
   const fillCosts = (id, lv, cost) => {
-    closeDialog();
     const dialog = `<div class="title" title="用一个角色的活股或固定资产，给另一个角色的圣殿消耗进行补充，目标人物的等级要小于或等于发动攻击圣殿的人物等级">星光碎片</div>
                   <div class="desc">当前版本可以通过资产重组进行补塔（1:2 补充损耗），如需资产重组在角色页面进行，同时可使用自动建塔保证重组数量<br>星光碎片只能使用活股充能，请勾选活股以确认</div>
                   <table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
@@ -1091,7 +1119,7 @@
                   <td>数量：<input id="amount" type="number" style="width:60px" value="${cost}"></td></tr>
                   <tr><td><input class="inputBtn" value="充能" id="submit_stardust" type="submit"></td></tr>
                   </tbody></table>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
     $('#submit_stardust').on('click', () => {
       const supplyId = parseInt($('#supplyId').val());
       const toSupplyId = parseInt($('#toSupplyId').val());
@@ -1137,9 +1165,7 @@
     });
     $('.fill_costs').off('click');
     $('.fill_costs').on('click', (e) => {
-      const id = $(e.target).data('id');
-      const lv = $(e.target).data('lv');
-      const cost = $(e.target).data('cost');
+      const { id, lv, cost } = $(e.target).data();
       fillCosts(id, lv, cost);
       e.stopPropagation();
     });
@@ -1228,16 +1254,26 @@
     } else {
       $item.find('.row .reload_chara').hide();
     }
+    if (chara.bad) {
+      $item.find('.begin_ico').hide();
+      $item.find('.title.avatar.l').text((i, value) => value + ' (虚空角色，请谨慎操作)');
+    }
   };
   const getNonCharacter = id => {
     getData(`/rakuen/topic/crt/${id}`).then(bgmPage => {
-      const bgmInfo = bgmPage.match(/class="avatar"><img\s+src="([^"]+)"\s+class="avatar\s+ll"><\/a>\s+<a href=".*"\s+target="_parent">.*<\/a><\/span><br\s*\/>(.+)<\/h1>/);
+      let bgmInfo = bgmPage.match(/class="avatar"><img\s+src="([^"]+)"\s+class="avatar\s+ll"><\/a>\s+<a href=".*"\s+target="_parent">.*<\/a><\/span><br\s*\/>(.+)<\/h1>/);
+      let bad = false;
+      if (bgmInfo === null) {
+        bgmInfo = bgmPage.match(/<a href="([^"]+)" class="cover thickbox" alt="([^"]+)" title="/);
+        bad = true;
+      }
       updateNonCharacter({
         Id: id,
         CharacterId: id,
         Icon: bgmInfo[1],
         Name: bgmInfo[2],
-        NotExist: true
+        NotExist: true,
+        bad
       });
     }).catch(e => {
       console.log(`未开启 ICO 角色 #${id} 信息加载失败`, e);
@@ -1329,13 +1365,12 @@
                   } catch (e) { console.log(`获取全部 ${d.Value.TotalItems} 个 ICO 列表出错`, e); }
                 }
                 const list_text = d.Value.Items.map(i => `https://bgm.tv/character/${i.CharacterId} ${i.Name}`).join('\n');
-                closeDialog();
                 const dialog = `<div class="bibeBox" style="padding:10px">
               <label>我的 ICO 列表（若复制按钮无效，请手动复制）</label>
               <textarea rows="10" class="quick" name="myICO"></textarea>
               <input class="inputBtn" value="复制" id="copy_list" type="submit" style="padding: 3px 5px;">
               </div>`;
-                showDialog(dialog);
+                showDialog(dialog, { closeBefore: true });
                 $('.bibeBox textarea').val(list_text);
                 $('#copy_list').on('click', () => {
                   $('.bibeBox label').children().remove();
@@ -1385,7 +1420,6 @@
   };
 
   const loadBalance = () => {
-    closeDialog();
     const dialog = `<table align="center" width="98%" cellspacing="0" cellpadding="5" class="settings">
     <tr><td>类型：<select id="balanceType" style="width:100px">
     <option value="0" selected="selected">全部</option>
@@ -1412,7 +1446,7 @@
     <td>每页<input id="amount" type="number" style="width:50px" value="1000">条</td>
     <td><input class="inputBtn" value="查询" id="submit_search" type="submit"></td></tr>
     </tbody></table>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
     $('#submit_search').on('click', () => {
       const Type = parseInt($('#balanceType').val());
       const page = parseInt($('#page').val());
@@ -1466,7 +1500,7 @@
     const ids = charas.slice(start, start + 50);
     const totalPages = Math.ceil(charas.length / 50);
     generateCharacterList(ids).then(list => {
-      loadCharacterList(list, page, totalPages, loadAutoBuild, 'autofillico', false);
+      loadCharacterList(list, page, totalPages, loadAutoFillICO, 'autofillico', false);
     });
   };
 
@@ -1517,23 +1551,66 @@
       loadCharacterList(list, page, totalPages, loadTemperaryList, 'chara', false);
     });
   };
-  const createTemporaryList = (page) => {
+  const createTemporaryList = () => {
     charasList = [];
-    closeDialog();
-    const dialog = `<div class="bibeBox" style="padding:10px">
-    <label>在超展开左边创建角色列表 请输入角色url或id，如 https://bgm.tv/character/29282 或 29282，一行一个</label>
-    <textarea rows="10" class="quick" name="urls"></textarea>
-    <input class="inputBtn" value="创建列表" id="submit_list" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="关注角色" id="add_follow" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="关注竞拍" id="add_auction" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="显示一键操作▼" id="one_key_actions" type="submit" style="padding: 3px 5px;">
-    <div id="one_keys" style="display: none;">
-    <input class="inputBtn" value="参与竞拍" id="join_auction" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="参与 ICO" id="join_ico" type="submit" style="padding: 3px 5px;">
-    <input class="inputBtn" value="启动 ICO" id="begin_ico" type="submit" style="padding: 3px 5px;">
+    const batchElement = {
+      basic: (text, desc, example) => `<span class="batch-element" title="${desc}, 例如：\n${example}">${text}</span>`,
+      int: (text, desc, example = '1\n20') => batchElement.basic(text, desc, example),
+      float: (text, desc, example = '1\n0.1\n3.14') => batchElement.basic(text, desc, example),
+      boolean: (text, desc, example = '1（是）\nY（是）\n0（否）\nN（否）') => batchElement.basic(text, desc, example)
+    };
+    batchElement.splitor = batchElement.basic(',', '分隔符', ',（逗号）\n （空格）\n\t（制表符）');
+    batchElement.id = batchElement.basic('ID', '角色 ID 或网址', '29282\nhttps://bgm.tv/character/29282');
+    const dialog = `
+    <div class="batch-tab-titlebar dialog-tab-titlebar">
+      <div data-tabid="batch-tab-temp" class="batch-tab-title dialog-tab-title open">临时列表</div>
+      <div data-tabid="batch-tab-onekey" class="batch-tab-title dialog-tab-title">一键操作</div>
+      <div data-tabid="batch-tab-trade" class="batch-tab-title dialog-tab-title">批量交易</div>
     </div>
+    <div class="batch-tab-content">
+      <div class="bibeBox" style="padding:10px">
+        <label class="batch-tab-temp dialog-tab-content">
+          在超展开左边创建角色列表 请输入角色url或id，如 https://bgm.tv/character/29282 或 29282，一行一个
+        </label>
+        <label class="batch-tab-onekey dialog-tab-content" style="display: none;">
+          一键参与凑人头或开启ICO 请输入角色url或id，如 https://bgm.tv/character/29282 或 29282，一行一个
+        </label>
+        <label class="batch-tab-trade dialog-tab-content" style="display: none;">
+          按照以下格式录入数据后进行批量操作<small>(鼠标移入下方元素显示示例)</small><br>
+          -<span title="批量设置自动建塔, 格式如下\n29282, 520.00, 12500\n29282, 10, 500">批量自动建塔</span>：<br>
+            &nbsp;${batchElement.id} ${batchElement.splitor}
+            ${batchElement.float('价格', '自动建塔买入时最低价格', '10\n520.00')} ${batchElement.splitor}
+            ${batchElement.int('目标献祭值', '目标建塔数量', '500\n2500')}<br>
+          -<span title="批量设置自动补款, 格式如下\n29282, 11, L, 0\n29282, 11, H, 1">批量自动补款</span>：<br>
+            &nbsp;${batchElement.id} ${batchElement.splitor}
+            ${batchElement.int('目标等级', '自动补款目标等级', '0（取消自动补款）\n1\n2')} ${batchElement.splitor}
+            ${batchElement.basic('补款类型', '自动补款类型（详见自动补款界面）', 'L：按不爆注的最低等级补款\nH：按能达到的最高等级补款')} ${batchElement.splitor}
+            ${batchElement.boolean('立即补款', '是否立即补款')}
+        </label>
+        <textarea rows="10" class="quick" name="urls"></textarea>
+        <div class="batch-tab-temp dialog-tab-content">
+          <input class="inputBtn" value="创建列表" id="submit_list" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="关注角色" id="add_follow" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="关注竞拍" id="add_auction" type="submit" style="padding: 3px 5px;">
+        </div>
+        <div class="batch-tab-onekey dialog-tab-content" style="display: none;">
+          <input class="inputBtn" value="参与竞拍" id="join_auction" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="参与 ICO" id="join_ico" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="启动 ICO" id="begin_ico" type="submit" style="padding: 3px 5px;">
+        </div>
+        <div class="batch-tab-trade dialog-tab-content" style="display: none;">
+          <input class="inputBtn" value="批量建塔" id="trade_auto_temple" type="submit" style="padding: 3px 5px;">
+          <input class="inputBtn" value="批量补款" id="trade_auto_fill_ico" type="submit" style="padding: 3px 5px;">
+        </div>
+      </div>
     </div>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
+    $('.dialog-tab-title').on('click', e => {
+      $('.dialog-tab-content').hide();
+      $(`.dialog-tab-content.${e.target.dataset.tabid}`).show();
+      $('.dialog-tab-title').removeClass('open');
+      $(e.target).addClass('open');
+    });
     $('#submit_list').on('click', () => {
       getCharasList();
       loadTemperaryList(1);
@@ -1571,13 +1648,6 @@
       loadFollowAuction(1);
       closeDialog();
     });
-    $('#one_key_actions').on('click', () => {
-      if ($('#one_keys').toggle().is(':visible')) {
-        $('#one_key_actions').attr('value', '隐藏一键操作▲');
-      } else {
-        $('#one_key_actions').attr('value', '显示一键操作▼');
-      }
-    });
     $('#join_auction').on('click', () => {
       getCharasList();
       $('#eden_tpc_list ul').html('');
@@ -1599,6 +1669,95 @@
       autoBeginICO(charasList).then(() => {
         loadTemperaryList(1);
         closeDialog();
+      });
+    });
+    const regElement = {
+      int: '(\\d+)',
+      float: '(\\d+(?:\\.\\d+)?)',
+      boolean: '([01ynYNtTfF])',
+      splitor: '[, \\t，|]+',
+      id: '(?:character\\/|crt\\/|#)?(\\d+)'
+    };
+    $('#trade_auto_temple').on('click', () => {
+      $('#trade_auto_temple').attr('value', '正在批量设置自动建塔...').closest('.bibeBox').find('.inputBtn').attr('disabled', true);
+      const items = $('.bibeBox textarea').val().split('\n');
+      const regAutoTemple = new RegExp(`${regElement.id}${regElement.splitor}${regElement.float}${regElement.splitor}${regElement.int}`, 'i');
+      const tradeAutoTempleList = [];
+      for (let i = 0; i < items.length; i++) {
+        try {
+          const [, charaId, price, target] = items[i].match(regAutoTemple);
+          charasList.push(parseInt(charaId));
+          tradeAutoTempleList.push({
+            charaId: parseInt(charaId),
+            name: '',
+            target: parseInt(target),
+            bidPrice: parseFloat(price)
+          });
+        } catch (e) {
+          console.debug(`批量建塔第 ${i + 1} 行解析出错: ${items[i]}`);
+        }
+      }
+      postData('chara/list', charasList).then((d) => {
+        const list = tradeAutoTempleList.map(item => {
+          const chara = d.Value.find(i => i.CharacterId === item.charaId);
+          if (chara !== undefined) {
+            item.name = chara.Name;
+          }
+          addBuildTemple(item);
+          return item
+        });
+        console.log('批量建塔', list);
+        autoBuildTemple(list);
+        loadTemperaryList(1);
+        closeDialog();
+      });
+    });
+    $('#trade_auto_fill_ico').on('click', () => {
+      $('#trade_auto_fill_ico').attr('value', '正在批量设置自动补款...').closest('.bibeBox').find('.inputBtn').attr('disabled', true);
+      const items = $('.bibeBox textarea').val().split('\n');
+      const regAutoICO = new RegExp(`${regElement.id}${regElement.splitor}${regElement.int}${regElement.splitor}([lhLH])${regElement.splitor}${regElement.boolean}`, 'i');
+      const tradeAutoICOList = [];
+      for (let i = 0; i < items.length; i++) {
+        try {
+          const [, charaId, target, type, now] = items[i].match(regAutoICO);
+          charasList.push(parseInt(charaId));
+          tradeAutoICOList.push({
+            Id: undefined,
+            charaId: parseInt(charaId),
+            name: '',
+            target: parseInt(target),
+            fillMin: type.toLowerCase() !== 'h',
+            end: undefined,
+            now: /[1yt]/i.test(now)
+          });
+        } catch (e) {
+          console.debug(`批量补款第 ${i + 1} 行解析出错: ${items[i]}`);
+        }
+      }
+      console.log('批量补款', tradeAutoICOList);
+      postData('chara/list', charasList).then((d) => {
+        const charas = d.Value.filter(i => i.Current === undefined);
+        const list = [];
+        tradeAutoICOList.filter(i => charas.some(c => c.CharacterId === i.charaId)).forEach(item => {
+          const chara = charas.find(i => i.CharacterId === item.charaId);
+          if (chara !== undefined) {
+            item.Id = chara.Id;
+            item.name = chara.Name;
+            item.end = chara.End;
+          }
+          if (item.target > 0 && item.now) {
+            list.push(item);
+          } else {
+            delete item.now;
+            addFillICO(item);
+          }
+        });
+        closeDialog();
+        if (list.length > 0) {
+          console.log('立即批量补款', list);
+          fullfillICO(list);
+        }
+        loadTemperaryList(1);
       });
     });
   };
@@ -1732,7 +1891,6 @@
   };
 
   const loadMagic = () => {
-    closeDialog();
     const itemsSetting = ItemsSetting.get();
     const templeId = itemsSetting.chaosCube || '';
     const monoId = itemsSetting.guidepost ? itemsSetting.guidepost.monoId : '';
@@ -1758,7 +1916,7 @@
       <td>数量：<input id="amount" type="number" style="width:60px" value="100"></td>
       <td><input class="inputBtn" value="充能" id="submit_stardust" type="submit" title="当前版本小圣杯已不支持圣殿股进行充能，勾选活股类型以确认使用活股充能"></td></tr>
     </tbody></table>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
     $('#submit_chaosCube').on('click', () => {
       const templeId = parseInt($('#chaosCube').val());
       ItemsSetting.set({ ...ItemsSetting.get(), chaosCube: templeId });
@@ -1978,7 +2136,6 @@
   };
 
   const openSettings = () => {
-    closeDialog();
     const settingRowBtn = `
     <tr class="setting-row-btn">
       <td><span class="txtBtn setting-btn-export">[导入导出设置]</span></td>
@@ -2041,7 +2198,7 @@
       </div>
     </div>
   `;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog, { closeBefore: true });
     $('.setting-tab-title').on('click', e => {
       $('.setting-tab').hide();
       $(`#${e.target.dataset.settingid}`).show();
@@ -2117,8 +2274,7 @@
       <input class="inputBtn" value="导入" id="import_setting" type="submit" style="padding: 3px 5px;">
       <input class="inputBtn" value="复制" id="copy_setting" type="submit" style="padding: 3px 5px;">
       </div>`;
-      closeDialog();
-      showDialog(dialog);
+      showDialog(dialog, { closeBefore: true });
       const configValue = exportConfig();
       $('.bibeBox textarea').val(configValue);
       $('#copy_setting').on('click', () => {
@@ -2332,6 +2488,59 @@
     bindShowAuctionTotal();
   };
 
+  const openBuildDialog = (chara) => {
+    const autoTempleList = AutoTempleList.get();
+    const charaId = chara.CharacterId || chara.Id;
+    let target = 500; let bidPrice = 10;
+    const temple = autoTempleList.find(temple => parseInt(temple.charaId) === charaId);
+    if (temple !== undefined) {
+      target = parseInt(temple.target);
+      bidPrice = parseFloat(temple.bidPrice);
+    }
+    const dialog = `<div class="title" title="目标数量 / 买入价格">
+                  自动建塔 - #${charaId} 「${chara.Name}」 ${target} / ₵${bidPrice}</div>
+                  <div class="desc"><p>当已献祭股数+持有股数达到目标数量时将自动建塔</p>
+                  输入 目标数量 / 买入价格(不超过此价格的卖单将自动买入)</div>
+                  <div class="desc action"><p>便捷设定圣殿等级：
+                    <span data-lv="1" class="text_button setToLv">[一级]</span>
+                    <span data-lv="2" class="text_button setToLv">[二级]</span>
+                    <span data-lv="3" class="text_button setToLv">[三级]</span></p></div>
+                  <div class="label"><div class="trade build">
+                  <input class="target" type="number" style="width:150px" title="目标数量" min="0" step="1" value="${target}">
+                  <input class="bidPrice" type="number" style="width:100px" title="卖出下限" min="0" value="${bidPrice}">
+                  <button id="startBuildButton" class="active">自动建塔</button><button id="cancelBuildButton">取消建塔</button></div></div>
+                  <div class="loading" style="display:none"></div>`;
+    const { closeDialog } = showDialog(dialog);
+    $('#cancelBuildButton').on('click', function () {
+      const autoTempleList = AutoTempleList.get();
+      const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId);
+      if (index >= 0) {
+        autoTempleList.splice(index, 1);
+        AutoTempleList.set(autoTempleList);
+        alert(`取消自动建塔${chara.Name}`);
+      }
+      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]');
+      closeDialog();
+    });
+    $('#startBuildButton').on('click', function () {
+      const info = {
+        charaId: parseInt(charaId),
+        name: chara.Name,
+        target: parseInt($('.trade.build .target').val()),
+        bidPrice: parseFloat($('.trade.build .bidPrice').val())
+      };
+      addBuildTemple(info);
+      alert(`启动自动建塔#${info.charaId} ${info.name}`);
+      closeDialog();
+      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔中]');
+      autoBuildTemple([info]);
+    });
+    $('.action .setToLv').on('click', e => {
+      const level = $(e.target).data('lv');
+      $('.trade.build .target').val(Math.pow(5, level - 1) * 500);
+    });
+  };
+
   const markFollow = () => {
     const followInfoTagsClass = 'item-info-tags';
     const followInfoTag = `<small class="${followInfoTagsClass}"></small>`;
@@ -2357,77 +2566,30 @@
       const templeInfo = AutoTempleList.get().find(e => parseInt(e.charaId) === id);
       if (templeInfo) {
         followInfo += followTemple;
-        if (templeInfo.bidPrice && templeInfo.target) {
-          followInfo += `<small title="自动建塔价 × 数量">(${templeInfo.bidPrice} * ${templeInfo.target})</small>`;
+        if (templeInfo.bidPrice !== undefined && templeInfo.target !== undefined) {
+          followInfo += `<small class="item-info-temple-text" title="自动建塔价 × 数量" data-id="${id}" data-name="${templeInfo.name}">(${templeInfo.bidPrice} * ${templeInfo.target})</small>`;
         }
       }
       const fillIcoInfo = FillICOList.get().find(e => parseInt(e.charaId) === id);
       if (fillIcoInfo) {
         followInfo += followIco;
         if (fillIcoInfo.target) {
-          followInfo += `<small title="自动补款目标">(lv${fillIcoInfo.target})</small>`;
+          followInfo += `<small title="自动补款目标" class="item-info-ico-text" data-id="${id}" data-icoid="${fillIcoInfo.Id}" data-name="${fillIcoInfo.Name}" data-end="${fillIcoInfo.End}" data-fillmin="${fillIcoInfo.fillMin}">(lv${fillIcoInfo.target})</small>`;
         }
       }
       followInfoTagEl.html(followInfo);
     });
-  };
-
-  const openBuildDialog = (chara) => {
-    const autoTempleList = AutoTempleList.get();
-    const charaId = chara.CharacterId || chara.Id;
-    let target = 500; let bidPrice = 10;
-    const temple = autoTempleList.find(temple => parseInt(temple.charaId) === charaId);
-    if (temple !== undefined) {
-      target = parseInt(temple.target);
-      bidPrice = parseFloat(temple.bidPrice);
-    }
-    const dialog = `<div class="title" title="目标数量 / 买入价格">
-                  自动建塔 - #${charaId} 「${chara.Name}」 ${target} / ₵${bidPrice}</div>
-                  <div class="desc"><p>当已献祭股数+持有股数达到目标数量时将自动建塔</p>
-                  输入 目标数量 / 买入价格(不超过此价格的卖单将自动买入)</div>
-                  <div class="desc action"><p>便捷设定圣殿等级：
-                    <span data-lv="1" class="text_button setToLv">[一级]</span>
-                    <span data-lv="2" class="text_button setToLv">[二级]</span>
-                    <span data-lv="3" class="text_button setToLv">[三级]</span></p></div>
-                  <div class="label"><div class="trade build">
-                  <input class="target" type="number" style="width:150px" title="目标数量" min="0" step="1" value="${target}">
-                  <input class="bidPrice" type="number" style="width:100px" title="卖出下限" min="0" value="${bidPrice}">
-                  <button id="startBuildButton" class="active">自动建塔</button><button id="cancelBuildButton">取消建塔</button></div></div>
-                  <div class="loading" style="display:none"></div>`;
-    showDialog(dialog);
-    $('#cancelBuildButton').on('click', function () {
-      const autoTempleList = AutoTempleList.get();
-      const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId);
-      if (index >= 0) {
-        autoTempleList.splice(index, 1);
-        AutoTempleList.set(autoTempleList);
-        alert(`取消自动建塔${chara.Name}`);
-      }
-      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]');
-      closeDialog();
+    $('.item_list .item-info-temple-text').off('click').on('click', (e) => {
+      const item = $(e.currentTarget);
+      openBuildDialog({ CharacterId: item.data('id'), Name: item.data('name') });
+      e.stopPropagation();
     });
-    $('#startBuildButton').on('click', function () {
-      const info = {
-        charaId: parseInt(charaId),
-        name: chara.Name,
-        target: parseInt($('.trade.build .target').val()),
-        bidPrice: parseFloat($('.trade.build .bidPrice').val())
-      };
-      const autoTempleList = AutoTempleList.get();
-      const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId);
-      if (index >= 0) {
-        autoTempleList.splice(index, 1);
-        autoTempleList.unshift(info);
-      } else autoTempleList.unshift(info);
-      AutoTempleList.set(autoTempleList);
-      alert(`启动自动建塔#${info.charaId} ${info.name}`);
-      closeDialog();
-      $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔中]');
-      autoBuildTemple([info]);
-    });
-    $('.action .setToLv').on('click', e => {
-      const level = $(e.target).data('lv');
-      $('.trade.build .target').val(Math.pow(5, level - 1) * 500);
+    $('.item_list .item-info-ico-text').off('click').on('click', (e) => {
+      const itemData = $(e.currentTarget).data();
+      const fillICOList = FillICOList.get();
+      const item = fillICOList.find(item => item.charaId === parseInt(itemData.id)) || { Id: parseInt(itemData.icoid), charaId: parseInt(itemData.id), name: itemData.name, end: itemData.end };
+      if (item) openICODialog({ Id: item.Id, CharacterId: item.charaId, Name: item.name, End: item.end });
+      e.stopPropagation();
     });
   };
 
@@ -2766,7 +2928,7 @@
                   <a id="lastweek" class="p" style="display:none; float: right;margin-bottom: 5px;margin-right: 50px;">前一周</a>
                   </div>
                   <div class="loading"></div>`;
-    showDialog(dialog);
+    const { closeDialog } = showDialog(dialog);
     const charaInitPrice = CharaInitPrice.get();
     const week_ms = 7 * 24 * 3600 * 1000;
     const templeWeek = Math.floor((new Date() - new Date('2019/10/05')) / week_ms + 1);

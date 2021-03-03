@@ -131,22 +131,28 @@ img.cover {
 #TB_window .desc .text_button {
   cursor: pointer; }
 
-#TB_window .setting-tab-titlebar {
+#TB_window .setting-tab-titlebar, #TB_window .dialog-tab-titlebar {
   display: flex;
   margin-top: 8px;
   border-bottom: solid 2px;
   padding: 0 8px; }
-  #TB_window .setting-tab-titlebar .setting-tab-title {
+  #TB_window .setting-tab-titlebar .setting-tab-title, #TB_window .setting-tab-titlebar .dialog-tab-title, #TB_window .dialog-tab-titlebar .setting-tab-title, #TB_window .dialog-tab-titlebar .dialog-tab-title {
     cursor: pointer;
     padding: 2px 8px;
     opacity: 0.8;
     border: solid 1px;
       border-bottom: none;
       border-radius: 5px 5px 0 0; }
-    #TB_window .setting-tab-titlebar .setting-tab-title.open {
+    #TB_window .setting-tab-titlebar .setting-tab-title.open, #TB_window .setting-tab-titlebar .dialog-tab-title.open, #TB_window .dialog-tab-titlebar .setting-tab-title.open, #TB_window .dialog-tab-titlebar .dialog-tab-title.open {
       font-weight: bold;
       opacity: 1;
       border-width: 2px; }
+
+#TB_window .batch-tab-content .batch-element {
+  padding: 0 2px; }
+
+#TB_window .batch-tab-content [title] {
+  border-bottom: dotted thin; }
 
 #TB_window .setting-tab table {
   width: 98%;
