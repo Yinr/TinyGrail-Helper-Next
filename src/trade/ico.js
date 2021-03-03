@@ -7,6 +7,16 @@ import { FillICOList } from '../config/fillICOList'
 
 const ICOStandardList = []
 
+const addFillICO = (info) => {
+  const fillICOList = FillICOList.get()
+  const index = fillICOList.findIndex(item => parseInt(item.Id) === info.Id)
+  if (index >= 0) {
+    fillICOList.splice(index, 1)
+  }
+  if (info.target > 0) fillICOList.push(info)
+  FillICOList.set(fillICOList)
+}
+
 const calculateICO = (ico, targetLevel, fillMin, joined, balance) => {
   // 人数最高等级
   const heads = ico.Users + (targetLevel === undefined || joined ? 0 : 1)
@@ -153,9 +163,11 @@ const autoFillICO = () => {
 const openICODialog = (chara) => {
   const fillICOList = FillICOList.get()
   let target = 1
+  let fillMin = true
   const item = fillICOList.find(item => parseInt(item.Id) === chara.Id)
   if (item) {
     target = item.target
+    fillMin = item.fillMin
   }
   const dialog = `<div class="title">自动补款 - #${chara.CharacterId} 「${chara.Name}」 lv${target}</div>
                   <div class="desc">
@@ -188,6 +200,7 @@ const openICODialog = (chara) => {
       $('#fillMinInfo').html('根据参与者人数、已筹集资金、个人资金余额，<br/>补款至不爆注的<b>最低等级</b>。')
     }
   }).trigger('click')
+  if (fillMin === false) $('#fillMinButton').trigger('click')
 
   $('#cancelfillICOButton').on('click', function () {
     const fillICOList = FillICOList.get()
@@ -215,12 +228,7 @@ const openICODialog = (chara) => {
     info.target = target
     info.fillMin = $('#fillMinButton').hasClass('on')
     info.end = chara.End
-    const fillICOList = FillICOList.get()
-    const index = fillICOList.findIndex(item => parseInt(item.Id) === chara.Id)
-    if (index >= 0) {
-      fillICOList[index] = info
-    } else fillICOList.push(info)
-    FillICOList.set(fillICOList)
+    addFillICO(info)
     alert(`启动自动补款#${chara.Id} ${chara.Name}`)
     $(`#grailBox.chara${chara.CharacterId} #followICOButton`).text('[自动补款中]')
     closeDialog()
@@ -321,4 +329,4 @@ const autoJoinFollowIco = () => {
   }
 }
 
-export { calculateICO, fullfillICO, autoFillICO, setFullFillICO, autoJoinICO, autoBeginICO, autoJoinFollowIco, openICODialog }
+export { calculateICO, addFillICO, fullfillICO, autoFillICO, setFullFillICO, autoJoinICO, autoBeginICO, autoJoinFollowIco, openICODialog }

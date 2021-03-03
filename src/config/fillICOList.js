@@ -5,6 +5,7 @@ import { configGenerator } from './base'
  *  item.charaId: (int) chara.CharacterId
  *  item.name: (string) chara.Name
  *  item.target: (int) 目标等级
+ *  item.fillMin: (boolean) 是否按不爆注的最低等级补款
  *  item.end: (string) chara.End, End Time
  */
 
