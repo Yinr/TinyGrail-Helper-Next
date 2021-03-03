@@ -5,13 +5,21 @@ import { getSacrifices } from './getSacrifices'
 
 import { AutoTempleList } from '../config/autoTempleList'
 
+const addBuildTemple = (info) => {
+  const autoTempleList = AutoTempleList.get()
+  const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === info.charaId)
+  if (index >= 0) {
+    autoTempleList.splice(index, 1)
+  }
+  autoTempleList.unshift(info)
+  AutoTempleList.set(autoTempleList)
+}
+
 const removeBuildTemple = (charaId) => {
   const autoTempleList = AutoTempleList.get()
-  for (let i = 0; i < autoTempleList.length; i++) {
-    if (parseInt(autoTempleList[i].charaId) === parseInt(charaId)) {
-      autoTempleList.splice(i, 1)
-      break
-    }
+  const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId)
+  if (index >= 0) {
+    autoTempleList.splice(index, 1)
   }
   $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔]')
   AutoTempleList.set(autoTempleList)
@@ -91,4 +99,4 @@ const autoBuildTemple = async (charas = undefined) => {
   }
 }
 
-export { autoBuildTemple, removeBuildTemple }
+export { autoBuildTemple, addBuildTemple, removeBuildTemple }
