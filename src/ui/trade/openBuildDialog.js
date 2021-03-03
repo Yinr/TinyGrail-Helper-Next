@@ -1,6 +1,6 @@
 import { showDialog } from '../../utils/dialog'
 
-import { autoBuildTemple } from '../../trade/temple'
+import { autoBuildTemple, addBuildTemple } from '../../trade/temple'
 
 import { AutoTempleList } from '../../config/autoTempleList'
 
@@ -48,13 +48,7 @@ export const openBuildDialog = (chara) => {
       target: parseInt($('.trade.build .target').val()),
       bidPrice: parseFloat($('.trade.build .bidPrice').val())
     }
-    const autoTempleList = AutoTempleList.get()
-    const index = autoTempleList.findIndex(temple => parseInt(temple.charaId) === charaId)
-    if (index >= 0) {
-      autoTempleList.splice(index, 1)
-      autoTempleList.unshift(info)
-    } else autoTempleList.unshift(info)
-    AutoTempleList.set(autoTempleList)
+    addBuildTemple(info)
     alert(`启动自动建塔#${info.charaId} ${info.name}`)
     closeDialog()
     $(`#grailBox.chara${charaId} #autobuildButton`).text('[自动建塔中]')
