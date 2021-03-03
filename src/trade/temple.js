@@ -37,12 +37,12 @@ const autoBuildTemple = async (charas = undefined) => {
       }
     })
   }
-  const postBid = (chara, price, amount, Amount, Needed) => {
+  const postBid = (chara, price, amount, myAmount, Needed) => {
     postData(`chara/bid/${chara.charaId}/${price}/${amount}`, null).then((d) => {
       if (d.Message) console.log(`#${chara.charaId} ${chara.name} ${d.Message}`)
       else {
         console.log(`买入成交 #${chara.charaId} ${chara.name} ${price}*${amount}`)
-        if ((Amount + amount) >= Needed) { // 持股达到数量，建塔
+        if ((myAmount + amount) >= Needed) { // 持股达到数量，建塔
           buildTemple(chara, Needed)
         }
       }
@@ -92,7 +92,7 @@ const autoBuildTemple = async (charas = undefined) => {
         const AskPrice = Asks[0] ? Asks[0].Price : 0
         if (AskPrice && AskPrice <= chara.bidPrice) { // 最低卖单低于买入上限，买入
           const [price, amount] = getAskin(Asks, chara.bidPrice)
-          postBid(chara, price, Math.min(amount, Needed), Amount, Needed)
+          postBid(chara, price, Math.min(amount, Needed - Amount), Amount, Needed)
         }
       })
     }
