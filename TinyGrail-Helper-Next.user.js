@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.2.0
+// @version     3.2.1
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -385,7 +385,7 @@
       charaId: parseInt(item.charaId),
       target: parseInt(item.target),
       end: item.end
-    }))
+    })).sort((a, b) => a.end - b.end)
   });
 
   const ICOStandardList = [];
@@ -1681,7 +1681,7 @@
     $('#trade_auto_temple').on('click', () => {
       $('#trade_auto_temple').attr('value', '正在批量设置自动建塔...').closest('.bibeBox').find('.inputBtn').attr('disabled', true);
       const items = $('.bibeBox textarea').val().split('\n');
-      const regAutoTemple = new RegExp(`${regElement.id}${regElement.splitor}${regElement.float}${regElement.splitor}${regElement.int}`, 'i');
+      const regAutoTemple = new RegExp(`${regElement.id}(?:${regElement.splitor}${regElement.float}${regElement.splitor}${regElement.int})?`, 'i');
       const tradeAutoTempleList = [];
       for (let i = 0; i < items.length; i++) {
         try {
@@ -1690,8 +1690,8 @@
           tradeAutoTempleList.push({
             charaId: parseInt(charaId),
             name: '',
-            target: parseInt(target),
-            bidPrice: parseFloat(price)
+            target: target === undefined ? 500 : parseInt(target),
+            bidPrice: price === undefined ? 10 : parseFloat(price)
           });
         } catch (e) {
           console.debug(`批量建塔第 ${i + 1} 行解析出错: ${items[i]}`);
@@ -1715,7 +1715,7 @@
     $('#trade_auto_fill_ico').on('click', () => {
       $('#trade_auto_fill_ico').attr('value', '正在批量设置自动补款...').closest('.bibeBox').find('.inputBtn').attr('disabled', true);
       const items = $('.bibeBox textarea').val().split('\n');
-      const regAutoICO = new RegExp(`${regElement.id}${regElement.splitor}${regElement.int}${regElement.splitor}([lhLH])${regElement.splitor}${regElement.boolean}`, 'i');
+      const regAutoICO = new RegExp(`${regElement.id}(?:${regElement.splitor}${regElement.int}(?:${regElement.splitor}([lhLH])${regElement.splitor}${regElement.boolean})?)?`, 'i');
       const tradeAutoICOList = [];
       for (let i = 0; i < items.length; i++) {
         try {
@@ -1725,10 +1725,10 @@
             Id: undefined,
             charaId: parseInt(charaId),
             name: '',
-            target: parseInt(target),
-            fillMin: type.toLowerCase() !== 'h',
+            target: target === undefined ? 1 : parseInt(target),
+            fillMin: type === undefined ? true : type.toLowerCase() !== 'h',
             end: undefined,
-            now: /[1yt]/i.test(now)
+            now: now === undefined ? false : /[1yt]/i.test(now)
           });
         } catch (e) {
           console.debug(`批量补款第 ${i + 1} 行解析出错: ${items[i]}`);
