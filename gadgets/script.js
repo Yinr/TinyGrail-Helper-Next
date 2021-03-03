@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.2.1
+// @version     3.2.2
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -278,12 +278,12 @@
         }
       });
     };
-    const postBid = (chara, price, amount, Amount, Needed) => {
+    const postBid = (chara, price, amount, myAmount, Needed) => {
       postData(`chara/bid/${chara.charaId}/${price}/${amount}`, null).then((d) => {
         if (d.Message) console.log(`#${chara.charaId} ${chara.name} ${d.Message}`);
         else {
           console.log(`买入成交 #${chara.charaId} ${chara.name} ${price}*${amount}`);
-          if ((Amount + amount) >= Needed) {
+          if ((myAmount + amount) >= Needed) {
             buildTemple(chara, Needed);
           }
         }
@@ -331,7 +331,7 @@
           const AskPrice = Asks[0] ? Asks[0].Price : 0;
           if (AskPrice && AskPrice <= chara.bidPrice) {
             const [price, amount] = getAskin(Asks, chara.bidPrice);
-            postBid(chara, price, Math.min(amount, Needed), Amount, Needed);
+            postBid(chara, price, Math.min(amount, Needed - Amount), Amount, Needed);
           }
         });
       }
