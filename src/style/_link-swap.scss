@@ -1,0 +1,11 @@
+// 连接自定义排序
+.link {
+  &.swapped .swapPos {
+    text-decoration: underline;
+  }
+
+  .swapPos {
+    margin-left: 0.5em;
+    cursor: pointer;
+  }
+}

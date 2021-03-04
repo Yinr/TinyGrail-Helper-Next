@@ -1,0 +1,12 @@
+// 圣殿图背景透明
+img.cover {
+  background-color: transparent;
+}
+
+// 圣殿台词样式修复
+&.temple .container {
+  text-align: center;
+  .line {
+    text-align: left;
+  }
+}

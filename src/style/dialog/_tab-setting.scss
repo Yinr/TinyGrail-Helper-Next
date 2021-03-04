@@ -1,0 +1,57 @@
+// 设置窗口界面
+.setting-tab-content table {
+  width: 98%;
+  text-align: center;
+  border-spacing: 0;
+
+  input[type=number] {
+    width: 7em;
+    &.chara-id {
+      width: 5em;
+    }
+    &.chara-level {
+      width: 4em;
+    }
+  }
+
+  tr {
+    border-top: dotted 1px;
+    &.hide-row {
+      display: none;
+    }
+    td {
+      text-align: left;
+      vertical-align: middle;
+      padding: 5px;
+      &:first-child {
+        width: 60%;
+      }
+    }
+    &.setting-collapse {
+      cursor: pointer;
+      td:before {
+        content: "▾ ";
+      }
+      &.setting-collapse-close {
+        td:before {
+          content: "▸ ";
+        }
+      }
+    }
+    &.setting-collapse-item {
+      td:first-child {
+        padding-left: 1.2em;
+      }
+    }
+  }
+
+  .setting-row-btn td {
+    vertical-align: baseline;
+  }
+
+  .txtBtn {
+    font-size: smaller;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

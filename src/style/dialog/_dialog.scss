@@ -1,0 +1,32 @@
+// 弹出界面
+#TB {
+  &_overlay {
+    z-index: 102;
+  }
+
+  &_window {
+    &[data-name] {
+      z-index: 102;
+      padding: 7px;
+      box-shadow: 0px 0px 4px 1px #56bce0;
+    }
+
+    .action .text_button {
+      margin: 0 8px 0 0;
+      padding: 0;
+      width: fit-content;
+      height: fit-content;
+      min-width: fit-content;
+    }
+
+    .desc .text_button {
+      cursor: pointer;
+    }
+
+    @import './temple-fixup'; // 圣殿样式修复
+
+    @import './tab-style'; // 弹出界面标签基本样式
+    @import './tab-setting'; // 设置窗口界面
+    @import './tab-batchaction'; // 批量操作界面
+  }
+}

@@ -1,0 +1,17 @@
+// 小圣杯功能块隐藏
+#grailBox {
+  .trade_box button {
+    min-width: 50px;
+    padding: 0 9px;
+  }
+
+  .hide_grail_block_title:after {
+    font-size: 12px;
+    content: ' (点击显示)';
+  }
+
+  .hide_grail_block {
+    display: none !important;
+  }
+}
+

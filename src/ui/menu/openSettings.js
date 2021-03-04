@@ -12,14 +12,14 @@ export const openSettings = () => { // 设置
     </tr>
   `
   const dialog = `
-    <div class="setting-tab-titlebar">
-      <div data-settingid="setting-tab-feat" class="setting-tab-title open">功能</div>
-      <div data-settingid="setting-tab-ui" class="setting-tab-title">界面</div>
-      <div data-settingid="setting-tab-magic" class="setting-tab-title">魔法</div>
+    <div class="setting-tab-titlebar dialog-tab-titlebar">
+      <div data-tabid="setting-tab-feat" class="dialog-tab-title open">功能</div>
+      <div data-tabid="setting-tab-ui" class="dialog-tab-title">界面</div>
+      <div data-tabid="setting-tab-magic" class="dialog-tab-title">魔法</div>
     </div>
     <div class="setting-tab-content">
-      <div id="setting-tab-feat" class="setting-tab">
-        <table class="settings-tab-table"><tbody>
+      <div class="setting-tab-feat dialog-tab-content">
+        <table><tbody>
           <tr><td>默认拍卖数量</td>
             <td><select id="set_auction_num"><option value="one" selected="selected">1</option><option value="all">全部</option></td></tr>
           <tr><td>周六自动提醒领取股息</td>
@@ -33,8 +33,8 @@ export const openSettings = () => { // 设置
           ${settingRowBtn}
         </tbody></table>
       </div>
-      <div id="setting-tab-ui" class="setting-tab" style="display: none;">
-        <table class="settings-tab-table"><tbody>
+      <div class="setting-tab-ui dialog-tab-content" style="display: none;">
+        <table><tbody>
           <tr><td>用户主页小圣杯默认显示状态</td>
             <td><select id="set_hide_grail"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>[连接] 默认显示状态</td>
@@ -50,8 +50,8 @@ export const openSettings = () => { // 设置
           ${settingRowBtn}
         </tbody></table>
       </div>
-      <div id="setting-tab-magic" class="setting-tab" style="display: none;">
-        <table class="settings-tab-table"><tbody>
+      <div class="setting-tab-magic dialog-tab-content" style="display: none;">
+        <table><tbody>
           <tr><td>混沌魔方 - 炮塔角色ID</td>
             <td><input id="item_set_chaos" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           <tr><td>虚空道标 - 炮塔角色ID</td>
@@ -69,10 +69,10 @@ export const openSettings = () => { // 设置
   `
   const { closeDialog } = showDialog(dialog, { closeBefore: true })
 
-  $('.setting-tab-title').on('click', e => {
-    $('.setting-tab').hide()
-    $(`#${e.target.dataset.settingid}`).show()
-    $('.setting-tab-title').removeClass('open')
+  $('.dialog-tab-title').on('click', e => {
+    $('.dialog-tab-content').hide()
+    $(`.dialog-tab-content.${e.target.dataset.tabid}`).show()
+    $('.dialog-tab-title').removeClass('open')
     $(e.target).addClass('open')
   })
 

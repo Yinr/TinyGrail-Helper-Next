@@ -1,0 +1,16 @@
+// 用户页小圣杯隐藏
+#grail {
+  li.title.hide_grail_title h2:after {
+    font-size: 12px;
+    content: '(点击显示)';
+  }
+
+  .temple_list .item {
+    margin: 5px 5px 5px 0;
+    width: 107px;
+  }
+}
+
+.hide_grail {
+  display: none !important;
+}

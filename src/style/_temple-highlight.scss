@@ -1,0 +1,18 @@
+// 高亮个人圣殿
+.assets .my_temple.item {
+  .name a {
+    font-weight: bold;
+    color: #0084b4;
+  }
+
+  .card {
+    box-shadow: 3px 3px 5px #FFEB3B;
+    border: 1px solid #FFC107;
+  }
+
+  html[data-theme='dark'] & .card {
+    box-shadow: 0px 0px 15px #FFEB3B;
+    border: 1px solid #FFC107;
+  }
+}
+

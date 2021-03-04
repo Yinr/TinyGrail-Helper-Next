@@ -1,0 +1,37 @@
+// 列表项目
+.item-info-tag {
+  display: inline-block;
+  padding: 0 4px;
+  margin-left: 2px;
+  vertical-align: top;
+  font-size: 50%;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #666;
+  border: none;
+  border-radius: 4px;
+  background: linear-gradient(#4f93cf, #369cf8);
+}
+.item-info-tags {
+  display: inline-block;
+  .item-info-tag {
+    display: inline-block;
+    padding: 0;
+    width: 10px;
+    height: 10px;
+    background-size: contain;
+    margin-left: 2px;
+  }
+  .item-info-chara-icon {
+    background-image: inline('src/image/follow.png')
+  }
+  .item-info-auc-icon {
+    background-image: inline('src/image/auction.png')
+  }
+  .item-info-ico-icon {
+    background-image: inline('src/image/ico.png')
+  }
+  .item-info-temple-icon {
+    background-image: inline('src/image/temple.png')
+  }
+}
+
