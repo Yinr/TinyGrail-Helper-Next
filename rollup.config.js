@@ -2,6 +2,7 @@ import metablock from 'rollup-plugin-userscript-metablock'
 import postcss from 'rollup-plugin-postcss'
 import cleanup from 'rollup-plugin-cleanup'
 import path from 'path'
+import postcsssass from '@csstools/postcss-sass'
 import autoprefixer from 'autoprefixer'
 import postcss_assets from 'postcss-assets'
 
@@ -40,6 +41,9 @@ export default [{
       inject: (css) => `GM_addStyle(${css})`,
       minimize: true,
       plugins: [
+        postcsssass({
+          outputStyle: 'compressed'
+        }),
         autoprefixer,
         postcss_assets
       ]
@@ -57,6 +61,7 @@ export default [{
     postcss({
       extract: path.resolve('dist/gadgets/style.css'),
       plugins: [
+        postcsssass(),
         autoprefixer,
         postcss_assets
       ]
