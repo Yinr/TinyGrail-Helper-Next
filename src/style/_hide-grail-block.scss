@@ -10,8 +10,20 @@
     content: ' (点击显示)';
   }
 
-  .hide_grail_block {
+  .hide_grail_block_on {
     display: none !important;
+  }
+
+  .hide_grail_block_not_me {
+    .rank_list:not(.my_rank) {
+      display: none;
+    }
+    .link:not(.my_link) {
+      display: none;
+    }
+    > .item:not(.my_temple) {
+      display: none;
+    }
   }
 }
 

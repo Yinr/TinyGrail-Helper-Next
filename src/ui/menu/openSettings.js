@@ -38,9 +38,9 @@ export const openSettings = () => { // 设置
           <tr><td>用户主页小圣杯默认显示状态</td>
             <td><select id="set_hide_grail"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>[连接] 默认显示状态</td>
-            <td><select id="set_hide_link"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+            <td><select id="set_hide_link"><option value="off" selected="selected">显示</option><option value="not_me">仅显示自己</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>[圣殿] 默认显示状态</td>
-            <td><select id="set_hide_temple"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+            <td><select id="set_hide_temple"><option value="off" selected="selected">显示</option><option value="not_me">仅显示自己</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>[董事会] 默认显示状态</td>
             <td><select id="set_hide_board"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>将自己圣殿或连接排到第一个显示</td>

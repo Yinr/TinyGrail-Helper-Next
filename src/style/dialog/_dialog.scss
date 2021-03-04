@@ -23,10 +23,10 @@
       cursor: pointer;
     }
 
-    @import './temple-fixup'; // 圣殿样式修复
+    @import './temple-fixup';    // 圣殿样式修复
 
-    @import './tab-style'; // 弹出界面标签基本样式
-    @import './tab-setting'; // 设置窗口界面
+    @import './tab-style';       // 弹出界面标签基本样式
+    @import './tab-setting';     // 设置窗口界面
     @import './tab-batchaction'; // 批量操作界面
   }
 }

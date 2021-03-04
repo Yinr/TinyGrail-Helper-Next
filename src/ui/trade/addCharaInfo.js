@@ -258,6 +258,7 @@ const showOwnLink = (charaId) => {
     const user = links[i].querySelector('.name a').href.split('/').pop()
     if (user === me) {
       links[i].classList.add('my_link')
+      links[i].closest('.rank_list').classList.add('my_rank')
       if (pre_link === 'on') $(links[i]).siblings('.rank.item').after(links[i])
       break
     }
@@ -454,20 +455,23 @@ const showEndTime = (chara) => {
 }
 
 const showHideBlock = (titleSelector, blockSelector, settings) => {
-  const toggleBlock = () => {
+  const toggleBlock = (set) => {
     const $linkTitle = $(titleSelector)
     const $linkBlock = $(blockSelector)
     if ($linkTitle.hasClass('hide_grail_block_title')) {
       $linkTitle.removeClass('hide_grail_block_title')
-      $linkBlock.removeClass('hide_grail_block')
+      $linkBlock.removeClass('hide_grail_block_on').removeClass('hide_grail_block_not_me')
     } else {
+      if (set === 'off') set = 'on'
       $linkTitle.addClass('hide_grail_block_title')
-      $linkBlock.addClass('hide_grail_block')
+      $linkBlock.addClass(`hide_grail_block_${set}`)
     }
   }
 
-  if (settings === 'on') toggleBlock()
-  $(titleSelector).css('cursor', 'pointer').attr('title', '显示/隐藏').off('click').on('click', toggleBlock)
+  // hide settings: on, not_me, off
+  if (settings !== 'off') toggleBlock(settings)
+
+  $(titleSelector).css('cursor', 'pointer').attr('title', '显示/隐藏').off('click').on('click', () => toggleBlock(settings))
 }
 
 const showHideLink = (charaId) => {

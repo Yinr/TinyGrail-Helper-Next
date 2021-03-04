@@ -1,14 +1,14 @@
-@import './style/hide-grail';          // 用户页小圣杯隐藏
+@use './style/hide-grail';          // 用户页小圣杯隐藏
 
-@import './style/valhalla-sacrifices'; // 英灵殿个人持股信息
+@use './style/valhalla-sacrifices'; // 英灵殿个人持股信息
 
-@import './style/list-tab';            // 列表页标签
-@import './style/list-item-info-tag';  // 列表项目收藏标签
+@use './style/list-tab';            // 列表页标签
+@use './style/list-item-info-tag';  // 列表项目收藏标签
 
-@import './style/hide-grail-block';    // 小圣杯功能块隐藏
-@import './style/auction-info';        // 拍卖信息样式
-@import './style/temple-highlight';    // 高亮个人圣殿
-@import './style/temple-style-fixup';  // 圣殿样式调整
-@import './style/link-swap';           // 连接自定义排序
+@use './style/hide-grail-block';    // 小圣杯功能块隐藏
+@use './style/auction-info';        // 拍卖信息样式
+@use './style/temple-highlight';    // 高亮个人圣殿
+@use './style/temple-style-fixup';  // 圣殿样式调整
+@use './style/link-swap';           // 连接自定义排序
 
-@import './style/dialog/dialog';       // 弹出界面
+@use './style/dialog/dialog';       // 弹出界面
