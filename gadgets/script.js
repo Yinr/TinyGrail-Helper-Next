@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.2.2
+// @version     3.2.3
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -1574,11 +1574,11 @@
         </label>
         <label class="batch-tab-trade dialog-tab-content" style="display: none;">
           按照以下格式录入数据后进行批量操作<small>(鼠标移入下方元素显示示例)</small><br>
-          -<span title="批量设置自动建塔, 格式如下\n29282, 520.00, 12500\n29282, 10, 500">批量自动建塔</span>：<br>
+          -<span title="批量设置自动建塔, 格式如下\n29282, 520.00, 12500\n29282, 10, 500\n29282（不加价格与目标，默认 10 cc 建 500 塔）">批量自动建塔</span>：<br>
             &nbsp;${batchElement.id} ${batchElement.splitor}
             ${batchElement.float('价格', '自动建塔买入时最低价格', '10\n520.00')} ${batchElement.splitor}
             ${batchElement.int('目标献祭值', '目标建塔数量', '500\n2500')}<br>
-          -<span title="批量设置自动补款, 格式如下\n29282, 11, L, 0\n29282, 11, H, 1">批量自动补款</span>：<br>
+          -<span title="批量设置自动补款, 格式如下\n29282, 11, L, 0\n29282, 11, H, 1\n29282, 11（默认最低补款且不立即补款）\n29282（默认目标等级 lv1）">批量自动补款</span>：<br>
             &nbsp;${batchElement.id} ${batchElement.splitor}
             ${batchElement.int('目标等级', '自动补款目标等级', '0（取消自动补款）\n1\n2')} ${batchElement.splitor}
             ${batchElement.basic('补款类型', '自动补款类型（详见自动补款界面）', 'L：按不爆注的最低等级补款\nH：按能达到的最高等级补款')} ${batchElement.splitor}
@@ -2140,14 +2140,14 @@
     </tr>
   `;
     const dialog = `
-    <div class="setting-tab-titlebar">
-      <div data-settingid="setting-tab-feat" class="setting-tab-title open">功能</div>
-      <div data-settingid="setting-tab-ui" class="setting-tab-title">界面</div>
-      <div data-settingid="setting-tab-magic" class="setting-tab-title">魔法</div>
+    <div class="setting-tab-titlebar dialog-tab-titlebar">
+      <div data-tabid="setting-tab-feat" class="dialog-tab-title open">功能</div>
+      <div data-tabid="setting-tab-ui" class="dialog-tab-title">界面</div>
+      <div data-tabid="setting-tab-magic" class="dialog-tab-title">魔法</div>
     </div>
     <div class="setting-tab-content">
-      <div id="setting-tab-feat" class="setting-tab">
-        <table class="settings-tab-table"><tbody>
+      <div class="setting-tab-feat dialog-tab-content">
+        <table><tbody>
           <tr><td>默认拍卖数量</td>
             <td><select id="set_auction_num"><option value="one" selected="selected">1</option><option value="all">全部</option></td></tr>
           <tr><td>周六自动提醒领取股息</td>
@@ -2161,14 +2161,14 @@
           ${settingRowBtn}
         </tbody></table>
       </div>
-      <div id="setting-tab-ui" class="setting-tab" style="display: none;">
-        <table class="settings-tab-table"><tbody>
+      <div class="setting-tab-ui dialog-tab-content" style="display: none;">
+        <table><tbody>
           <tr><td>用户主页小圣杯默认显示状态</td>
             <td><select id="set_hide_grail"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>[连接] 默认显示状态</td>
-            <td><select id="set_hide_link"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+            <td><select id="set_hide_link"><option value="off" selected="selected">显示</option><option value="not_me">仅显示自己</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>[圣殿] 默认显示状态</td>
-            <td><select id="set_hide_temple"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
+            <td><select id="set_hide_temple"><option value="off" selected="selected">显示</option><option value="not_me">仅显示自己</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>[董事会] 默认显示状态</td>
             <td><select id="set_hide_board"><option value="off" selected="selected">显示</option><option value="on">隐藏</option></select></td></tr>
           <tr><td>将自己圣殿或连接排到第一个显示</td>
@@ -2178,8 +2178,8 @@
           ${settingRowBtn}
         </tbody></table>
       </div>
-      <div id="setting-tab-magic" class="setting-tab" style="display: none;">
-        <table class="settings-tab-table"><tbody>
+      <div class="setting-tab-magic dialog-tab-content" style="display: none;">
+        <table><tbody>
           <tr><td>混沌魔方 - 炮塔角色ID</td>
             <td><input id="item_set_chaos" class="chara-id" type="number" min="0" step="1" value="0"></td></tr>
           <tr><td>虚空道标 - 炮塔角色ID</td>
@@ -2196,10 +2196,10 @@
     </div>
   `;
     const { closeDialog } = showDialog(dialog, { closeBefore: true });
-    $('.setting-tab-title').on('click', e => {
-      $('.setting-tab').hide();
-      $(`#${e.target.dataset.settingid}`).show();
-      $('.setting-tab-title').removeClass('open');
+    $('.dialog-tab-title').on('click', e => {
+      $('.dialog-tab-content').hide();
+      $(`.dialog-tab-content.${e.target.dataset.tabid}`).show();
+      $('.dialog-tab-title').removeClass('open');
       $(e.target).addClass('open');
     });
     const settings = Settings.get();
@@ -2911,6 +2911,7 @@
       const user = links[i].querySelector('.name a').href.split('/').pop();
       if (user === me) {
         links[i].classList.add('my_link');
+        links[i].closest('.rank_list').classList.add('my_rank');
         if (pre_link === 'on') $(links[i]).siblings('.rank.item').after(links[i]);
         break
       }
@@ -3090,19 +3091,20 @@
     $(`#grailBox.chara${charaId} .title .text`).append(`<div class="sub" style="margin-left: 20px">结束时间: ${endTime}</div>`);
   };
   const showHideBlock = (titleSelector, blockSelector, settings) => {
-    const toggleBlock = () => {
+    const toggleBlock = (set) => {
       const $linkTitle = $(titleSelector);
       const $linkBlock = $(blockSelector);
       if ($linkTitle.hasClass('hide_grail_block_title')) {
         $linkTitle.removeClass('hide_grail_block_title');
-        $linkBlock.removeClass('hide_grail_block');
+        $linkBlock.removeClass('hide_grail_block_on').removeClass('hide_grail_block_not_me');
       } else {
+        if (set === 'off') set = 'on';
         $linkTitle.addClass('hide_grail_block_title');
-        $linkBlock.addClass('hide_grail_block');
+        $linkBlock.addClass(`hide_grail_block_${set}`);
       }
     };
-    if (settings === 'on') toggleBlock();
-    $(titleSelector).css('cursor', 'pointer').attr('title', '显示/隐藏').off('click').on('click', toggleBlock);
+    if (settings !== 'off') toggleBlock(settings);
+    $(titleSelector).css('cursor', 'pointer').attr('title', '显示/隐藏').off('click').on('click', () => toggleBlock(settings));
   };
   const showHideLink = (charaId) => {
     const titleSelector = `#grailBox.chara${charaId} .link_desc .link_count`;
