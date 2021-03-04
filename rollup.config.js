@@ -38,6 +38,7 @@ export default [{
     metab,
     postcss({
       inject: (css) => `GM_addStyle(${css})`,
+      minimize: true,
       plugins: [
         autoprefixer,
         postcss_assets
