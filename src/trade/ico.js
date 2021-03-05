@@ -45,7 +45,7 @@ const calculateICO = (ico, targetLevel, fillMin, joined, balance) => {
   }
   const levelInfo = ICOStandard(level)
 
-  const price = Math.max(ico.Total, levelInfo.Total) / levelInfo.Amount
+  const price = (Math.max(ico.Total, levelInfo.Total) - 1000000 /* 20210304 新增市场监管税 */) / levelInfo.Amount
   const needMoney = Math.max(levelInfo.Total - ico.Total, 0)
 
   let message = ''
@@ -85,7 +85,7 @@ const ICOStandard = (lv) => {
         Level: level,
         Users: level * 5 + 10,
         Amount: 10000 + (level - 1) * 7500,
-        Total: level === 1 ? 100000 : (Math.pow(level, 2) * 100000 + ICOStandardList[level - 1 - 1].Total)
+        Total: level === 1 ? 100000 + 1000000 /* 20210304 新增市场监管税 */ : (Math.pow(level, 2) * 100000 + ICOStandardList[level - 1 - 1].Total)
       })
     }
   }

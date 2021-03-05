@@ -136,7 +136,7 @@ const renderCharacter = (item, type, even, showCancel) => {
     chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a>
               <small class="grey set_autofillico" title="点击设置自动补款" data-id="${id}" data-icoid="${item.Id}" data-name="${item.Name}" data-end="${item.End}">(ICO进行中: lv${pre.Level})</small>
-              <div class="row"><small class="time">${formatTime(item.End)}</small><span class="ico-state">${icoState}</span>${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`
+              <div class="row"><small class="time">${formatTime(item.End, true)}</small><span class="ico-state">${icoState}</span>${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`
   } else {
     chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)} / ${formatNumber(item.Total, 0)} / ₵${formatNumber(item.MarketValue, 0)})</small>

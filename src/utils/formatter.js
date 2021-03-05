@@ -3,7 +3,7 @@ const formatDate = (date) => {
   return date.format('yyyy-MM-dd hh:mm:ss')
 }
 
-const formatTime = (timeStr) => {
+const formatTime = (timeStr, countDown = false) => {
   const now = new Date()
   const time = new Date(timeStr) - (new Date().getTimezoneOffset() + 8 * 60) * 60 * 1000
 
@@ -19,9 +19,11 @@ const formatTime = (timeStr) => {
 
     if (day > 0) return `剩余${day}天${hour}小时`
     else if (hour > 0) return `剩余${hour}小时${minute}分钟`
-    else return `即将结束 剩余${minute}分钟`
-    // return '即将结束';
+    else if (countDown) return `即将结束 剩余${minute}分钟` // return '即将结束';
+    else return '刚刚'
   } else {
+    if (countDown) return '已结束'
+
     times = Math.abs(times)
     day = Math.floor(times / (60 * 60 * 24))
     hour = Math.floor(times / (60 * 60))
@@ -36,7 +38,7 @@ const formatTime = (timeStr) => {
       return `${hour}h ago`
     }
 
-    if (day > 1000) { return 'never' }
+    if (day > 365) return 'years ago'
 
     return `[${new Date(timeStr).format('yyyy-MM-dd')}] ${day}d ago`
   }
