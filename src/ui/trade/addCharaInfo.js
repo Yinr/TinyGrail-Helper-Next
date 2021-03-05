@@ -64,7 +64,7 @@ const followAuctions = (charaId) => { // 关注竞拍情况
 }
 
 const sell_out = (charaId, init_price) => {
-  $($(`#grailBox.chara${charaId} .info .text`)[1]).append('<button id="sell_out" class="text_button" title="以发行价全部卖出">[全部卖出]</button>')
+  $(`#grailBox.chara${charaId} .info .text .listed`).before('<button id="sell_out" class="text_button" title="以发行价全部卖出">[全部卖出]</button>')
   $(`#grailBox.chara${charaId} #sell_out`).on('click', function () {
     getData(`chara/user/${charaId}`).then((d) => {
       $(`#grailBox.chara${charaId} .ask .price`).val(init_price)
@@ -73,22 +73,24 @@ const sell_out = (charaId, init_price) => {
   })
 }
 
-const showInitialPrice = (charaId) => {
+const showInitialPrice = (chara) => {
+  const charaId = chara.CharacterId || chara.Id
+  let time = formatDate(chara.ListedDate)
   const charaInitPrice = CharaInitPrice.get()
   if (charaInitPrice[charaId]) {
     const init_price = charaInitPrice[charaId].init_price
-    const time = charaInitPrice[charaId].time
-    $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
+    time = time || charaInitPrice[charaId].time
+    $(`#grailBox.chara${charaId} .info .text .listed`).before(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
     sell_out(charaId, init_price)
   } else {
     getData(`chara/charts/${charaId}/2019-08-08`).then((d) => {
       if (d.Value[0]) {
         const init_price = d.Value[0].Begin.toFixed(2)
-        const time = d.Value[0].Time.replace('T', ' ')
+        time = time || d.Value[0].Time.replace('T', ' ')
         const charaInitPrice = CharaInitPrice.get()
-        charaInitPrice[charaId] = { init_price: init_price, time: time }
+        charaInitPrice[charaId] = { init_price: init_price }
         CharaInitPrice.set(charaInitPrice)
-        $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
+        $(`#grailBox.chara${charaId} .info .text .listed`).before(`<span title="上市时间:${time}">发行价：${init_price}</span>`)
         sell_out(charaId, init_price)
       }
     })
@@ -395,7 +397,7 @@ const showTradeHistory = (chara) => {
 const showPrice = (chara) => {
   const charaId = chara.CharacterId || chara.Id
   const price = chara.Price.toFixed(2)
-  $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span>评估价：${price}</span>`)
+  $(`#grailBox.chara${charaId} .info .text .listed`).before(`<span>评估价：${price}</span>`)
 }
 
 const showTempleRate = (chara) => {
@@ -499,7 +501,6 @@ const addCharaInfo = (cid) => {
     $(`#grailBox.chara${charaId} .assets_box`).addClass('tinygrail-helped')
     followChara(charaId) // 关注角色
     followAuctions(charaId) // 关注竞拍情况
-    showInitialPrice(charaId) // 显示发行价
     priceWarning(charaId) // 买入价格过高提醒
     changeBaseAmount(charaId) // 修改初始买卖单股数
     mergeorderListHistory(charaId) // 合并同一时间订单历史记录
@@ -534,6 +535,7 @@ const addCharaInfo = (cid) => {
       showAuctionHistory(chara) // 历史拍卖
       showTradeHistory(chara) // 交易记录
       showPrice(chara) // 显示评估价
+      showInitialPrice(chara) // 显示发行价
       showTempleRate(chara) // 显示各级圣殿数量及股息计算值
       setBuildTemple(chara) // 自动建塔
       fixAuctions(chara) // 修改默认拍卖底价和数量
