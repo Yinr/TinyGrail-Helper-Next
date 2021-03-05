@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.2.3
+// @version     3.2.4
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -64,7 +64,7 @@
     date = new Date(date);
     return date.format('yyyy-MM-dd hh:mm:ss')
   };
-  const formatTime = (timeStr) => {
+  const formatTime = (timeStr, countDown = false) => {
     const now = new Date();
     const time = new Date(timeStr) - (new Date().getTimezoneOffset() + 8 * 60) * 60 * 1000;
     let times = (time - now) / 1000;
@@ -78,8 +78,10 @@
       minute = Math.floor(times / 60) - Math.floor(times / (60 * 60)) * 60;
       if (day > 0) return `剩余${day}天${hour}小时`
       else if (hour > 0) return `剩余${hour}小时${minute}分钟`
-      else return `即将结束 剩余${minute}分钟`
+      else if (countDown) return `即将结束 剩余${minute}分钟`
+      else return '刚刚'
     } else {
+      if (countDown) return '已结束'
       times = Math.abs(times);
       day = Math.floor(times / (60 * 60 * 24));
       hour = Math.floor(times / (60 * 60));
@@ -92,7 +94,7 @@
       } else if (hour < 24) {
         return `${hour}h ago`
       }
-      if (day > 1000) { return 'never' }
+      if (day > 365) return 'years ago'
       return `[${new Date(timeStr).format('yyyy-MM-dd')}] ${day}d ago`
     }
   };
@@ -415,7 +417,7 @@
       level = Math.min(targetLevel, headLevel, moneyLevel);
     }
     const levelInfo = ICOStandard(level);
-    const price = Math.max(ico.Total, levelInfo.Total) / levelInfo.Amount;
+    const price = (Math.max(ico.Total, levelInfo.Total) - 1000000 ) / levelInfo.Amount;
     const needMoney = Math.max(levelInfo.Total - ico.Total, 0);
     let message = '';
     if (headLevel === 0) {
@@ -452,7 +454,7 @@
           Level: level,
           Users: level * 5 + 10,
           Amount: 10000 + (level - 1) * 7500,
-          Total: level === 1 ? 100000 : (Math.pow(level, 2) * 100000 + ICOStandardList[level - 1 - 1].Total)
+          Total: level === 1 ? 100000 + 1000000  : (Math.pow(level, 2) * 100000 + ICOStandardList[level - 1 - 1].Total)
         });
       }
     }
@@ -1088,7 +1090,7 @@
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a>
               <small class="grey set_autofillico" title="点击设置自动补款" data-id="${id}" data-icoid="${item.Id}" data-name="${item.Name}" data-end="${item.End}">(ICO进行中: lv${pre.Level})</small>
-              <div class="row"><small class="time">${formatTime(item.End)}</small><span class="ico-state">${icoState}</span>${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`;
+              <div class="row"><small class="time">${formatTime(item.End, true)}</small><span class="ico-state">${icoState}</span>${cancel}</div></div><div class="tags tag lv${pre.Level}">ICO进行中</div></li>`;
     } else {
       chara = `<li class="${line} item_list" data-id="${id}">${avatar}<div class="inner">
               <a href="/rakuen/topic/crt/${id}?trade=true" class="title avatar l" target="right">${item.Name}${badge}</a> <small class="grey">(+${item.Rate.toFixed(2)} / ${formatNumber(item.Total, 0)} / ₵${formatNumber(item.MarketValue, 0)})</small>
