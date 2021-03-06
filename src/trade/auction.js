@@ -1,6 +1,7 @@
 import { getData, postData } from '../utils/api'
 
 import { formatNumber } from '../utils/formatter'
+import { isDayOfWeek } from '../utils/utils'
 
 const loadUserAuctions = (d) => {
   d.Value.forEach((a) => {
@@ -62,8 +63,7 @@ const bidAuction = (chara) => {
 
 const cancelAuction = (chara) => {
   let message = '确定取消竞拍？'
-  const Day = new Date().getDay()
-  if (Day === 6) message = '周六取消竞拍将收取20%税，确定取消竞拍？'
+  if (isDayOfWeek(6)) message = '周六取消竞拍将收取20%税，确定取消竞拍？'
   if (!confirm(message)) return
   $('#TB_window .loading').show()
   $('#TB_window .label').hide()
