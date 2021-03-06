@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.2.4
+// @version     3.2.5
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -767,8 +767,7 @@
   };
   const cancelAuction = (chara) => {
     let message = '确定取消竞拍？';
-    const Day = new Date().getDay();
-    if (Day === 6) message = '周六取消竞拍将收取20%税，确定取消竞拍？';
+    if (isDayOfWeek(6)) message = '周六取消竞拍将收取20%税，确定取消竞拍？';
     if (!confirm(message)) return
     $('#TB_window .loading').show();
     $('#TB_window .label').hide();
@@ -2731,7 +2730,7 @@
     });
   };
   const sell_out = (charaId, init_price) => {
-    $($(`#grailBox.chara${charaId} .info .text`)[1]).append('<button id="sell_out" class="text_button" title="以发行价全部卖出">[全部卖出]</button>');
+    $(`#grailBox.chara${charaId} .info .text .listed`).before('<button id="sell_out" class="text_button" title="以发行价全部卖出">[全部卖出]</button>');
     $(`#grailBox.chara${charaId} #sell_out`).on('click', function () {
       getData(`chara/user/${charaId}`).then((d) => {
         $(`#grailBox.chara${charaId} .ask .price`).val(init_price);
@@ -2739,22 +2738,24 @@
       });
     });
   };
-  const showInitialPrice = (charaId) => {
+  const showInitialPrice = (chara) => {
+    const charaId = chara.CharacterId || chara.Id;
+    let time = formatDate(chara.ListedDate);
     const charaInitPrice = CharaInitPrice.get();
     if (charaInitPrice[charaId]) {
       const init_price = charaInitPrice[charaId].init_price;
-      const time = charaInitPrice[charaId].time;
-      $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
+      time = time || charaInitPrice[charaId].time;
+      $(`#grailBox.chara${charaId} .info .text .listed`).before(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
       sell_out(charaId, init_price);
     } else {
       getData(`chara/charts/${charaId}/2019-08-08`).then((d) => {
         if (d.Value[0]) {
           const init_price = d.Value[0].Begin.toFixed(2);
-          const time = d.Value[0].Time.replace('T', ' ');
+          time = time || d.Value[0].Time.replace('T', ' ');
           const charaInitPrice = CharaInitPrice.get();
-          charaInitPrice[charaId] = { init_price: init_price, time: time };
+          charaInitPrice[charaId] = { init_price: init_price };
           CharaInitPrice.set(charaInitPrice);
-          $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
+          $(`#grailBox.chara${charaId} .info .text .listed`).before(`<span title="上市时间:${time}">发行价：${init_price}</span>`);
           sell_out(charaId, init_price);
         }
       });
@@ -3039,7 +3040,7 @@
   const showPrice = (chara) => {
     const charaId = chara.CharacterId || chara.Id;
     const price = chara.Price.toFixed(2);
-    $($(`#grailBox.chara${charaId} .info .text`)[1]).append(`<span>评估价：${price}</span>`);
+    $(`#grailBox.chara${charaId} .info .text .listed`).before(`<span>评估价：${price}</span>`);
   };
   const showTempleRate = (chara) => {
     const charaId = chara.CharacterId || chara.Id;
@@ -3132,7 +3133,6 @@
       $(`#grailBox.chara${charaId} .assets_box`).addClass('tinygrail-helped');
       followChara(charaId);
       followAuctions(charaId);
-      showInitialPrice(charaId);
       priceWarning(charaId);
       changeBaseAmount(charaId);
       mergeorderListHistory(charaId);
@@ -3167,6 +3167,7 @@
         showAuctionHistory(chara);
         showTradeHistory(chara);
         showPrice(chara);
+        showInitialPrice(chara);
         showTempleRate(chara);
         setBuildTemple(chara);
         fixAuctions(chara);
