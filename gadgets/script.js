@@ -5,7 +5,7 @@
 // @include     http*://bgm.tv/*
 // @include     http*://bangumi.tv/*
 // @include     http*://chii.in/*
-// @version     3.2.5
+// @version     3.2.6
 // @author      Liaune, Cedar, no1xsyzy(InQβ), Yinr
 // @homepage    https://github.com/Yinr/TinyGrail-Helper-Next
 // @license     MIT
@@ -388,6 +388,7 @@
   });
 
   const ICOStandardList = [];
+  const ICO_TAX = 500000;
   const addFillICO = (info) => {
     const fillICOList = FillICOList.get();
     const index = fillICOList.findIndex(item => parseInt(item.Id) === info.Id);
@@ -417,7 +418,7 @@
       level = Math.min(targetLevel, headLevel, moneyLevel);
     }
     const levelInfo = ICOStandard(level);
-    const price = (Math.max(ico.Total, levelInfo.Total) - 1000000 ) / levelInfo.Amount;
+    const price = (Math.max(ico.Total, levelInfo.Total) - ICO_TAX) / levelInfo.Amount;
     const needMoney = Math.max(levelInfo.Total - ico.Total, 0);
     let message = '';
     if (headLevel === 0) {
@@ -454,7 +455,7 @@
           Level: level,
           Users: level * 5 + 10,
           Amount: 10000 + (level - 1) * 7500,
-          Total: level === 1 ? 100000 + 1000000  : (Math.pow(level, 2) * 100000 + ICOStandardList[level - 1 - 1].Total)
+          Total: level === 1 ? 100000 + ICO_TAX : (Math.pow(level, 2) * 100000 + ICOStandardList[level - 1 - 1].Total)
         });
       }
     }
